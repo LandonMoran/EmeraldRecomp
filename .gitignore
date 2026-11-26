@@ -105,6 +105,9 @@ android/.gradle/
 android/build/
 android/app/build/
 android/app/.cxx/
+# App manifest derived from the engine's by android/app/build.gradle (adds the
+# spoken setup activity). Regenerated on every configuration.
+android/app/generated/
 *.apk
 *.aab
 

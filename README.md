@@ -132,6 +132,36 @@ larger lobbies and Single-Pak multiboot are future work.
 
 Save states: **Shift+F1–F9** save to a slot, **F1–F9** load it.
 
+## Accessibility: spoken interface and TalkBack
+
+EmeraldRecomp can be played by ear. **Mods → Accessibility → Spoken
+Interface** (enabled on fresh profiles, and its options are on the pad as well)
+reads screens, menus and their items,
+bag and shop lists, dialogue, battle messages, battle choices and the name-entry
+keyboard aloud. On
+Android the game speaks through its own **text to speech**, so it works with
+**TalkBack turned off**; with TalkBack on, the same messages become TalkBack
+announcements and the game appears as a tree of focusable choices and buttons
+(Up, Down, Left, Right, A, B, Start, Read status, Repeat, Stop speech), so
+TalkBack gestures can play the game.
+
+With a **controller** and TalkBack off there is nothing extra to learn: moving
+the d-pad/stick moves the game's own cursor, and every cursor change, menu,
+list, battle choice and printed line is spoken as it happens. Four pad
+commands cover the rest — **L** reads the current screen, **Select** repeats the
+last utterance, **Select, then L** stops speech (the two presses need not be
+simultaneous), and **L, then Select, held** opens the spoken settings. The
+settings are the mod's own options — read game text, detail, speech rate, reset
+to defaults — cycled with the pad alone, each change spoken with its new value
+and stored where the Mods menu reads it, so the visual menu is never needed.
+
+On Android the first-launch **setup screen speaks too**: the game subclasses
+the engine's ROM/BIOS import screen, so it is narrated and its status changes
+are announced before the game exists. TalkBack's live regions are kept current
+for the same screen. See
+[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for what is spoken, the mod
+options and the TCP test commands.
+
 ## How it self-improves
 
 `gbarecomp`'s coverage is honest: a path that wasn't statically recompiled is

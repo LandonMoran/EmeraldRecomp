@@ -1,0 +1,110 @@
+[scaffold] force_map -> Route101 at (17,26)
+[start] (17,26) map Route101
+[explore1up f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+[explore1up f0] Starting Pokémon Emerald.
+[explore1up f517] Title and main menu.
+[explore1up f623] Title and main menu.
+[explore1up f1242] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[explore1up f1749] This is what we call a “POKéMON.”.
+[explore1up f1973] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[explore1up f3597] And you are?
+[explore1up f3809] Are you a boy? Or are you a girl?
+[explore1up f3934] All right. What’s your name?
+[explore1up f4076] Name entry.
+[explore1up f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[explore1up f4135] Name: A
+[explore1up f4165] Name: AA
+[explore1up f4195] Name: AAA
+[explore1up f4225] Name: AAAA
+[explore1up f4255] Name: AAAAA
+[explore1up f4285] Name: AAAAAA
+[explore1up f4315] Name: AAAAAAA
+[explore1up f4332] OK
+[explore1up f4372] Title and main menu.
+[explore1up f4380] So it’s AAAAAAA?
+[explore1up f4497] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[explore1up f4993] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[explore1up f6020] Overworld.
+[explore1up f6020] Person south. Press A to talk.
+[explore1up f6238] Overworld.
+[explore1up f6238] New area.
+[explore1up f6939] Object here. Press A.
+[explore1up f6939] Door two steps north-west. Press A to exit.
+[explore1up f7103] Person north. Press A to talk.
+[explore1up f7927] Door two steps north. Press A to exit.
+[explore1up f8039] Person west. Press A to talk.
+[explore1up f8339] Object here. Press A.
+[explore1up f8350] Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!
+[explore1up f8891] Object here. Press A.
+[explore1up f8910] It’s dangerous if you don’t have your own POKéMON.
+[explore1up f9114] Person west. Press A to talk.
+[explore1up f12302] Overworld.
+[explore1up f12302] New area.
+[explore1up f13159] Object here. Press A.
+[explore1up f13426] Overworld.
+[explore] up -> (17,25) map Route101 scene overworld
+[explore] up -> (17,24) map Route101 scene overworld
+[explore] up -> (17,23) map Route101 scene overworld
+[explore] up -> (17,22) map Route101 scene overworld
+[explore5up f13867] Object here. Press A.
+[explore] up -> (17,21) map Route101 scene overworld
+[explore] up blocked at (17,21) map Route101 scene overworld
+[explore] left -> (16,21) map Route101 scene overworld
+[explore] up blocked at (16,21) map Route101 scene overworld
+[explore9left f14083] Person west. Press A to talk.
+[explore] left -> (15,21) map Route101 scene overworld
+[explore] up blocked at (15,21) map Route101 scene overworld
+[explore] left blocked at (15,21) map Route101 scene overworld
+[explore] right -> (16,21) map Route101 scene overworld
+[explore] right -> (17,21) map Route101 scene overworld
+[explore] right -> (18,21) map Route101 scene overworld
+[explore] up blocked at (18,21) map Route101 scene overworld
+[explore] left -> (17,21) map Route101 scene overworld
+[explore] down -> (17,22) map Route101 scene overworld
+[explore] left -> (16,22) map Route101 scene overworld
+[explore19up f14603] Object here. Press A.
+[explore] up -> (16,21) map Route101 scene overworld
+[explore] down -> (16,22) map Route101 scene overworld
+[explore] left -> (15,22) map Route101 scene overworld
+[explore22up f14759] Person west. Press A to talk.
+[explore] up -> (15,21) map Route101 scene overworld
+[explore] down -> (15,22) map Route101 scene overworld
+[explore] left -> (14,22) map Route101 scene overworld
+[explore] up blocked at (14,22) map Route101 scene overworld
+[explore] left -> (13,22) map Route101 scene overworld
+[explore27up f15019] Person east. Press A to talk.
+[explore] up -> (13,21) map Route101 scene overworld
+[explore] up -> (13,20) map Route101 scene overworld
+[explore] up -> (13,19) map Route101 scene overworld
+[explore] up -> (13,18) map Route101 scene overworld
+[explore] up -> (13,17) map Route101 scene overworld
+[explore] up -> (13,16) map Route101 scene overworld
+[explore] up -> (13,15) map Route101 scene overworld
+[explore] up blocked at (13,15) map Route101 scene overworld
+[explore] left -> (12,15) map Route101 scene overworld
+[explore] up blocked at (12,15) map Route101 scene overworld
+[explore] left -> (11,15) map Route101 scene overworld
+[explore] up blocked at (11,15) map Route101 scene overworld
+[explore] left -> (10,15) map Route101 scene overworld
+[explore] up blocked at (10,15) map Route101 scene overworld
+[explore] left -> (9,15) map Route101 scene overworld
+[explore] up blocked at (9,15) map Route101 scene overworld
+[explore] left blocked at (9,15) map Route101 scene overworld
+[explore] right -> (10,15) map Route101 scene overworld
+[explore] right -> (11,15) map Route101 scene overworld
+[explore] right -> (12,15) map Route101 scene overworld
+[explore] right -> (13,15) map Route101 scene overworld
+[explore] right -> (14,15) map Route101 scene overworld
+[explore] up -> (14,14) map Route101 scene overworld
+[explore] up blocked at (14,14) map Route101 scene overworld
+[explore] left blocked at (14,14) map Route101 scene overworld
+[explore] right -> (15,14) map Route101 scene overworld
+[explore] up blocked at (15,14) map Route101 scene overworld
+[explore] left -> (14,14) map Route101 scene overworld
+[explore] down -> (14,15) map Route101 scene overworld
+[explore] left -> (13,15) map Route101 scene overworld
+[explore] down -> (13,16) map Route101 scene overworld
+[explore] left blocked at (13,16) map Route101 scene overworld
+[explore] right -> (14,16) map Route101 scene overworld
+[explore] up -> (14,15) map Route101 scene overworld
+[status] scene overworld menu False message 'It’s dangerous if you don’t have your own POKéMON.'

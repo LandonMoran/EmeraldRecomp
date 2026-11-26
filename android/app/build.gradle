@@ -58,3 +58,45 @@ ext.gbaGame = [
 ]
 
 apply from: new File(engineRoot, "platform/android/gbarecomp-app.gradle")
+
+// Game-owned Java sources: the spoken-UI / TalkBack bridge
+// (src/accessibility/emerald_a11y_android.cpp resolves this class from native
+// code) and the spoken setup screen. Added to the shared shell's app module
+// without editing the engine checkout.
+//
+// The engine declares org.gbarecomp.GbaSetupActivity as the launcher. The game
+// subclasses it (EmeraldSetupActivity) so ROM/BIOS import, verification and the
+// saved-game screen are narrated instead of silent. Point the launcher at the
+// subclass by deriving the app manifest from the engine's: only the one
+// activity class name is rewritten, so engine manifest changes (metadata,
+// permissions, new activities) still flow through untouched.
+//
+// The generated copy lives in android/app/generated (git-ignored), not in
+// build/: a single `gradlew clean assembleDebug` would otherwise configure,
+// then delete it with clean/, and leave the manifest merger without an input.
+def engineManifestFile = new File(engineRoot, "platform/android/AndroidManifest.xml")
+def spokenManifestFile = new File(gameRoot,
+    "android/app/generated/emeraldManifest/AndroidManifest.xml")
+def engineManifestText = engineManifestFile.getText("UTF-8")
+def engineLauncher = 'android:name="org.gbarecomp.GbaSetupActivity"'
+def spokenLauncher = 'android:name="com.mstan.emeraldrecomp.accessibility.EmeraldSetupActivity"'
+if (!engineManifestText.contains(engineLauncher)) {
+    throw new GradleException(
+        "The shared Android manifest no longer declares org.gbarecomp.GbaSetupActivity. " +
+        "Update the spoken-setup manifest rewrite in android/app/build.gradle.")
+}
+def spokenManifestText = engineManifestText.replace(engineLauncher, spokenLauncher)
+if (!spokenManifestFile.exists() ||
+    spokenManifestFile.getText("UTF-8") != spokenManifestText) {
+    spokenManifestFile.parentFile.mkdirs()
+    spokenManifestFile.setText(spokenManifestText, "UTF-8")
+}
+
+android {
+    sourceSets {
+        main {
+            java.srcDirs += new File(gameRoot, "android/app/src/main/java")
+            manifest.srcFile spokenManifestFile
+        }
+    }
+}

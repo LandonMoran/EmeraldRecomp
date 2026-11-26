@@ -1,0 +1,45 @@
+# === boot / spoken interface greeting ===
+[boot] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. L then Select, held, for settings.
+[intro] Starting Pokémon Emerald.
+[intro] Title and main menu.
+[intro] Title and main menu.
+[intro] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[intro] This is what we call a “POKéMON.”.
+[intro] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[intro] And you are?
+[intro] Are you a boy? Or are you a girl?
+[intro] Option 1 of 2.
+[intro] All right. What’s your name?
+[intro] Name entry.
+[intro] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+# === name entry ===
+[naming] Name: A
+[naming] OK
+[naming] Title and main menu.
+[post-naming] So it’s A?
+[post-naming] Option 1 of 2.
+[post-naming] Ah, okay! You’re A who’s moving to my hometown of LITTLEROOT. I get it now!
+[post-naming] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[post-naming] Overworld.
+[post-naming] Person south. Press A to talk.
+# === truck ride (field controls locked ~750 frames) ===
+# === stepping out of the truck ===
+[step-out] Overworld.
+[step-out] New area.
+# === Mom outside the truck (long dialogue) ===
+[mom-dialogue] Object here. Press A.
+[mom-dialogue] MOM: A, we’re here, honey! It must be tiring riding with our things in the moving truck. Well, this is LITTLEROOT TOWN. How do you like it? This is our new home! It has a quaint feel, but it seems to be an easy place to live, don’t you think? And, you get your own room, A! Let’s go inside.
+[mom-dialogue] Door two steps north. Press A to exit.
+[mom-dialogue] Object here. Press A.
+# === into the house (Mom's script walks the player in) ===
+[enter-house] Overworld.
+[enter-house] New area.
+[enter-house] MOM: See, A? Isn’t it nice in here, too?
+[move-in] Door here. Press A to exit.
+[move-in] The mover’s POKéMON do all the work of moving us in and cleaning up after. This is so convenient! A, your room is upstairs. Go check it out, dear! DAD bought you a new clock to mark our move here. Don’t forget to set it!
+# === walking / look-triggered speech (the front door) ===
+# walk to (8,7)
+# facing south looking at {'kind': 'door', 'x': 15, 'y': 15, 'dir': 'south'}
+[look-town] Door here. Press A to exit.
+# === silence when nothing new is looked at ===
+[silence] MOM: Well, A? Aren’t you interested in seeing your very own room?

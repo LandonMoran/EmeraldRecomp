@@ -1,0 +1,34 @@
+[probeleft f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+[probeleft f0] Starting Pokémon Emerald.
+[probeleft f517] Title and main menu.
+[probeleft f623] Title and main menu.
+[probeleft f1242] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[probeleft f1749] This is what we call a “POKéMON.”.
+[probeleft f1973] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[probeleft f3597] And you are?
+[probeleft f3809] Are you a boy? Or are you a girl?
+[probeleft f3934] All right. What’s your name?
+[probeleft f4076] Name entry.
+[probeleft f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[probeleft f4135] Name: A
+[probeleft f4165] Name: AA
+[probeleft f4195] Name: AAA
+[probeleft f4225] Name: AAAA
+[probeleft f4255] Name: AAAAA
+[probeleft f4285] Name: AAAAAA
+[probeleft f4315] Name: AAAAAAA
+[probeleft f4332] OK
+[probeleft f4372] Title and main menu.
+[probeleft f4380] So it’s AAAAAAA?
+[probeleft f4497] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[probeleft f4993] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[probeleft f6020] Overworld.
+[probeleft f6020] Person south. Press A to talk.
+[truck] left blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] left blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] down blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] down blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] right blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] right blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] right blocked at (2,2) map InsideOfTruck flags c1 elev 3
+[truck] up blocked at (2,2) map InsideOfTruck flags c1 elev 3

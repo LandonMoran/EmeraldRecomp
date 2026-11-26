@@ -36,6 +36,15 @@ constexpr std::uint32_t sNumStartMenuActions = 0x0203760F;
 constexpr std::uint32_t sCurrentStartMenuActions = 0x02037610;
 constexpr std::uint32_t sProcessInputDelay = 0x02039F90; // script_menu.o
 constexpr std::uint32_t gMenuCallback = 0x03005DF4;      // start_menu.c
+// Name entry (naming_screen.c). The keyboard rows, the page order and each
+// page's column count are the game's own ROM tables, so the letters read are
+// the ones the screen shows. The cursor's row and column are not in the struct:
+// the game keeps them in the cursor sprite's data fields (sX = data[0],
+// sY = data[1]).
+constexpr std::uint32_t sNamingScreen = 0x02039F94;      // -> NamingScreenData*
+constexpr std::uint32_t sKeyboardChars = 0x0858BE40;     // [3][4][8], game charset
+constexpr std::uint32_t sPageColumnCounts = 0x0858BEA0;  // [3]
+constexpr std::uint32_t sPageToKeyboardId = 0x0858BEC1;  // [3] currentPage -> table
 // Field
 constexpr std::uint32_t gPlayerAvatar = 0x02037590;
 constexpr std::uint32_t gObjectEvents = 0x02037350;    // 16 x 0x24
@@ -48,6 +57,11 @@ constexpr std::uint32_t sLockFieldControls = 0x03000F2C;
 constexpr std::uint32_t sGlobalScriptContextStatus = 0x03000E38;
 constexpr std::uint32_t sGlobalScriptContext = 0x03000E40;
 constexpr std::uint32_t sFieldMessageBoxMode = 0x020375BC;
+// Live text printers (32 x 0x24). A printer with windowId 0 while active means
+// the message window is typing; gStringVar4 holds the full string being shown
+// (scripts and battle narration both expand into it).
+constexpr std::uint32_t kPrinterCount = 32;
+constexpr std::uint32_t gStringVar4 = 0x02021FC4;   // 1000 bytes
 // Battle
 constexpr std::uint32_t gBattleTypeFlags = 0x02022FEC;
 constexpr std::uint32_t gBattlerControllerFuncs = 0x03005D60; // 4 x ptr

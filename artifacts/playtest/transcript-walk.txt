@@ -1,0 +1,60 @@
+[scaffold] force_map -> Route101 at (17,26)
+[strip] (17,26) map Route101
+[strip f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+[strip f0] Starting Pokémon Emerald.
+[strip f517] Title and main menu.
+[strip f623] Title and main menu.
+[strip f1242] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[strip f1749] This is what we call a “POKéMON.”.
+[strip f1973] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[strip f3597] And you are?
+[strip f3809] Are you a boy? Or are you a girl?
+[strip f3934] All right. What’s your name?
+[strip f4076] Name entry.
+[strip f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[strip f4135] Name: A
+[strip f4165] Name: AA
+[strip f4195] Name: AAA
+[strip f4225] Name: AAAA
+[strip f4255] Name: AAAAA
+[strip f4285] Name: AAAAAA
+[strip f4315] Name: AAAAAAA
+[strip f4332] OK
+[strip f4372] Title and main menu.
+[strip f4380] So it’s AAAAAAA?
+[strip f4497] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[strip f4993] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[strip f6020] Overworld.
+[strip f6020] Person south. Press A to talk.
+[strip f6238] Overworld.
+[strip f6238] New area.
+[strip f6939] Object here. Press A.
+[strip f6939] Door two steps north-west. Press A to exit.
+[strip f7103] Person north. Press A to talk.
+[strip f7927] Door two steps north. Press A to exit.
+[strip f8039] Person west. Press A to talk.
+[strip f8339] Object here. Press A.
+[strip f8350] Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!
+[strip f8891] Object here. Press A.
+[strip f8910] It’s dangerous if you don’t have your own POKéMON.
+[strip f9114] Person west. Press A to talk.
+[strip f12302] Overworld.
+[strip f12302] New area.
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] left blocked at (17,26) map Route101 scene overworld
+[strip] up -> (17,25) map Route101 scene overworld
+[strip] up -> (17,24) map Route101 scene overworld
+[strip] up -> (17,23) map Route101 scene overworld
+[strip] up -> (17,22) map Route101 scene overworld
+[strip f13159] Object here. Press A.
+[strip] up -> (17,21) map Route101 scene overworld
+[strip] up blocked at (17,21) map Route101 scene overworld
+[strip] up blocked at (17,21) map Route101 scene overworld
+[strip] up blocked at (17,21) map Route101 scene overworld
+[strip] up blocked at (17,21) map Route101 scene overworld

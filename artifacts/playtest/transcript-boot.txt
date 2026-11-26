@@ -1,0 +1,36 @@
+pre-field loop end: scene=naming
+after naming: scene=title_menus
+entered field: scene=overworld
+  right#1: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#2: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#3: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#4: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#5: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#6: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#7: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#8: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#9: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+  right#10: (9,9) -> (9,9) map [25, 40] -> [25, 40]
+speech tail: So it’s JOHNNY? | Option 1 of 2. | Ah, okay! You’re JOHNNY who’s moving to my hometown of LITTLEROOT. I get it now! | All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB. | Overworld.
+
+--- spoken ---
+Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+Starting Pokémon Emerald.
+Title and main menu.
+Title and main menu.
+Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+This is what we call a “POKéMON.”.
+This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+And you are?
+Are you a boy? Or are you a girl?
+Option 1 of 2.
+All right. What’s your name?
+Name entry.
+Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+OK
+Title and main menu.
+So it’s JOHNNY?
+Option 1 of 2.
+Ah, okay! You’re JOHNNY who’s moving to my hometown of LITTLEROOT. I get it now!
+All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+Overworld.

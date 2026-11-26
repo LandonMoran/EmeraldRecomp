@@ -1,0 +1,283 @@
+// emerald_a11y_android.cpp — Android TextToSpeech + TalkBack bridge.
+//
+// Compiled only for Android. SDLActivity loads libmain.so, so SDL's Java
+// environment (and the activity) are available without the engine shell needing
+// to know this layer exists.
+//
+// Native → Java: speak/stop/setScene/setRate on
+// com.mstan.emeraldrecomp.accessibility.EmeraldAccessibility.
+// Java → native: the registered nativeAction(int action, int arg) queues a
+// command for the next emulated frame (thread-safe).
+//
+// With TalkBack (touch exploration) on, the Java side turns speech into
+// accessibility announcements and publishes the virtual node tree, so
+// TalkBack's own voice and settings apply. With TalkBack off, the same calls
+// speak through the game's own TextToSpeech instance.
+
+#include "emerald_a11y.h"
+
+#include "emerald_cues.h"   // audio-cue sink (SoundPool on the Java side)
+
+#if defined(__ANDROID__)
+
+#include <SDL.h>
+#include <android/log.h>
+#include <jni.h>
+
+namespace emerald::accessibility {
+namespace {
+
+constexpr const char* kTag = "EmeraldA11y";
+// Dot-separated: resolved through the activity's ClassLoader (FindClass on a
+// native thread does not see application classes).
+constexpr const char* kClass =
+    "com.mstan.emeraldrecomp.accessibility.EmeraldAccessibility";
+// Audio cues live in their own class: the C++ cue table names an asset, the
+// Java player turns it into sound (or a synthesized fallback).
+constexpr const char* kCuesClass = "com.mstan.emeraldrecomp.accessibility.A11yCues";
+
+JavaVM* g_vm = nullptr;
+jobject g_activity = nullptr;
+jclass g_class = nullptr;
+jclass g_cues = nullptr;
+jmethodID g_cue_play = nullptr;
+jmethodID g_cue_attach = nullptr;
+jmethodID g_cue_shutdown = nullptr;
+jmethodID g_speak = nullptr;
+jmethodID g_stop = nullptr;
+jmethodID g_scene = nullptr;
+jmethodID g_rate = nullptr;
+jmethodID g_attach = nullptr;
+jmethodID g_shutdown = nullptr;
+jmethodID g_talkback = nullptr;
+bool g_ready = false;
+
+bool clear(JNIEnv* e) {
+    if (!e || !e->ExceptionCheck()) return false;
+    e->ExceptionDescribe();
+    e->ExceptionClear();
+    return true;
+}
+
+JNIEnv* env() {
+    if (!g_vm) return nullptr;
+    JNIEnv* e = nullptr;
+    const jint status = g_vm->GetEnv(reinterpret_cast<void**>(&e), JNI_VERSION_1_6);
+    if (status == JNI_OK) return e;
+    if (status == JNI_EDETACHED && g_vm->AttachCurrentThread(&e, nullptr) == JNI_OK)
+        return e;
+    return nullptr;
+}
+
+void native_action(JNIEnv*, jclass, jint action, jint arg) {
+    push_action(static_cast<Action>(action), static_cast<int>(arg));
+}
+
+// Resolve an application class through the activity's ClassLoader (FindClass on
+// a native thread cannot see application classes).
+jclass load_app_class(JNIEnv* e, jobject activity, const char* name) {
+    jclass activity_class = e->GetObjectClass(activity);
+    jmethodID get_loader = e->GetMethodID(activity_class, "getClassLoader",
+                                         "()Ljava/lang/ClassLoader;");
+    jobject loader = get_loader ? e->CallObjectMethod(activity, get_loader) : nullptr;
+    jclass loader_class = loader ? e->GetObjectClass(loader) : nullptr;
+    jmethodID load_class =
+        loader_class ? e->GetMethodID(loader_class, "loadClass",
+                                      "(Ljava/lang/String;)Ljava/lang/Class;")
+                     : nullptr;
+    jstring jname = e->NewStringUTF(name);
+    jclass cls = (load_class && jname)
+                     ? static_cast<jclass>(e->CallObjectMethod(loader, load_class, jname))
+                     : nullptr;
+    if (jname) e->DeleteLocalRef(jname);
+    if (loader_class) e->DeleteLocalRef(loader_class);
+    if (loader) e->DeleteLocalRef(loader);
+    if (activity_class) e->DeleteLocalRef(activity_class);
+    if (!cls) clear(e);
+    return cls;
+}
+
+// Native cue sink: the asset name travels as a string; speech is already routed
+// through android_speak() by the cue layer, so `say` is not repeated here.
+void android_cue(const char* asset, const char*, int) {
+    if (!g_ready || !g_cues || !g_cue_play || !asset) return;
+    JNIEnv* e = env();
+    if (!e) return;
+    jstring value = e->NewStringUTF(asset);
+    if (value) {
+        e->CallStaticVoidMethod(g_cues, g_cue_play, value);
+        e->DeleteLocalRef(value);
+    }
+    clear(e);
+}
+
+void android_speak(const char* text, int interrupt) {
+    if (!g_ready || !g_class || !text) return;
+    JNIEnv* e = env();
+    if (!e) return;
+    jstring value = e->NewStringUTF(text);
+    if (value) {
+        e->CallStaticVoidMethod(g_class, g_speak, value, static_cast<jint>(interrupt));
+        e->DeleteLocalRef(value);
+    }
+    clear(e);
+}
+
+void android_update(const char* status, const char* items, int selected,
+                    const char* message) {
+    if (!g_ready || !g_class || !g_scene) return;
+    JNIEnv* e = env();
+    if (!e) return;
+    jstring jstatus = e->NewStringUTF(status ? status : "");
+    jstring jitems = e->NewStringUTF(items ? items : "");
+    jstring jmessage = e->NewStringUTF(message ? message : "");
+    if (jstatus && jitems && jmessage) {
+        e->CallStaticVoidMethod(g_class, g_scene, jstatus, jitems,
+                                static_cast<jint>(selected), jmessage);
+    }
+    if (jstatus) e->DeleteLocalRef(jstatus);
+    if (jitems) e->DeleteLocalRef(jitems);
+    if (jmessage) e->DeleteLocalRef(jmessage);
+    clear(e);
+}
+
+void android_stop() {
+    if (!g_ready || !g_class || !g_stop) return;
+    JNIEnv* e = env();
+    if (!e) return;
+    e->CallStaticVoidMethod(g_class, g_stop);
+    clear(e);
+}
+
+void android_rate(float rate) {
+    if (!g_ready || !g_class || !g_rate) return;
+    JNIEnv* e = env();
+    if (!e) return;
+    e->CallStaticVoidMethod(g_class, g_rate, static_cast<jfloat>(rate));
+    clear(e);
+}
+
+}  // namespace
+
+bool install_platform_bridge() {
+    if (g_ready) return true;
+    JNIEnv* e = static_cast<JNIEnv*>(SDL_AndroidGetJNIEnv());
+    if (!e || e->GetJavaVM(&g_vm) != JNI_OK) {
+        __android_log_print(ANDROID_LOG_WARN, kTag, "no JNI environment");
+        return false;
+    }
+    jobject activity = static_cast<jobject>(SDL_AndroidGetActivity());
+    if (!activity) {
+        __android_log_print(ANDROID_LOG_WARN, kTag, "no activity");
+        return false;
+    }
+
+    jclass cls = load_app_class(e, activity, kClass);
+    if (!cls) {
+        clear(e);
+        __android_log_print(ANDROID_LOG_WARN, kTag, "accessibility class not found");
+        return false;
+    }
+
+    static const JNINativeMethod methods[] = {
+        {"nativeAction", "(II)V", reinterpret_cast<void*>(&native_action)},
+    };
+    if (e->RegisterNatives(cls, methods, 1) != JNI_OK) {
+        clear(e);
+        e->DeleteLocalRef(cls);
+        return false;
+    }
+
+    g_speak = e->GetStaticMethodID(cls, "speak", "(Ljava/lang/String;I)V");
+    g_stop = e->GetStaticMethodID(cls, "stopSpeech", "()V");
+    g_scene = e->GetStaticMethodID(
+        cls, "setScene",
+        "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V");
+    g_rate = e->GetStaticMethodID(cls, "setRate", "(F)V");
+    g_attach = e->GetStaticMethodID(cls, "attach", "(Landroid/app/Activity;)Z");
+    g_shutdown = e->GetStaticMethodID(cls, "shutdown", "()V");
+    g_talkback = e->GetStaticMethodID(cls, "talkbackActive", "()Z");
+    if (clear(e) || !g_speak || !g_stop || !g_scene || !g_rate || !g_attach) {
+        e->DeleteLocalRef(cls);
+        __android_log_print(ANDROID_LOG_WARN, kTag, "accessibility methods missing");
+        return false;
+    }
+
+    g_class = static_cast<jclass>(e->NewGlobalRef(cls));
+    g_activity = e->NewGlobalRef(activity);
+    e->DeleteLocalRef(cls);
+    const jboolean attached = e->CallStaticBooleanMethod(g_class, g_attach, g_activity);
+    if (clear(e) || !attached) {
+        __android_log_print(ANDROID_LOG_WARN, kTag, "attach failed");
+        return false;
+    }
+
+    install_sink(&android_speak, &android_update, &android_stop, &android_rate);
+
+    // Audio cues: same attachment point, separate class, never fatal.
+    jclass cues = load_app_class(e, activity, kCuesClass);
+    if (cues) {
+        g_cue_play = e->GetStaticMethodID(cues, "play", "(Ljava/lang/String;)V");
+        g_cue_attach = e->GetStaticMethodID(cues, "attach", "(Landroid/app/Activity;)Z");
+        g_cue_shutdown = e->GetStaticMethodID(cues, "shutdown", "()V");
+        if (clear(e) || !g_cue_play || !g_cue_attach) {
+            g_cue_play = nullptr;
+            g_cue_attach = nullptr;
+            g_cue_shutdown = nullptr;
+        } else {
+            g_cues = static_cast<jclass>(e->NewGlobalRef(cues));
+            e->CallStaticBooleanMethod(g_cues, g_cue_attach, g_activity);
+            clear(e);
+            install_cue_sink(&android_cue);
+        }
+        e->DeleteLocalRef(cues);
+    } else {
+        __android_log_print(ANDROID_LOG_WARN, kTag, "cue player not found; cues log only");
+    }
+
+    g_ready = true;
+    __android_log_print(ANDROID_LOG_INFO, kTag, "spoken UI bridge attached");
+    return true;
+}
+
+void shutdown_platform_bridge() {
+    if (!g_ready) return;
+    if (g_class && g_shutdown) {
+        JNIEnv* e = env();
+        if (e) {
+            e->CallStaticVoidMethod(g_class, g_shutdown);
+            clear(e);
+        }
+    }
+    install_sink(nullptr, nullptr, nullptr, nullptr);
+    install_cue_sink(nullptr);
+    JNIEnv* e = env();
+    if (e) {
+        if (g_cues && g_cue_shutdown) {
+            e->CallStaticVoidMethod(g_cues, g_cue_shutdown);
+            clear(e);
+        }
+        if (g_cues) e->DeleteGlobalRef(g_cues);
+        if (g_class) e->DeleteGlobalRef(g_class);
+        if (g_activity) e->DeleteGlobalRef(g_activity);
+    }
+    g_cues = nullptr;
+    g_cue_play = g_cue_attach = g_cue_shutdown = nullptr;
+    g_class = nullptr;
+    g_activity = nullptr;
+    g_speak = g_stop = g_scene = g_rate = g_attach = g_shutdown = g_talkback = nullptr;
+    g_ready = false;
+}
+
+bool talkback_available() {
+    if (!g_ready || !g_class || !g_talkback) return false;
+    JNIEnv* e = env();
+    if (!e) return false;
+    const jboolean on = e->CallStaticBooleanMethod(g_class, g_talkback);
+    clear(e);
+    return on == JNI_TRUE;
+}
+
+}  // namespace emerald::accessibility
+
+#endif  // __ANDROID__

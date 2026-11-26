@@ -1,0 +1,72 @@
+format_version = 1
+id = "pokemon-emerald.accessibility.spoken-ui"
+version = "1.0.0"
+name = "Spoken Interface (Screen Reader)"
+author = "EmeraldRecomp contributors"
+description = "Reads the game aloud: menus and their items, dialogue and battle text, lists, and battle choices. On Android it speaks through text to speech with TalkBack off, and adds a TalkBack layer of focusable game items and buttons."
+license = "PolyForm-Noncommercial-1.0.0"
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "pokemon-emerald-us"
+rom_sha1 = "f3ae088181bf583e55daf962a92bb46f4f1d07b7"
+
+[[feature]]
+id = "spoken-ui"
+name = "Spoken Interface"
+description = "Speaks screens, menus, list items, dialogue and battle choices as they change, and exposes the game to TalkBack as a tree of items and buttons. Read-only: it never edits saves, RAM or game code, and steers the game only with synthesized key presses."
+group = "Accessibility"
+default_enabled = true
+
+[[option]]
+feature = "spoken-ui"
+id = "game-text"
+label = "Read game text"
+description = "Speak dialogue, battle messages and other text the game prints, as it prints it. Off reads only screens, menus, lists and battle choices."
+type = "choice"
+default = "on"
+
+[[option.choice]]
+value = "on"
+label = "On"
+[[option.choice]]
+value = "off"
+label = "Off"
+
+[[option]]
+feature = "spoken-ui"
+id = "verbosity"
+label = "Detail"
+description = "Everything reads all printed text. Menus limits speech to screens, menus, lists and battles."
+type = "choice"
+default = "everything"
+
+[[option.choice]]
+value = "everything"
+label = "Everything"
+[[option.choice]]
+value = "menus"
+label = "Menus and battles only"
+
+[[option]]
+feature = "spoken-ui"
+id = "rate"
+label = "Speech rate"
+description = "Android text-to-speech speed. Applies when TalkBack is off; TalkBack uses its own settings when it is on."
+type = "choice"
+default = "normal"
+
+[[option.choice]]
+value = "slow"
+label = "Slow"
+[[option.choice]]
+value = "normal"
+label = "Normal"
+[[option.choice]]
+value = "fast"
+label = "Fast"
+
+[[plugin]]
+feature = "spoken-ui"
+id = "pokemon-emerald.spoken-ui"

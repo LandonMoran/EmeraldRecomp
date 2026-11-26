@@ -49,6 +49,15 @@ add_executable(emerald_extended_view_test
     tests/extended_view_test.cpp src/emerald_extended_view.cpp src/emerald_object_view.cpp src/emerald_ui_view.cpp)
 target_include_directories(emerald_extended_view_test PRIVATE src "${GBARECOMP_ROOT}/src/gba")
 add_test(NAME emerald_extended_view_test COMMAND emerald_extended_view_test)
+add_executable(emerald_hotkeys_test tests/hotkeys_test.cpp)
+target_include_directories(emerald_hotkeys_test PRIVATE src "${GBARECOMP_ROOT}/src/runtime")
+add_test(NAME emerald_hotkeys_test COMMAND emerald_hotkeys_test)
+add_executable(emerald_settings_test tests/settings_test.cpp)
+target_include_directories(emerald_settings_test PRIVATE src)
+# Run from the project root so the test can read the shipped mod manifest and
+# check that every option id and value the pad writes is a real choice.
+add_test(NAME emerald_settings_test COMMAND emerald_settings_test
+         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(emerald_view_capture_check
     tools/widescreen_capture_check.cpp src/emerald_extended_view.cpp src/emerald_object_view.cpp)
 target_include_directories(emerald_view_capture_check PRIVATE src "${GBARECOMP_ROOT}/src/gba")
@@ -80,6 +89,10 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
             src/mods/emerald_adaptive_view_plugin.cpp
             src/emerald_ui_view.cpp
             src/mods/emerald_absolute_rtc_plugin.cpp
+            src/accessibility/emerald_a11y.cpp
+            src/accessibility/emerald_cues.cpp
+            src/accessibility/emerald_nav.cpp
+            src/mods/emerald_accessibility_plugin.cpp
             src/touch/emerald_scene.cpp
             src/touch/emerald_touch.cpp
             src/touch/emerald_touch_menus.cpp
@@ -91,6 +104,7 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
         # (gbarecomp/platform/android) builds this target as `main`.
         add_library(${TARGET} SHARED
             ${VARIANT_GAME_SOURCES}
+            src/accessibility/emerald_a11y_android.cpp
             ${VARIANT_GENERATED})
     else()
         add_executable(${TARGET}
@@ -127,6 +141,15 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
         gbarecomp_gba
         gbarecomp_armv4t
         "-Wl,--end-group")
+
+    if(ANDROID)
+        # The spoken-UI bridge reaches Android TextToSpeech and the activity
+        # through SDL, which the shared Android shell provides.
+        if(NOT TARGET SDL2::SDL2)
+            find_package(SDL2 REQUIRED)
+        endif()
+        target_link_libraries(${TARGET} PRIVATE SDL2::SDL2)
+    endif()
 
     target_compile_definitions(${TARGET} PRIVATE
         GBARECOMP_GAME_VERSION="${PROJECT_VERSION}"

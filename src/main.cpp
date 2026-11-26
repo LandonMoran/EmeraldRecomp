@@ -27,6 +27,7 @@
 #include "mobile_platform.h"
 #include "emerald_extended_view.h"
 #include "touch/emerald_touch.h"
+#include "accessibility/emerald_a11y.h"
 #if defined(GBAGAME_NETPLAY)
 #include "multiplayer_launch.h"
 #include "gba_netplay_build_identity.h"
@@ -132,11 +133,14 @@ int emerald_main(int argc, char** argv) {
                                : nullptr;
     opts.launcher_game_config = GBARECOMP_DEFAULT_GAME_CONFIG;  // prefill ROM/BIOS
     // Touch-first controls (inert without touches): gestures become verified
-    // key presses; host chrome draws trails and the battle panel.
-    opts.input_frame = emerald::touch::input_frame;
+    // key presses; host chrome draws trails and the battle panel. The
+    // accessibility layer wraps the touch frame so its speech follows the same
+    // per-frame scene classification, and its TCP commands extend the touch
+    // ones (RunOptions stores a single callback for each).
+    opts.input_frame = emerald::accessibility::input_frame;
     opts.touch_gesture_claims = emerald::touch::kGestureClaims;
     opts.host_overlay = emerald::touch::host_overlay;
-    opts.tcp_command = emerald::touch::tcp_command;
+    opts.tcp_command = emerald::accessibility::tcp_command;
     opts.diagnostics_snapshot = emerald::touch::diagnostics_snapshot;
     opts.presentation_request = emerald::touch::presentation_request;
     emerald::touch::set_mobile(on_mobile);
@@ -155,6 +159,11 @@ int emerald_main(int argc, char** argv) {
     std::vector<char*> av;
 #if defined(GBAGAME_RECOMP_UI)
     if (game_launcher_preboot(args, opts)) return 0;   // user quit the launcher
+#endif
+#if defined(__ANDROID__)
+    // Android text to speech and the TalkBack layer. This only attaches the
+    // bridge: speech stays silent until the Spoken Interface feature runs.
+    emerald::accessibility::install_platform_bridge();
 #endif
     av.reserve(args.size());
     for (auto& s : args) av.push_back(s.data());

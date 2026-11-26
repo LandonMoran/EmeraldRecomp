@@ -11,3 +11,13 @@ id = "widescreen"
 enabled = true
 [feature.values]
 aspect = "fit"
+
+# Spoken interface: on by default so the game is playable without sight of the
+# Mods menu. Everything is read; TalkBack is layered separately.
+[[package]]
+id = "pokemon-emerald.accessibility.spoken-ui"
+version = "1.0.0"
+[[feature]]
+package_id = "pokemon-emerald.accessibility.spoken-ui"
+id = "spoken-ui"
+enabled = true

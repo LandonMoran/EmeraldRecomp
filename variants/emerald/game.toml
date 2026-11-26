@@ -183,3 +183,14 @@ note = "ListMenu_ProcessInput(listTaskId) — list menu live"
 addr = 0x08085DAC
 mode = "thumb"
 note = "DoCB1_Overworld — field input processed this frame"
+
+# ── Spoken interface: text capture (src/accessibility/emerald_a11y.cpp) ──
+# AddTextPrinter is the single entry point that sees every string the game
+# prints — field dialogue and battle narration included — with the full text in
+# the template at call time. The callback is observe-only and always declines,
+# so the guest body runs unchanged. Without this guard the code generator emits
+# no entry check and the callback can never fire.
+[[mod_function_hook]]
+addr = 0x0800467C
+mode = "thumb"
+note = "AddTextPrinter — all printed game text (dialogue, battle messages)"

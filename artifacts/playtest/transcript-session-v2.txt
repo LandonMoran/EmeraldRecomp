@@ -1,0 +1,178 @@
+
+=== BEAT boot ===
+[boot f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. L then Select, held, for settings.
+[boot f24] Starting Pokémon Emerald.
+[state] scene=boot frame=59
+
+=== BEAT title-screen ===  (before the player presses anything)
+[scene] boot (f59)
+[scene] other (f293)
+[scene] title_menus (f527)
+[press f529] Title and main menu.
+[press f661] NEW GAME, OPTION
+[press f1245] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[press f1728] This is what we call a “POKéMON.”.
+[press f1962] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been undertaking research. That’s what I do.
+[press f3496] And you are?
+[press f3709] Are you a boy? Or are you a girl?
+[press f3824] BOY.
+[press f3835] All right. What’s your name?
+[scene] other (f3959)
+[press f3968] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[scene] naming (f3985)
+[state] scene=naming frame=3985
+
+=== BEAT name-entry ===
+[name f3992] Name entry.
+[name f4020] Name: A
+[name f4052] Name: AA
+[name] box says: ' à      ç            ç  â          ç                 ç         ¸       ç     Ù            ¸   Ø         Ù     Ù   è   Ù '
+[name-start f4084] OK
+[state] after naming scene=title_menus f=4133
+
+=== BEAT intro-to-field ===
+[intro f4142] So it’s AA?
+[intro f4186] YES.
+[intro f4243] Ah, okay! You’re AA who’s moving to my hometown of LITTLEROOT. I get it now!
+[intro f4727] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[intro f5761] Box south. Press A.
+[intro f5785] Overworld.
+[state] map=InsideOfTruck tile=(2,2) facing=1 scene=overworld
+
+=== BEAT truck-box ===  (facing the moving box: press A, hear its description)
+[box0 f6651] The box is printed with a POKéMON logo. It’s a POKéMON brand moving and delivery service.
+[state] box closed=True
+
+=== BEAT walk-out-of-truck ===  (one pad step per tile, east to the door)
+[walk] right from (2,2) moved=True -> (3,2) map=InsideOfTruck
+[walk] right from (3,2) moved=True -> (4,2) map=InsideOfTruck
+[right3 f7404] New area.
+[walk] right from (4,2) moved=True -> (4,10) map=LittlerootTown
+
+=== BEAT overworld-walking ===  (steps, facing and proximity cues)
+[walk] up moved=False tile=(4,10) facing=4 look=nothing@east
+[walk-up f7584] Object here. Press A.
+[walk] up moved=False tile=(4,10) facing=4 look=object@east
+[walk-right f7607] MOM: AA, we’re here, honey! It must be tiring riding with our things in the moving truck. Well, this is LITTLEROOT TOWN. How do you like it? This is our new home! It has a quaint feel, but it seems to be an easy place to live, don’t you think? And, you get your own room, AA! Let’s go inside.
+[walk] right moved=False tile=(4,10) facing=4 look=object@east
+[walk] up moved=False tile=(4,10) facing=4 look=object@east
+[walk] left moved=False tile=(4,10) facing=4 look=object@east
+[walk] up moved=False tile=(4,10) facing=4 look=object@east
+
+=== BEAT facing-silence ===  (nothing in front: the mod must stay quiet)
+[silence] lines=0 (0 means nothing was announced about what we are not looking at)
+
+=== BEAT route-101-scaffold ===  (force_map + VAR_ROUTE101_STATE=1 (harness-only))
+[route-load f8887] New area.
+[state] map=Route101 tile=(10,18) facing=1
+
+=== BEAT birch-rescue ===  (step onto the coord event at (10,19))
+[rescue-step f9199] H-help me!
+[walk] down moved=True tile=(10,19)
+[rescue10 f9605] Hello! You over there! Please! Help! In my BAG! There’s a POKé BALL!
+[state] cutscene over: var=2 box=False scene=overworld tile=(10, 15) facing=3
+
+=== BEAT birch-bag ===  (walk to the bag and press A for the starter choice)
+[bag-walk3 f10262] Person west. Press A to talk.
+[walk] at bag-side tile (8, 14) after 3 steps
+[bag-press f10428] CHICK POKéMON TORCHIC PROF. BIRCH is in trouble! Release a POKéMON and rescue him!
+[bag2 f10473] Do you choose this POKéMON?
+[bag2 f10474] YES.
+[surface] menu=True list=False items=['YES', 'NO'] selected=0
+[state] battle started from the bag choice
+[state] after bag: scene=battle menu=False list=False items=[]
+
+=== BEAT battle ===  (action menu, move selection, damage and HP)
+[battle] scene=battle battle=True menu=False items=[]
+[battle1 f10635] Battle.
+[battle8 f10873] Wild ZIGZAGOON appeared!
+[battle12 f10979] Go! TORCHIC!
+[battle18 f11179] Fight, 1 of 4.
+[battle19 f11200] SCRATCH, NORMAL, PP 35 of 35. 1 of 2
+[battle20 f11239] TORCHIC used SCRATCH!
+[battle26 f11439] Wild ZIGZAGOON used GROWL!
+[battle34 f11677] TORCHIC’s ATTACK fell!
+[battle39 f11842] Fight, 1 of 4.
+[battle40 f11872] SCRATCH, NORMAL, PP 34 of 35. 1 of 2
+[battle41 f11911] TORCHIC used SCRATCH!
+[battle47 f12105] Wild ZIGZAGOON used TACKLE!
+[battle54 f12329] Fight, 1 of 4.
+[battle55 f12352] SCRATCH, NORMAL, PP 33 of 35. 1 of 2
+[battle56 f12391] TORCHIC used SCRATCH!
+[battle64 f12658] Wild ZIGZAGOON fainted!
+[battle68 f12778] TORCHIC gained 17 EXP. Points!
+[state] battle over after 75 presses
+[state] after battle scene=overworld map=Route101 tile=(6, 13)
+
+=== BEAT grant-poke-balls ===  (SaveBlock1 ball pocket (harness-only))
+[scaffold] {'pocket': '0x20260b8', 'slots': [{'item': 4, 'quantity': 30}, {'item': 1, 'quantity': 1}]}
+
+=== BEAT wild-encounter ===  (force_map onto Route 101 tall grass)
+[grass-load f13051] Overworld.
+[state] map=Route101 tile=(5, 16)
+[state] encounter: scene=battle
+
+=== BEAT throw-ball ===  (Bag -> ball pocket -> POKé BALL -> USE)
+[try0-intro0 f14478] Battle.
+[try0-intro12 f14733] Wild POOCHYENA appeared!
+[try0-intro17 f14838] Go! TORCHIC!
+[try0-intro26 f15033] Fight, 1 of 4.
+[bag] action menu: 'Battle. Fight, 1 of 4.'
+[try0-right f15054] Bag, 2 of 4.
+[bag] after right: 'Battle. Bag, 2 of 4.'
+[try0-open0 f15102] ITEMS, CLOSE BAG Return to the battle.
+[try0-open3 f15127] CLOSE BAG, 1 of 1.
+[try0-open3 f15128] Bag.
+[bag] open: scene=bag items=['CLOSE BAG']
+[try0-right0 f15137] ITEMS POKé BALLS
+[try0-rightwait00 f15155] 30 POKé BALL 1 MASTER BALL, CLOSE BAG
+[try0-rightwait00 f15156] A tool used for catching wild POKéMON.
+[try0-rightwait00 f15158] POKé BALL, 1 of 3.
+[bag] pocket 0: items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
+[bag] at balls: items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
+[try0-ball f15165] POKé BALL is selected. USE, CANCEL
+[try0-ball f15174] Option 1 of 2.
+[throw] ball selected: 'POKé BALL is selected. USE, CANCEL'
+
+=== BEAT catch ===  (the ball flies, wobbles, catches or breaks free)
+[catch0-1 f15238] 5 17/ 20 TORCHIC♂
+[catch0-1 f15240] 2 POOCHYENA♂
+[catch0-2 f15267] Battle.
+[catch0-2 f15270] AA used POKé BALL!
+[catch0-16 f15791] Gotcha! POOCHYENA was caught!
+[throw] attempt 0 (slot 0): caught
+[state] throw result: caught
+
+=== BEAT nickname ===  (answer the nickname prompt and type a name)
+[nick-prompt9 f16041] POOCHYENA’s data was added to the POKéDEX.
+[nick-prompt16 f16248] POKéDEX registration completed.
+[nick-prompt16 f16249] 010 POOCHYENA BITE POKéMON HT, WT 1’08”
+[nick-prompt16 f16250] 30.0 lbs. It savagely threatens foes with bared fangs. It chases after fleeing targets tenaciously. It turns tail and runs, however, if the foe strikes back.
+[nick-prompt18 f16329] Give a nickname to the captured POOCHYENA?
+[state] nickname screen: naming=True status='Name entry. Upper case letters. A, row 1 of 4, column 1 of 8.' msg='Give a nickname to the captured POOCHYENA?'
+[state] saved nickname.state for iteration
+[nick-letter0 f16531] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[nick-letter0 f16555] Name entry.
+[nick-letter1 f16576] Name: A
+[nick-letter2 f16606] Name: AA
+[nick-ok f16636] OK
+[state] end: scene=battle map=Route101
+
+=== beats reached ===
+* boot
+* title-screen
+* name-entry
+* intro-to-field
+* truck-box
+* walk-out-of-truck
+* overworld-walking
+* facing-silence
+* route-101-scaffold
+* birch-rescue
+* birch-bag
+* battle
+* grant-poke-balls
+* wild-encounter
+* throw-ball
+* catch
+* nickname

@@ -1,0 +1,189 @@
+[field] (11,17) map Route101 grass=False
+[plan] 13 steps to grass: up up up left left left left up up right right right right
+[to1 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+[to1 f0] Starting Pokémon Emerald.
+[to1 f517] Title and main menu.
+[to1 f623] Title and main menu.
+[to1 f1242] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[to1 f1749] This is what we call a “POKéMON.”.
+[to1 f1973] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[to1 f3597] And you are?
+[to1 f3809] Are you a boy? Or are you a girl?
+[to1 f3934] All right. What’s your name?
+[to1 f4076] Name entry.
+[to1 f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[to1 f4135] Name: A
+[to1 f4165] Name: AA
+[to1 f4195] Name: AAA
+[to1 f4225] Name: AAAA
+[to1 f4255] Name: AAAAA
+[to1 f4285] Name: AAAAAA
+[to1 f4315] Name: AAAAAAA
+[to1 f4332] OK
+[to1 f4372] Title and main menu.
+[to1 f4380] So it’s AAAAAAA?
+[to1 f4497] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[to1 f4993] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[to1 f6020] Overworld.
+[to1 f6020] Person south. Press A to talk.
+[to1 f6238] Overworld.
+[to1 f6238] New area.
+[to1 f6939] Object here. Press A.
+[to1 f6939] Door two steps north-west. Press A to exit.
+[to1 f7103] Person north. Press A to talk.
+[to1 f7927] Door two steps north. Press A to exit.
+[to1 f8039] Person west. Press A to talk.
+[to1 f8339] Object here. Press A.
+[to1 f8350] Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!
+[to1 f8891] Object here. Press A.
+[to1 f8910] It’s dangerous if you don’t have your own POKéMON.
+[to1 f9114] Person west. Press A to talk.
+[to1 f12302] Overworld.
+[to1 f12302] New area.
+[to1 f13159] Object here. Press A.
+[to1 f13426] Overworld.
+[to1 f13867] Object here. Press A.
+[to1 f14083] Person west. Press A to talk.
+[to1 f14603] Object here. Press A.
+[to1 f14759] Person west. Press A to talk.
+[to1 f15019] Person east. Press A to talk.
+[walk] up -> (11,16) grass=False scene=overworld
+[walk] up -> (11,15) grass=False scene=overworld
+[walk] up blocked at (11,15) grass=False scene=overworld
+[walk] re-plan
+[walk] left -> (10,15) grass=False scene=overworld
+[walk] left -> (9,15) grass=False scene=overworld
+[walk] left blocked at (9,15) grass=False scene=overworld
+[walk] re-plan
+[walk] left blocked at (9,15) grass=False scene=overworld
+[walk] re-plan
+[walk] up blocked at (9,15) grass=False scene=overworld
+[walk] re-plan
+[walk] up blocked at (9,15) grass=False scene=overworld
+[walk] re-plan
+[walk] right -> (10,15) grass=False scene=overworld
+[walk] right -> (11,15) grass=False scene=overworld
+[walk] right -> (12,15) grass=False scene=overworld
+[walk] right -> (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[pace] down (13,16) grass=False scene=overworld
+[pace] up (13,15) grass=False scene=overworld
+[status] scene overworld menu False battle False msg 'It’s dangerous if you don’t have your own POKéMON.'
+[end] phase 3 done

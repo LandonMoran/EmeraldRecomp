@@ -1,0 +1,55 @@
+[field] (11,20) var=1
+[walk f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select and L together to stop speech.
+[walk f0] Starting Pokémon Emerald.
+[walk f517] Title and main menu.
+[walk f623] Title and main menu.
+[walk f1242] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[walk f1749] This is what we call a “POKéMON.”.
+[walk f1973] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been
+[walk f3597] And you are?
+[walk f3809] Are you a boy? Or are you a girl?
+[walk f3934] All right. What’s your name?
+[walk f4076] Name entry.
+[walk f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[walk f4135] Name: A
+[walk f4165] Name: AA
+[walk f4195] Name: AAA
+[walk f4225] Name: AAAA
+[walk f4255] Name: AAAAA
+[walk f4285] Name: AAAAAA
+[walk f4315] Name: AAAAAAA
+[walk f4332] OK
+[walk f4372] Title and main menu.
+[walk f4380] So it’s AAAAAAA?
+[walk f4497] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[walk f4993] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[walk f6020] Overworld.
+[walk f6020] Person south. Press A to talk.
+[walk f6238] Overworld.
+[walk f6238] New area.
+[walk f6939] Object here. Press A.
+[walk f6939] Door two steps north-west. Press A to exit.
+[walk f7103] Person north. Press A to talk.
+[walk f7927] Door two steps north. Press A to exit.
+[walk f8039] Person west. Press A to talk.
+[walk f8339] Object here. Press A.
+[walk f8350] Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!
+[walk f8891] Object here. Press A.
+[walk f8910] It’s dangerous if you don’t have your own POKéMON.
+[walk f9114] Person west. Press A to talk.
+[walk f12302] Overworld.
+[walk f12302] New area.
+[walk f13159] Object here. Press A.
+[walk f13426] Overworld.
+[walk f13867] Object here. Press A.
+[walk f14083] Person west. Press A to talk.
+[walk f14603] Object here. Press A.
+[walk f14759] Person west. Press A to talk.
+[walk f15019] Person east. Press A to talk.
+[walk] up -> (11,19) scene overworld
+[walk] up -> (11,18) scene overworld
+[walk] left blocked at (11,18) scene overworld
+[walk] right -> (12,18) scene overworld
+[walk] left -> (11,18) scene overworld
+[walk] up -> (11,17) scene overworld
+[status] scene overworld menu False battle False msg 'It’s dangerous if you don’t have your own POKéMON.'
