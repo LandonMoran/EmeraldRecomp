@@ -52,9 +52,6 @@ jobs:
             "cmake;3.22.1"
           printf 'ANDROID_HOME=%s\nANDROID_SDK_ROOT=%s\n' "$SDK" "$SDK" >> "$GITHUB_ENV"
 
-      - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Build the debug APK
         working-directory: android
         run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
