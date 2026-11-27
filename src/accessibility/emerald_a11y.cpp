@@ -78,7 +78,6 @@ const char* scene_speech_name(SceneKind kind);   // defined below
 // ── Speech sink ──────────────────────────────────────────────────────────
 
 SpeakFn g_speak_fn = nullptr;
-UpdateFn g_update_fn = nullptr;
 void (*g_stop_fn)() = nullptr;
 void (*g_rate_fn)(float) = nullptr;
 
@@ -154,7 +153,7 @@ std::string g_naming_typed;
 bool g_pending_item = false;
 int g_pending_deadline = 0;
 
-// ── Navigation (TalkBack "select this item") ─────────────────────────────
+// ── Navigation ("select this item") ─────────────────────────────────────
 
 struct Nav {
     bool active = false;
@@ -731,7 +730,7 @@ bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
     return false;
 }
 
-// ── Status text (also the TalkBack status node) ──────────────────────────
+// ── Status text (what read-status says) ──────────────────────────────────
 
 std::string status_text(const SceneState& s, const Mem& m) {
     if (s.kind == SceneKind::Naming) {
@@ -764,64 +763,6 @@ std::string status_text(const SceneState& s, const Mem& m) {
             return what.empty() ? std::string(name) + "." : std::string(name) + ". " + what;
         }
     }
-}
-
-// ── UI node publication ──────────────────────────────────────────────────
-
-std::size_t g_ui_hash = 0;
-bool g_ui_published = false;
-
-void publish_ui(const SceneState& s, const Mem& m) {
-    if (!g_update_fn) return;
-    std::vector<std::string> items;
-    int selected = -1;
-
-    if (s.menu.live) {
-        for (int i = s.menu.min; i <= s.menu.max && items.size() < kMaxItems; ++i) {
-            std::string label = menu_label(s.menu, i);
-            if (label.empty()) label = "Option " + std::to_string(i - s.menu.min + 1);
-            items.push_back(label);
-        }
-        selected = s.menu.cursor - s.menu.min;
-    } else if (s.list.live) {
-        for (int i = 0; i < s.list.total && items.size() < kMaxItems; ++i) {
-            std::string label = list_item_name(m, s.list, i);
-            if (label.empty()) label = "Item " + std::to_string(i + 1);
-            items.push_back(label);
-        }
-        selected = list_index(s.list);
-    } else if (s.battle.active) {
-        const auto& b = s.battle;
-        if (b.control == BattleControl::Action || b.control == BattleControl::SafariAction) {
-            for (int i = 0; i < 4; ++i) items.push_back(action_label(b.control, i));
-            selected = b.action_cursor;
-        } else if (b.control == BattleControl::Move) {
-            for (int i = 0; i < 4; ++i) items.push_back(move_speech(m, b, i));
-            selected = b.move_cursor;
-        } else if (b.control == BattleControl::Target) {
-            const int count = std::min<int>(4, m.u8(addr::gBattlersCount));
-            for (int i = 0; i < count; ++i) items.push_back(target_speech(m, i));
-            selected = b.target_cursor;
-        } else if (b.control == BattleControl::YesNo) {
-            items = {"Yes", "No"};
-            selected = b.target_cursor;
-        }
-    }
-
-    std::string status = status_text(s, m);
-    std::string joined;
-    for (std::size_t i = 0; i < items.size(); ++i) {
-        if (i) joined += '\n';
-        joined += items[i];
-    }
-
-    std::size_t hash = std::hash<std::string>{}(status);
-    hash ^= std::hash<std::string>{}(joined) ^ (static_cast<std::size_t>(selected) << 1);
-    hash ^= std::hash<std::string>{}(g_message) << 3;
-    if (g_ui_published && hash == g_ui_hash) return;
-    g_ui_hash = hash;
-    g_ui_published = true;
-    g_update_fn(status.c_str(), joined.c_str(), selected, g_message.c_str());
 }
 
 // ── Scene/screen speech ──────────────────────────────────────────────────
@@ -1350,7 +1291,6 @@ void watch(const SceneState& s, const Mem& m) {
         }
     }
 
-    publish_ui(s, m);
 }
 
 // ── Spoken settings (read from the mod's own options) ────────────────────
@@ -1472,12 +1412,10 @@ std::uint16_t input_frame(const gbarecomp::TouchFrameInfo* frame) {
     return swallow_keys ? 0 : keys;
 }
 
-void install_sink(SpeakFn speak, UpdateFn update, void (*stop)(), void (*rate)(float)) {
+void install_sink(SpeakFn speak, void (*stop)(), void (*rate)(float)) {
     g_speak_fn = speak;
-    g_update_fn = update;
     g_stop_fn = stop;
     g_rate_fn = rate;
-    g_ui_published = false;
     if (g_rate_fn) g_rate_fn(g_rate);
 }
 
@@ -1533,7 +1471,6 @@ void enable(bool on) {
     g_control = BattleControl::None;
     g_battle_cursor = -9999;
     g_surface = 0;
-    g_ui_published = false;
     g_message.clear();
     std::fprintf(stderr, "[emerald:a11y] spoken UI %s\n", on ? "enabled" : "disabled");
 }

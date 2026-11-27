@@ -1,33 +1,26 @@
-// emerald_a11y.h — spoken UI and TalkBack layer for Pokémon Emerald.
+// emerald_a11y.h — spoken UI for Pokémon Emerald.
 //
-// The accessibility layer is a screen reader for the game: it watches the same
-// read-only guest state the touch policy classifies (callbacks, menus, lists,
-// battle controllers, text printers), turns changes into speech, and accepts
-// navigation commands from Android's accessibility services (TalkBack virtual
-// nodes) or from the TCP debug port.
+// The layer is a screen reader for the game: it watches the same read-only
+// guest state the touch policy classifies (callbacks, menus, lists, battle
+// controllers, text printers), turns changes into speech, and accepts commands
+// from the pad's own key state and from the TCP debug port.
 //
-// Two speech paths exist on purpose:
+// One speech path exists on purpose: everything the game itself draws is
+// captured at the text-printer entry point and spoken in full, before the
+// typewriter animation runs, using labels the game is showing rather than a
+// screenshot guess. The voice is Android's TextToSpeech inside the game.
 //
-//   * Game → speech. Every string the game itself draws is captured at the
-//     text-printer entry point and spoken in full, before the typewriter
-//     animation runs. Menus, lists and battle cursors are announced with the
-//     label the game is showing, not a screenshot guess.
-//   * TalkBack → game. A virtual accessibility node tree (status, the current
-//     items, and the buttons) is published by the Android bridge; activating a
-//     node becomes a synthesized key press. The player can therefore drive the
-//     game entirely from TalkBack gestures.
+// There is deliberately no accessibility node tree over the game screen. With
+// nodes in the tree, TalkBack takes the controls: the pad, the keyboard and
+// touches move accessibility focus instead of reaching the game, which makes a
+// controller-driven player unable to play. The game view is hidden from
+// accessibility services instead, and the game speaks for itself. The launcher
+// before the game is a different activity of stock Android widgets, so it stays
+// fully TalkBack-navigable — that is where a screen reader is wanted.
 //
 // The layer never writes guest memory and never calls guest functions: speech
 // is read-only, and the game is steered exclusively through the engine's key
 // synthesizer (the same mechanism the touch policy uses).
-//
-// Speech routing is decided at the platform layer, and Android text to speech
-// is the voice for everything: with TalkBack (touch exploration) actually
-// driving the screen, announcements go through accessibility events so
-// TalkBack's own voice and verbosity apply; in every other case -- TalkBack off,
-// no screen reader, or no view to announce through -- the game speaks the same
-// lines through its own Android TextToSpeech instance, which is created when
-// the activity attaches rather than when the view tree appears.
 
 #pragma once
 
@@ -42,9 +35,8 @@ struct TouchFrameInfo;
 
 namespace emerald::accessibility {
 
-// TalkBack virtual-node commands. The same numbers are used by
-// android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/
-// EmeraldAccessibility.java — keep the two lists in step.
+// Commands. The spoken layer's own vocabulary: the pad hotkeys and the TCP
+// debug port queue them, and they are serviced once per emulated frame.
 enum class Action : int {
     Up = 1,
     Down = 2,
@@ -75,27 +67,23 @@ std::uint16_t input_frame(const gbarecomp::TouchFrameInfo* frame);
 int tcp_command(const char* request, void (*write)(void*, const char*, std::size_t),
                 void* ctx);
 
-// Platform bridge (Android: TextToSpeech + accessibility node tree). Returns
-// true once a bridge is live; false on desktop or when it cannot attach.
+// Platform bridge (Android: TextToSpeech and the save-state slot hotkey).
+// Returns true once a bridge is live; false on desktop or when it cannot attach.
 bool install_platform_bridge();
 void shutdown_platform_bridge();
-bool talkback_available();
 
 // Sink registered by the platform bridge. All strings are UTF-8.
-//   speak   — queue or interrupt an utterance (interrupt != 0 flushes first)
-//   update  — publish the current node tree ("items" is '\n'-separated)
-//   stop    — stop speech immediately
-//   rate    — set the speech rate multiplier
+//   speak — queue or interrupt an utterance (interrupt != 0 flushes first)
+//   stop  — stop speech immediately
+//   rate  — set the speech rate multiplier
 using SpeakFn = void (*)(const char* text, int interrupt);
-using UpdateFn = void (*)(const char* status, const char* items, int selected,
-                          const char* message);
-void install_sink(SpeakFn speak, UpdateFn update, void (*stop)(), void (*rate)(float));
+void install_sink(SpeakFn speak, void (*stop)(), void (*rate)(float));
 
 // Speak through the active sink (also used by the platform greeting and tests).
 void speak_now(const char* text, bool interrupt);
 
 // Controller hotkeys. The game is played with a pad, so the spoken screen has
-// to be reachable from the pad itself — not only from TalkBack gestures or the
+// to be reachable from the pad itself — not only from the touch sheet or the
 // TCP port. Every frame reads the host's own key state (TouchFrameInfo's
 // host_keyinput, active-low, before synthesis):
 //
@@ -103,8 +91,8 @@ void speak_now(const char* text, bool interrupt);
 //   Select                  repeat the last utterance
 //   Select, then L          stop speech
 //
-// Save states are not on the pad either: they are the touch sheet below, the
-// TalkBack buttons, or the runtime's own menu rows.
+// Save states are not on the pad: they are the touch sheet below, or the
+// runtime's own menu rows.
 //
 // A real pad never presses both chord buttons on the same frame, so the chords
 // are separated by order and by a hold (emerald_hotkeys.h): Select alone waits

@@ -173,8 +173,8 @@ int emerald_main(int argc, char** argv) {
     if (game_launcher_preboot(args, opts)) return 0;   // user quit the launcher
 #endif
 #if defined(__ANDROID__)
-    // Android text to speech and the TalkBack layer. This only attaches the
-    // bridge: speech stays silent until the Spoken Interface feature runs.
+    // Android text to speech and the save-state slot hotkey. This only attaches
+    // the bridge: speech stays silent until the Spoken Interface feature runs.
     emerald::accessibility::install_platform_bridge();
 #endif
     av.reserve(args.size());

@@ -10,7 +10,7 @@
 //                         screens, menus, lists and battles
 //   rate       slow/normal/fast   TextToSpeech rate multiplier
 //
-// The C++ spoken-UI core and its TalkBack bridge are compiled into every
+// The C++ spoken-UI core and its Android text-to-speech bridge ship in every
 // Emerald build; this file only arms them when the feature is active.
 
 #include <string>

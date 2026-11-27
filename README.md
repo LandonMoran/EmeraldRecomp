@@ -141,29 +141,31 @@ Without sight the menu is not needed: in the overworld, **tap the top-left
 corner of the game image** and the game speaks a save-state sheet — tap saves
 the slot, swipe up loads it, swipe left or right changes the slot, a two-finger
 tap closes it — and each action ends with what actually happened ("Saved to
-slot 3.", "Loaded slot 3.", "Nothing saved in slot 3."). With TalkBack on, the
-same three commands are **Save state / Load state / Next state slot** buttons in
-the accessibility tree. The menu itself is unchanged.
+slot 3.", "Loaded slot 3.", "Nothing saved in slot 3."). The menu itself is
+unchanged, and the sheet is a touch feature (TalkBack's touch exploration takes
+the corner tap, so snapshots are for TalkBack-off play).
 
-## Accessibility: spoken interface and TalkBack
+## Accessibility: spoken interface
 
 EmeraldRecomp can be played by ear. **Mods → Accessibility → Spoken
 Interface** (enabled on fresh profiles; on Android its three options are on the
 launcher screen, before play) reads screens, menus and their items,
 bag and shop lists, dialogue, battle messages, battle choices and the name-entry
-keyboard aloud. On
-Android the game speaks through its own **text to speech**, so it works with
-**TalkBack turned off**; with TalkBack on, the same messages become TalkBack
-announcements and the game appears as a tree of focusable choices and buttons
-(Up, Down, Left, Right, A, B, Start, Read status, Repeat, Stop speech), so
-TalkBack gestures can play the game.
+keyboard aloud. On Android the game speaks through its own **text to speech**,
+with or without TalkBack running.
 
-With a **controller** and TalkBack off there is nothing extra to learn: moving
-the d-pad/stick moves the game's own cursor, and every cursor change, menu,
-list, battle choice and printed line is spoken as it happens. Three pad
-commands cover the rest — **L** reads the current screen, **Select** repeats the
-last utterance, and **Select, then L** stops speech (the two presses need not be
-simultaneous).
+There is deliberately **no accessibility tree over the running game**: with one,
+TalkBack owns the pad, the keyboard and touches, and a controller can no longer
+play. The game screen is hidden from accessibility services and the game speaks
+for itself. The **setup screen before the game** keeps its normal Android tree,
+so TalkBack reads and drives it as usual.
+
+With a **controller** there is nothing extra to learn: moving the d-pad/stick
+moves the game's own cursor, and every cursor change, menu, list, battle choice
+and printed line is spoken as it happens. Three pad commands cover the rest —
+**L** reads the current screen, **Select** repeats the last utterance, and
+**Select, then L** stops speech (the two presses need not be simultaneous).
+On an Xbox pad that is **LB**, **View**, and **View then LB**.
 
 The spoken settings — read game text, detail, speech rate — are deliberately
 **not** on the pad, so no combination pressed while playing can change how the
@@ -172,8 +174,8 @@ there. On desktop they are in the Mods menu.
 
 On Android the first-launch **setup screen speaks too**: the game subclasses
 the engine's ROM/BIOS import screen, so it is narrated and its status changes
-are announced before the game exists. TalkBack's live regions are kept current
-for the same screen. See
+are announced before the game exists, and TalkBack's live regions are kept
+current for the same screen. See
 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for what is spoken, the mod
 options and the TCP test commands.
 

@@ -1,10 +1,17 @@
-# Spoken interface and TalkBack layer
+# Spoken interface
 
 EmeraldRecomp can be played entirely by ear. The **Spoken Interface** feature
 reads the game aloud — screens, menus and their items, list entries, dialogue,
-battle messages and battle choices — and, on Android, exposes the running game
-to **TalkBack** as a tree of items and buttons so a blind player can drive the
-whole game with accessibility gestures.
+battle messages and battle choices — through Android's own text-to-speech
+engine inside the game, with no screen reader required.
+
+There is deliberately **no accessibility node tree over the running game**.
+With a tree in place, TalkBack owns the controls: the pad, the keyboard and
+touches move accessibility focus instead of reaching the game, so a player
+holding a controller cannot play. The game screen is hidden from accessibility
+services and the game speaks for itself. The setup screen *before* the game is
+a different activity of stock Android widgets, and TalkBack reads and drives it
+normally — that is where a screen reader is wanted.
 
 It is the accessibility principle of the Melee accessibility mod applied here:
 the game keeps running exactly as it does for everyone else, a read-only layer
@@ -20,26 +27,16 @@ own words.
 
 Everything the Spoken Interface says is spoken by Android's `TextToSpeech`
 engine — one instance owned by the game, with the game's own queue,
-interruption and speech rate. That is what a player using a controller with
-TalkBack off hears, and it is the only path: no line depends on a screen reader
-being installed, enabled, or attached.
-
-| Play style | What speaks | How |
-| --- | --- | --- |
-| TalkBack **off** (the expected handheld setup) | Android `TextToSpeech` | Every line the layer produces, through the game's own engine. |
-| TalkBack **on** | TalkBack's own voice | The same messages become `TYPE_ANNOUNCEMENT` events and the virtual node tree, so nothing is spoken twice by two voices. |
-
-TalkBack's voice is used only while TalkBack is actually driving the screen —
-touch exploration enabled **and** a view to announce through. In every other
-case, including TalkBack enabled but not attached, or a device with no screen
-reader, the line goes to the game's own `TextToSpeech` engine, so no message is
-lost to a missing announcement channel. The choice is per utterance, so
-toggling TalkBack mid-session takes effect immediately.
+interruption and speech rate. It is the only path: no line depends on a screen
+reader being installed, enabled, or attached, and no line is announced as an
+accessibility event. TalkBack on or off changes nothing about the game's voice
+or about where the controls go.
 
 The voice itself is brought up so it cannot be lost to start-up timing:
 
 * the engine is created when the activity attaches, **not** when the SDL view
-tree appears, and the node-tree install retries by itself;
+tree appears, and hiding the game screen from accessibility services retries
+by itself;
 * lines produced while the engine is still starting are queued (newest kept,
 bounded by count and length) and spoken as soon as it is ready;
 * if the platform reports the engine unavailable the layer retries once and
@@ -49,9 +46,9 @@ times, two seconds apart), so an attach that raced the view cannot leave the
 whole run silent.
 
 Speech rate is the **Speech rate** setting (slow / normal / fast), changed on
-the launcher screen (Android) or in the Mods menu — see [Options](#options)
-below; nothing on the pad changes it. With TalkBack on, TalkBack's own rate
-applies instead.
+the launcher screen (Android) or in the Mods menu — see
+[Options](#options) below; nothing on the pad changes it, and TalkBack's own
+rate does not apply because the game never speaks through TalkBack.
 
 ## Setup screen (ROM and BIOS import)
 
@@ -94,7 +91,7 @@ completed with no sight at all and no TalkBack, the supported route remains a
 private build that bundles the files (`-PprivateRom=<path>` /
 `-PprivateBios=<path>`), which skips this screen entirely.
 
-## Playing with a controller (no TalkBack)
+## Playing with a controller
 
 The game is a pad game, so the spoken interface must be reachable from the pad.
 Moving the d-pad, stick or touch controls moves the game's own cursor, and every
@@ -109,8 +106,9 @@ and nothing else is bound:
 | **Select, then L** | Stop speech immediately. The two presses need not be simultaneous: see below. |
 | **Name entry: R instead of Select** | The naming screen reads Select itself (it swaps the keyboard page), so there the modifier moves to R, which that screen ignores: R repeats, R then L stops, L still reads. |
 
-Every command the spoken interface has is one of these pad commands: nothing
-needs a keyboard, a touch target, the visual Mods menu or TalkBack. A second
+Every command the spoken interface has is one of these pad commands (or the
+save sheet's touch gestures): nothing needs a keyboard, the visual Mods menu or
+TalkBack. A second
 thumb never reaches L on the same frame as Select, so the chords are told apart
 by **order** and by a **hold**, never by simultaneity:
 
@@ -189,8 +187,9 @@ from the instant before the save), "Loaded slot 3." once the runtime's state
 epoch has moved (the counter it bumps on every restoration), "Nothing saved in
 slot 3." when the slot has no file, and "Slot 3 did not save." / "Slot 3 could
 not be loaded." when the engine never delivered.
-* **TalkBack** users get the same commands as tree buttons — **Save state**,
-**Load state**, **Next state slot** — with the same confirmations spoken.
+* The sheet is a **touch** feature: it needs the corner tap, which TalkBack's
+  touch exploration would take for itself, so snapshots are for TalkBack-off
+  play. The game's own cartridge save works with TalkBack on or off.
 
 The layer does not snapshot anything itself: a game cannot call the runtime's
 snapshot code. It delivers the runtime's own edge-triggered slot hotkey (F1–F9
@@ -202,32 +201,32 @@ The menu keeps its rows and its behaviour untouched. A session with no host
 event queue (a headless run) says save states are unavailable in this session
 rather than claiming a save happened.
 
-## The TalkBack layer
+## Why the game has no accessibility tree
 
-The layer is installed on the SDL activity's content view at startup (no engine
-change required) and publishes a virtual accessibility tree:
+Earlier builds published a virtual tree over the game screen: a status node, the
+current choices, the last message and a row of buttons, each activating a
+synthesized key press. It read well with TalkBack, and it made the game
+**unplayable with a controller**: while that tree exists, TalkBack's navigation
+consumes the pad, the keyboard and touch exploration, so the player's inputs move
+accessibility focus instead of reaching Pokémon.
 
-```
-Game screen
-├── status          "Battle. Fight, bag, Pokémon, run, 1 of 4."   (click = read status)
-├── choices         the current menu / list / battle choices      (click = choose it)
-│   ├── Fight
-│   ├── Bag
-│   ├── Pokémon
-│   └── Run
-├── message         the last line the game printed               (click = repeat)
-└── controls        Up, Down, Left, Right, A, B, Start menu,
-                    Read status, Repeat, Stop speech,
-                    Save state, Load state, Next state slot
-```
+The game already speaks everything it draws, so the tree was only ever a second
+way to hear the same words — at the cost of the controls. It is gone. The game
+screen is marked not important for accessibility (with its descendants), which
+keeps TalkBack's navigation away from the emulator, and every line comes from
+the game's own `TextToSpeech`.
 
-* Focusing a choice reads it (TalkBack reads the node text); activating it
-  **navigates the game's own cursor there and presses A**, verifying the cursor
-  after every D-pad press, so the game's sounds, redraws and description
-  callbacks all run as if the D-pad were used.
-* The controls act on the game directly (D-pad, A, B, Start).
-* Content changes (a new menu, a new line) refresh the tree and post a
-  content-changed event, so TalkBack never reads stale choices.
+What that means in play:
+
+* **TalkBack on or off**, the D-pad, A/B, Start/Select, the shoulders and touch
+  all reach the game, and the game speaks through its own voice.
+* The **setup screen before the game** keeps its normal Android tree, so
+  TalkBack reads the ROM/BIOS cards, the Spoken interface card and the Play
+  button exactly as it reads any other app.
+* The **spoken save-state sheet** is opened by a tap in the top-left corner of
+the game image. With TalkBack on, its touch exploration takes that tap, so
+  snapshots are a TalkBack-off feature; the game's own cartridge save
+  (START → SAVE) works either way.
 
 ## What is spoken
 
@@ -241,7 +240,7 @@ Game screen
 | Battle, target menu | Target name and side |
 | Dialogue, battle text, banners | The full string the moment the game starts printing it (before the typewriter animation) |
 | Battle messages | Same path; a turn's messages are spoken in order |
-| Read status (button / node) | The current screen plus whatever is selected |
+| Read status (pad L, on-screen L, or `read_status`) | The current screen plus whatever is selected |
 | Repeat | The last utterance |
 | Name entry (naming screen) | The key under the cursor, the page (upper case / lower case / symbols), row and column on opening and on page changes, the buttons (Change page, Backspace, OK), and the name typed so far as it changes |
 
@@ -265,12 +264,8 @@ cursor one key at a time, A types the key, and speech follows each move ("m",
 swaps the page, B deletes the last letter, Start jumps to OK — because they are
 the game's keys and a player who cannot see the keyboard needs to be told them. On opening, and whenever the page changes, it also says
 where it is: "Upper case letters. A, row 1 of 4, column 1 of 8." After a key is
-typed it says the name so far. Read status (L on a pad, or the node) repeats the
-key, the page and the typed name at any time.
-
-With TalkBack the same moves are made from the published Up, Down, Left, Right
-and A nodes, and the same announcements are raised, so the name can be typed
-without the pad.
+typed it says the name so far. Read status (L on a pad, or the on-screen L)
+repeats the key, the page and the typed name at any time.
 
 ## Exits, nearby things and audio cues
 
@@ -345,7 +340,7 @@ how the game talks, and nothing has to be remembered as a chord.
 | --- | --- | --- |
 | Read game text | on / off | Speak printed dialogue and battle text as it appears. Off keeps screens, menus, lists and battle choices. |
 | Detail | Everything / Menus and battles only | "Everything" reads all printed text, including banners and summaries. |
-| Speech rate | Slow / Normal / Fast | Android TTS rate; ignored while TalkBack is on. |
+| Speech rate | Slow / Normal / Fast | Android TTS rate of the game's own voice. |
 
 These are the **same stored options** the Mods menu (Mods → Accessibility →
 Spoken Interface) shows, kept in the mod's own state file
@@ -354,8 +349,8 @@ it at start-up, so the launcher and the menu are one setting: change it in
 either place and both agree, and it survives a restart.
 
 The feature ships **enabled** for fresh profiles so a player who cannot see the
-Mods menu still gets speech. Turning it off stops all speech and leaves the
-TalkBack tree in place (it is silent until the game speaks again).
+Mods menu still gets speech. Turning it off stops all speech until it is turned
+back on.
 
 ## How it works
 
@@ -390,7 +385,7 @@ TalkBack tree in place (it is silent until the game speaks again).
 | `docs/a11y-sfx.md` | Cue assets: sources, licenses, hashes, fallbacks |
 | `android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/A11yCues.java` | `SoundPool` playback and synthesized fallbacks |
 | `src/mods/emerald_accessibility_plugin.cpp` | Mod activation and options |
-| `android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/EmeraldAccessibility.java` | TTS, announcements, virtual node tree |
+| `android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/EmeraldAccessibility.java` | The game's own TTS, and hiding the game screen from accessibility services |
 | `android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/EmeraldSetupActivity.java` | Spoken launcher: setup screen narration, live regions, focus speech |
 | `android/app/src/main/java/com/mstan/emeraldrecomp/accessibility/SetupVoice.java` | TTS/announcement helper for the setup screen |
 | `android/app/build.gradle` | Derives the app manifest from the engine's, rewriting only the launcher activity |
@@ -428,9 +423,9 @@ mapping can be checked headlessly.
 A useful check is a scripted route (the existing touch scenarios) with the log
 pulled afterwards: every scene the route enters should produce one screen
 announcement, every menu open one item announcement, and every dialogue line
-exactly one utterance. The Java layer needs a device: confirm that TalkBack off
-speaks through `TextToSpeech`, that TalkBack on announces instead, and that
-activating a choice node moves the in-game cursor.
+exactly one utterance. The Java layer needs a device: confirm that the game
+speaks through its own `TextToSpeech`, and that with TalkBack running the pad,
+buttons and touch still reach the game instead of moving accessibility focus.
 
 ## Limits
 
@@ -447,9 +442,10 @@ activating a choice node moves the in-game cursor.
   game's own map-name banner, which is spoken as text.
 * Link battles and records replay through the same battle windows; they are
   spoken like any battle.
-* Touch exploration gestures compete with the game's own touch controls. The
-  design assumption is TalkBack off for gameplay (game speaks, touch controls
-  work) or TalkBack on with the virtual nodes and buttons (no direct touch).
+* The game screen is hidden from accessibility services on purpose (see *Why
+  the game has no accessibility tree*). A player who relies on TalkBack to
+  operate apps gets the game's spoken interface instead, and its touch sheet
+  needs TalkBack off.
 
 ## Verified against the game (headless session)
 

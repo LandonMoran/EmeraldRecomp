@@ -1,18 +1,18 @@
-// emerald_a11y_android.cpp — Android TextToSpeech + TalkBack bridge.
+// emerald_a11y_android.cpp — Android TextToSpeech bridge.
 //
 // Compiled only for Android. SDLActivity loads libmain.so, so SDL's Java
 // environment (and the activity) are available without the engine shell needing
 // to know this layer exists.
 //
-// Native → Java: speak/stop/setScene/setRate on
-// com.mstan.emeraldrecomp.accessibility.EmeraldAccessibility.
-// Java → native: the registered nativeAction(int action, int arg) queues a
-// command for the next emulated frame (thread-safe).
+// Native → Java: speak/stopSpeech/setRate on
+// com.mstan.emeraldrecomp.accessibility.EmeraldAccessibility, plus the slot
+// hotkey the runtime reads for save states.
 //
-// With TalkBack (touch exploration) on, the Java side turns speech into
-// accessibility announcements and publishes the virtual node tree, so
-// TalkBack's own voice and settings apply. With TalkBack off, the same calls
-// speak through the game's own TextToSpeech instance.
+// There is no accessibility node tree over the game screen: with nodes in the
+// tree TalkBack takes the controls (pad, keyboard, touch) and the game becomes
+// unplayable with a controller. The game speaks through its own TextToSpeech
+// and the screen is hidden from accessibility services; the launcher before the
+// game keeps its stock widgets and is TalkBack-navigable as usual.
 
 #include "emerald_a11y.h"
 
@@ -45,11 +45,9 @@ jmethodID g_cue_attach = nullptr;
 jmethodID g_cue_shutdown = nullptr;
 jmethodID g_speak = nullptr;
 jmethodID g_stop = nullptr;
-jmethodID g_scene = nullptr;
 jmethodID g_rate = nullptr;
 jmethodID g_attach = nullptr;
 jmethodID g_shutdown = nullptr;
-jmethodID g_talkback = nullptr;
 bool g_ready = false;
 
 bool clear(JNIEnv* e) {
@@ -67,10 +65,6 @@ JNIEnv* env() {
     if (status == JNI_EDETACHED && g_vm->AttachCurrentThread(&e, nullptr) == JNI_OK)
         return e;
     return nullptr;
-}
-
-void native_action(JNIEnv*, jclass, jint action, jint arg) {
-    push_action(static_cast<Action>(action), static_cast<int>(arg));
 }
 
 // Resolve an application class through the activity's ClassLoader (FindClass on
@@ -120,24 +114,6 @@ void android_speak(const char* text, int interrupt) {
         e->CallStaticVoidMethod(g_class, g_speak, value, static_cast<jint>(interrupt));
         e->DeleteLocalRef(value);
     }
-    clear(e);
-}
-
-void android_update(const char* status, const char* items, int selected,
-                    const char* message) {
-    if (!g_ready || !g_class || !g_scene) return;
-    JNIEnv* e = env();
-    if (!e) return;
-    jstring jstatus = e->NewStringUTF(status ? status : "");
-    jstring jitems = e->NewStringUTF(items ? items : "");
-    jstring jmessage = e->NewStringUTF(message ? message : "");
-    if (jstatus && jitems && jmessage) {
-        e->CallStaticVoidMethod(g_class, g_scene, jstatus, jitems,
-                                static_cast<jint>(selected), jmessage);
-    }
-    if (jstatus) e->DeleteLocalRef(jstatus);
-    if (jitems) e->DeleteLocalRef(jitems);
-    if (jmessage) e->DeleteLocalRef(jmessage);
     clear(e);
 }
 
@@ -204,25 +180,12 @@ bool install_platform_bridge() {
         return false;
     }
 
-    static const JNINativeMethod methods[] = {
-        {"nativeAction", "(II)V", reinterpret_cast<void*>(&native_action)},
-    };
-    if (e->RegisterNatives(cls, methods, 1) != JNI_OK) {
-        clear(e);
-        e->DeleteLocalRef(cls);
-        return false;
-    }
-
     g_speak = e->GetStaticMethodID(cls, "speak", "(Ljava/lang/String;I)V");
     g_stop = e->GetStaticMethodID(cls, "stopSpeech", "()V");
-    g_scene = e->GetStaticMethodID(
-        cls, "setScene",
-        "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V");
     g_rate = e->GetStaticMethodID(cls, "setRate", "(F)V");
     g_attach = e->GetStaticMethodID(cls, "attach", "(Landroid/app/Activity;)Z");
     g_shutdown = e->GetStaticMethodID(cls, "shutdown", "()V");
-    g_talkback = e->GetStaticMethodID(cls, "talkbackActive", "()Z");
-    if (clear(e) || !g_speak || !g_stop || !g_scene || !g_rate || !g_attach) {
+    if (clear(e) || !g_speak || !g_stop || !g_rate || !g_attach) {
         e->DeleteLocalRef(cls);
         __android_log_print(ANDROID_LOG_WARN, kTag, "accessibility methods missing");
         return false;
@@ -237,7 +200,7 @@ bool install_platform_bridge() {
         return false;
     }
 
-    install_sink(&android_speak, &android_update, &android_stop, &android_rate);
+    install_sink(&android_speak, &android_stop, &android_rate);
     install_slot_hotkey(&android_slot_hotkey);
 
     // Audio cues: same attachment point, separate class, never fatal.
@@ -275,7 +238,7 @@ void shutdown_platform_bridge() {
             clear(e);
         }
     }
-    install_sink(nullptr, nullptr, nullptr, nullptr);
+    install_sink(nullptr, nullptr, nullptr);
     install_slot_hotkey(nullptr);
     install_cue_sink(nullptr);
     JNIEnv* e = env();
@@ -292,17 +255,8 @@ void shutdown_platform_bridge() {
     g_cue_play = g_cue_attach = g_cue_shutdown = nullptr;
     g_class = nullptr;
     g_activity = nullptr;
-    g_speak = g_stop = g_scene = g_rate = g_attach = g_shutdown = g_talkback = nullptr;
+    g_speak = g_stop = g_rate = g_attach = g_shutdown = nullptr;
     g_ready = false;
-}
-
-bool talkback_available() {
-    if (!g_ready || !g_class || !g_talkback) return false;
-    JNIEnv* e = env();
-    if (!e) return false;
-    const jboolean on = e->CallStaticBooleanMethod(g_class, g_talkback);
-    clear(e);
-    return on == JNI_TRUE;
 }
 
 }  // namespace emerald::accessibility
