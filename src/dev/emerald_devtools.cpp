@@ -41,6 +41,13 @@ constexpr int kFlagCount = 0x400 * 8;      // FLAGS_COUNT
 constexpr int kVarFirst = 0x4000;          // VAR_0x4000
 constexpr int kVarCount = 256;             // VARS_COUNT
 
+// global.fieldmap.h: the player is controllable while 1 << 5 is set, and a
+// scripted walk owns the avatar while 1 << 6 is set. Testing the wrong bit
+// refuses warps during normal play and allows them mid-cutscene, which is the
+// one case that leaves the field ignoring input.
+constexpr std::uint8_t kAvatarControllable = 1u << 5;
+constexpr std::uint8_t kAvatarForcedMove = 1u << 6;
+
 constexpr int kWarpIdNone = 0xFF;
 constexpr int kLoadDeadlineFrames = 900;   // 15 s at 60 Hz
 constexpr int kTurnSettleFrames = 10;
@@ -227,14 +234,20 @@ void command_warp(const gbarecomp::json::Value& req, std::string* out) {
         *out = gbarecomp::json::error_reply("a message box is open; finish reading it first");
         return;
     }
-    // A scripted walk owns the player through gPlayerAvatar.flags &
-    // PLAYER_AVATAR_FLAG_FORCED_MOVE (0x20). Loading a map from under it carries
-    // the flag onto the new map, where the field ignores every D-pad press — the
-    // warp would appear to work and the game would be unplayable. Refuse instead
-    // and let the caller finish the scene.
-    if (m.u8(addr::gPlayerAvatar) & 0x20) {
-        *out = gbarecomp::json::error_reply(
-            "a scripted walk is in progress; wait for the field to hand control back");
+    // A scripted walk or cutscene owns the player while
+    // PLAYER_AVATAR_FLAG_FORCED_MOVE is set or PLAYER_AVATAR_FLAG_CONTROLLABLE is
+    // clear. Loading a map from under it carries that state onto the new map,
+    // where the field ignores every D-pad press — the warp would appear to work
+    // and the game would be unplayable. Refuse instead and let the caller finish
+    // the scene.
+    const std::uint8_t avatar = m.u8(addr::gPlayerAvatar);
+    if ((avatar & kAvatarForcedMove) || !(avatar & kAvatarControllable)) {
+        char buf[192];
+        std::snprintf(buf, sizeof(buf),
+                      "the player is not free to move (avatar flags 0x%02X); "
+                      "finish the cutscene or scripted walk first",
+                      avatar);
+        *out = gbarecomp::json::error_reply(buf);
         return;
     }
 

@@ -1,0 +1,10 @@
+Default-configuration build (what ships)
+
+EMERALD_DEVTOOLS:BOOL=OFF
+compiler: CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+
+Preloading the Emerald mod catalog
+[100%] Built target EmeraldRecomp
+BUILD_EXIT:0
+
+dev commands in the shipping binary: 0 (devtools build: 1)

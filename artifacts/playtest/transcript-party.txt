@@ -1,0 +1,48 @@
+[start] scene overworld map Route101
+[scaffold] VAR_ROUTE101_STATE=1
+[warp] at map [0,16] (10,18) facing south
+[field] at [10, 18]
+[trigger f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[trigger f24] Starting Pokémon Emerald.
+[trigger f541] Title and main menu.
+[trigger f680] NEW GAME, OPTION
+[trigger f1243] Hi! Sorry to keep you waiting! Welcome to the world of POKéMON! My name is BIRCH. But everyone calls me the POKéMON PROFESSOR.
+[trigger f1750] This is what we call a “POKéMON.”.
+[trigger f1974] This world is widely inhabited by creatures known as POKéMON. We humans live alongside POKéMON, at times as friendly playmates, and at times as cooperative workmates. And sometimes, we band together and battle others like us. But despite our closeness, we don’t know everything about POKéMON. In fact, there are many, many secrets surrounding POKéMON. To unravel POKéMON mysteries, I’ve been undertaking research. That’s what I do.
+[trigger f3598] And you are?
+[trigger f3810] Are you a boy? Or are you a girl?
+[trigger f3930] BOY.
+[trigger f3935] All right. What’s your name?
+[trigger f4076] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[trigger f4100] Name entry.
+[trigger f4135] Name: A
+[trigger f4165] Name: AA
+[trigger f4195] Name: AAA
+[trigger f4225] Name: AAAA
+[trigger f4255] Name: AAAAA
+[trigger f4285] Name: AAAAAA
+[trigger f4315] Name: AAAAAAA
+[trigger f4332] OK
+[trigger f4381] So it’s AAAAAAA?
+[trigger f4441] YES.
+[trigger f4498] Ah, okay! You’re AAAAAAA who’s moving to my hometown of LITTLEROOT. I get it now!
+[trigger f4994] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
+[trigger f6020] Something to read here. Press A.
+[trigger f6039] Step plate one step east.
+[trigger f6044] Overworld.
+[trigger f6238] New area.
+[trigger f6271] LITTLEROOT TOWN
+[trigger f6939] Object here. Press A.
+[trigger f7103] Person north. Press A to talk.
+[trigger f7927] Person north. Press A to talk.
+[trigger f8339] Object here. Press A.
+[trigger f8351] Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!
+[trigger f8891] Object here. Press A.
+[trigger f8911] It’s dangerous if you don’t have your own POKéMON.
+[trigger f9114] Person west. Press A to talk.
+[trigger f12302] New area.
+[trigger f12335] ROUTE 101
+[trigger f17624] H-help me!
+[trigger] moved=True pos [10, 19] want [10, 19]
+[cut2 f17697] You were moved 2 tiles north.
+[cut14 f18010] Hello! You over there! Please! Help! In my BAG! There’s a POKé BALL!

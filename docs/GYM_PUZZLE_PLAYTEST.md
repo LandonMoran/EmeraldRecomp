@@ -64,7 +64,7 @@ missing party). A mechanic PASS does not make the gym PASS.
 | --- | --- | --- | --- | --- |
 | Rustboro | 11 / 3 | none: no map scripts, no coord events, trainers only | n/a | NOT TESTED |
 | Dewford | 3 / 3 | darkness level set by `setflashlevel`, lowered per trainer defeated | n/a | NOT TESTED |
-| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | BLOCKED (trainer battle) |
+| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | NOT TESTED (route stops at the beam maze; party no longer the blocker) |
 | Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | NOT TESTED | NOT TESTED |
 | Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
 | Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
@@ -134,12 +134,20 @@ the fixes below. Still missing for a *full* run:
 **Regression result.** The same checkpoint replayed twice produced the same
 tile and the same line (`The room changed south-east.`), `REPRODUCIBLE: True`.
 
-**Full run: BLOCKED.** Walking the gym from the entrance runs into a trainer
-who starts a battle; the field locks and every direction is swallowed (recorded
-as `field locked: script or battle` in the route report). The checkpoint is a
-fresh game with no party, so the battle cannot be won. A starting save with a
-usable party is required before a full gym run can be judged — see
-`artifacts/puzzles/plans/` and the notes in `docs/PLAYTEST.md`.
+**Full run: NOT TESTED (the blocker is now the route, not the team).**
+
+The missing-party problem is solved: `party-starter` holds the Torchic the game
+gives on Route 101 and `party-ready` / `party-lab` hold the same Pokémon with a
+test stat block, and a battle against that Pokémon is on record — the rescue
+Zigzagoon fainted and the game awarded EXP (`TORCHIC gained 17 EXP. Points!`).
+Battles can therefore be won from a checkpoint.
+
+What still stops the walk is the gym's own corridor. From the entrance at
+(4,19) the runner reaches (4,15) or (4,18) and then `left` is refused, so it
+never crosses a trainer's sight line and never reaches a plate; the trainers
+stand at (1,16), (1,13), (5,10), (7,8) and (7,10) behind those beams. Routing
+through the barrier puzzle is the missing piece, not party strength — the same
+wall would stop a sighted player who did not solve the beams.
 
 ## Rustboro City Gym — 11 / 3
 
@@ -240,8 +248,9 @@ the next staircase is. This is the clearest remaining gap in the eight gyms.
 
 ## Cross-gym gaps
 
-1. **Battles block the field.** Every gym has trainers. The harness records the
-   lock and stops, but a full run needs a checkpoint with a usable party.
+1. **Battles block the field.** Every gym has trainers. `gym_run.py` now fights
+   through them from a checkpoint that has a party, so this is scaffolding, not
+   a gap — but no trainer battle has yet been fought *inside* a gym.
 2. **No layout description.** The mod says what is next to you, not what the
    room looks like. Gym routing currently depends on probing.
 3. **Used switches are silent.** A plate that has already fired says nothing.

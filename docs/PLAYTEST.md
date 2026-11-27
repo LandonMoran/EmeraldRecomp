@@ -349,3 +349,38 @@ sidecars are.
 The puzzle results, what the mod says during each one, and the status rule live
 in [GYM_PUZZLE_PLAYTEST.md](GYM_PUZZLE_PLAYTEST.md) and
 [ENVIRONMENT_PUZZLE_PLAYTEST.md](ENVIRONMENT_PUZZLE_PLAYTEST.md).
+
+### A party for the gyms
+
+A checkpoint from a fresh save has no party, and every gym puts trainers between
+the door and the puzzle. The team is obtained by playing the game, not by
+writing a Pokémon structure:
+
+```sh
+python3 artifacts/playtest/get_party.py --save party-starter
+python3 artifacts/playtest/party.py --dump
+python3 artifacts/playtest/party.py --boost --level 50
+```
+
+`get_party.py` warps to Route 101 at (10,18), arms the rescue the way Littleroot's
+gate script does (`VAR_ROUTE101_STATE = 1`), steps south onto the coord event at
+(10,19), takes the starter from Birch's bag at (7,14) and wins the Zigzagoon
+battle with the pad. Walking out of Littleroot is not attempted: the north exit
+is a coord event that blocks while `VAR_LITTLEROOT_TOWN_STATE` is 0, which is
+exactly the message a party-less script gets stuck on.
+
+`party.py` is harness scaffolding, like the bag writes in the battle transcripts.
+It reads `gPlayerParty` (6 × 0x64 at 0x020244EC, count at 0x020244E9) and can set
+a level-50 test stat block so a checkpoint can survive a gym's trainers while the
+puzzle is what gets measured. The party layout is the pinned decompilation's
+`struct Pokemon`; PP lives inside the encrypted Moves substruct, so a boosted
+checkpoint keeps the moves and PP the game gave it. A boosted checkpoint is
+labelled as such wherever it is reported.
+
+`gym_run.py` is the runner for a whole gym rather than one mechanic: it loads a
+checkpoint, finishes any dialogue the checkpoint was saved inside, warps to the
+entrance, walks a direction route, and presses A through any battle the route
+starts, recording what the mod said the whole way.
+
+Checkpoints that exist: `party-starter` (level 5, untouched), `party-ready` and
+`party-lab` (level 50 test block, idle field in Birch's lab).

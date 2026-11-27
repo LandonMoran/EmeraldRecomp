@@ -121,3 +121,6 @@ artifacts/playtest/checkpoints/*.state
 # The user's own ROM/BIOS copies, provided out of band.
 artifacts/rom/
 .toolvenv/
+
+# Playtest runtime state (pid files, per-run logs).
+artifacts/playtest/*.pid
