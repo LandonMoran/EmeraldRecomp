@@ -21,9 +21,11 @@ contains the ROM itself, and the workflow refuses to upload an APK that does.
 
 ## What to add (one secret, one variable)
 
-### 1. Put the ROM somewhere private
+### 1. Put the ROM where the build can reach it
 
-Either works; pick one.
+Pick one. There is no browser step: a runner has no signed-in browser, and
+Google's copy-confirm pages need JavaScript and cookies, so the build asks the
+plain download endpoint for bytes and fails loudly when it gets HTML back.
 
 **Private repository (simplest)**
 
@@ -39,6 +41,23 @@ Either works; pick one.
 
 Do **not** put it in this public repository, even encrypted: an encrypted copy of
 a commercial ROM is still a copy of it.
+
+**Google Drive (shared by link, no token)**
+
+1. Right-click the file in Drive → **Share** → **Anyone with the link** →
+   Viewer.
+2. Use `drive:<file-id>`, e.g.
+   `drive:1Kev3HlrxtkN2GMUGukirCtMN1BLnrjMx` (the id is in the share URL:
+   `https://drive.google.com/file/d/<id>/view`).
+
+No secret is needed for this form. Trade-offs: **anyone with the link can
+download the ROM**, Drive occasionally serves "can't scan this file" or
+"too many downloads" pages to anonymous requests, and a link can be revoked at
+will — so it is convenient, not permanent. The script detects an HTML answer and
+fails with that explanation (exit 5) instead of hashing a web page. A private
+repo or release asset with `EMERALD_ROM_TOKEN` is the more reliable choice, and
+any other permanent host works too via `url:` (an R2/S3 object with a long random path,
+for instance).
 
 ### 2. Create a read-only token
 
@@ -56,15 +75,23 @@ Repository → **Settings → Secrets and variables → Actions**:
 | --- | --- | --- |
 | Secret | `EMERALD_ROM_TOKEN` | the fine-grained token from step 2 |
 | Variable | `EMERALD_ROM_SOURCE` | one of the forms below |
+| Secret (Drive/public URL only) | *none needed* | leave `EMERALD_ROM_TOKEN` unset |
 
 `EMERALD_ROM_SOURCE` forms (the variable is not secret — it is just a location):
 
 ```
-repo:your-name/emerald-rom:emerald_usa.gba        # raw file from a private repo
-asset:your-name/emerald-rom:123456789             # release asset by numeric id
+repo:your-name/emerald-rom:emerald_usa.gba        # file from a private repo (token)
+asset:your-name/emerald-rom:123456789             # release asset by numeric id (token)
+drive:1Kev3HlrxtkN2GMUGukirCtMN1BLnrjMx          # Google Drive, shared by link
 url:https://example.com/path/emerald_usa.gba      # any direct URL
 file:/path/on/a/self-hosted/runner/emerald.gba    # self-hosted runners
 ```
+
+The download may be the raw 16 MiB dump **or a zip of it** — the Drive copy is
+`Pokemon - Emerald Version (USA, Europe).zip`, 6,976,143 bytes. A zip is
+unpacked, its single `.gba` is taken, and the SHA-1 is checked against the
+extracted file. That also means a 7 MB zip can be uploaded to the private repo
+instead of the 16 MiB dump.
 
 Optionally override the expected dump with a variable `EMERALD_ROM_SHA1`; the
 default is the USA dump this repository's symbols are built for
