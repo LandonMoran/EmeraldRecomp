@@ -97,6 +97,7 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
             src/mods/emerald_absolute_rtc_plugin.cpp
             src/accessibility/emerald_a11y.cpp
             src/accessibility/emerald_cues.cpp
+            src/accessibility/emerald_map_names.cpp
             src/accessibility/emerald_nav.cpp
             src/accessibility/emerald_puzzle.cpp
             src/mods/emerald_accessibility_plugin.cpp

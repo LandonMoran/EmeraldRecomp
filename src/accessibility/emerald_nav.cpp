@@ -32,6 +32,7 @@
 
 #include "emerald_a11y.h"      // speak_now (used indirectly through cues)
 #include "emerald_cues.h"
+#include "emerald_map_names.h"
 #include "touch/emerald_scene.h"   // SceneKind / SceneState
 
 namespace emerald::accessibility {
@@ -411,7 +412,19 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
         g_ann.mapGroup = n.mapGroup;
         g_ann.mapNum = n.mapNum;
         g_ann.warp_index = -1;
-        if (!first) play_cue(Cue::MapTransition, "New area.");
+        if (!first) {
+            // "New area." alone tells a player that something changed and not
+            // what: walking into a house, a Centre and a gym all sounded the
+            // same. The name comes from the compiled table, because the guest
+            // keeps none.
+            const char* name = map_name_spoken(n.mapGroup, n.mapNum);
+            char line[96];
+            if (name)
+                std::snprintf(line, sizeof(line), "New area. %s.", name);
+            else
+                std::snprintf(line, sizeof(line), "New area.");
+            play_cue(Cue::MapTransition, line);
+        }
     }
 
     // ── Navigation target ───────────────────────────────────────────────

@@ -14,7 +14,7 @@ means a player cannot get it at all.
 | Capability | Status | Evidence |
 | --- | --- | --- |
 | Dialogue, signs, NPCs | PASS | every string the game prints is spoken from the text-printer hook, before the typewriter runs |
-| Map name, doors, exits | PASS | `New area.` / `Door one step south. Press A to exit.` on every indoor map load |
+| Map name, doors, exits | PASS | `New area. Mauville City Pokémon Center 1F.` on entering, `Door one step south. Press A to exit.` at exits. The name comes from a table compiled from the decomp's map metadata, because the guest keeps no map name at all |
 | What is next to you | PASS | `Trainer west. Press A to talk.`, `Object here. Press A.` |
 | A trainer battle, start to finish, on the pad | PASS | Mauville's Battle Girl Vivian and Aroma Lady Rose: won, EXP and level-ups, back to `CB2_Overworld` |
 | Your move list (name, type, PP) | PASS | `Scratch, normal, PP 35 of 35. 1 of 4.` |
@@ -43,6 +43,13 @@ means a player cannot get it at all.
    town, so travel is exploration rather than navigation.
 
 ## What was fixed here
+
+- Entering a map says where you are. It used to say `New area.` and stop, so
+  a house, a Pokémon Centre and a gym all sounded the same; walking between
+  towns told a player that something had changed and not what. The guest keeps
+  no map name, so `tools/gen_map_names.py` compiles the names from the decomp's
+  map metadata into `src/accessibility/emerald_map_names.inc` and the nav layer
+  looks them up by the map group and number the game has loaded.
 
 - The Start menu has labels. Its six entries are printed into one window the
   frame the menu opens; the classifier registers that window a frame or two
