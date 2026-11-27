@@ -64,14 +64,17 @@ means a player cannot get it at all.
 
 ## Findings from the potion-in-battle run
 
-- **The battle action menu does not read like a list.** It is a 2x2 grid -
+- **FIXED: the battle action menu is announced by where it sits.** It is a 2x2
+  grid, so it now says `Fight, top left.`, `Bag, top right.`, `Pokémon, bottom
+  left.`, `Run, bottom right.` instead of "1 of 4", which sent a player pressing
+  down for BAG into POKéMON. (Was: "does not read like a list.") It is a 2x2 grid -
   FIGHT and BAG on the top row, POKéMON and RUN below - but read-status numbers
   it 1..4, so pressing down from FIGHT reports "Pokémon, 3 of 4" and pressing
   right from FIGHT reports "Run, 4 of 4". A player who hears "1 of 4" and presses
   down lands two entries away. This is why the potion was not used in this run: I
   could not reach BAG reliably by ear, and reaching it by trial ended in the party
   summary and then in RUN ("No! There's no running from a TRAINER battle!").
-- **Read-status inside a message box reports the selection from before it.** While
+- **FIXED: read-status stays quiet about the cursor while a message box is up.** While
   "No! There's no running from a TRAINER battle!" was on screen, read-status kept
   answering "Run, 4 of 4." after the cursor had already been moved.
 - What did work, from the same run: the battle HP line tracks the real fight

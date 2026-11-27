@@ -838,7 +838,11 @@ int list_index(const ListState& l) { return l.scroll + l.selected; }
 // Fill `out` with what the current selection is. Returns false when the label
 // could not be resolved (so the caller can wait a frame for captured labels).
 bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
-    if (s.menu.live) {
+    // While a message box is up the cursor is not what the player is looking at,
+    // and reading it out answers the question that was asked two presses ago.
+    // Saying nothing leaves the caller free to speak the message instead.
+    const bool text_up = !s.battle.active && m.u8(addr::sFieldMessageBoxMode) != 0;
+    if (s.menu.live && !text_up) {
         const MenuState& menu = s.menu;
         const int count = menu.max - menu.min + 1;
         const int pos = menu.cursor - menu.min + 1;
@@ -879,7 +883,14 @@ bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
             case BattleControl::SafariAction: {
                 *out = action_label(b.control, b.action_cursor);
                 if (out->empty()) *out = "Choice";
-                *out += ", " + std::to_string(b.action_cursor + 1) + " of 4.";
+                // The action menu is a 2x2 grid, not a list: FIGHT and BAG on the
+                // top row, POKéMON and RUN below. "1 of 4" made a player press
+                // down for BAG and land on POKéMON, so the position is what is
+                // said - it is what the screen shows.
+                static const char* const kWhere[4] = {
+                    "top left", "top right", "bottom left", "bottom right"};
+                const int at = b.action_cursor & 3;
+                *out += ", " + std::string(kWhere[at]) + ".";
                 return true;
             }
             case BattleControl::Move: {
