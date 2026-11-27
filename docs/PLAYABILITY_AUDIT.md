@@ -81,6 +81,29 @@ means a player cannot get it at all.
   (`AAAAAAAAAA level 9, 12 of 28 HP. Foe MEDITITE level 17, 33 of 39 HP.`), and a
   Super Potion was bought at the Mart for 700 (`That will be 700.`).
 
+## A press is one press (checked, not assumed)
+
+The level-up messages and the nurse/trader conversations looked like they replayed
+on every A press, so the synthesized tap was suspected of arriving twice. It does
+not:
+
+- Instrumenting the action queue logged one entry per command
+  (`[a11y:act] f=27274 n=1`), so a single `confirm` never produced two actions.
+- `KeySynth` presses a tap for `press_frames` then releases it for
+  `release_frames`, which is one rising edge for the guest; there is no second
+  edge to be had.
+- One A press on Prof. Birch's multi-page text advanced exactly one page, and
+  with presses sent only once the box had settled the whole level-up block spoke
+  `grew to LV. 7!`, `learned FOCUS ENERGY!`, `grew to LV. 8!`, `grew to LV. 9!`
+  once each - no repeats.
+
+What actually happened in the failing runs: the drive script pressed A on a fixed
+frame count, so presses landed inside EXP-bar and battle animations where the game
+discards input, the box therefore stayed on the same page, and the same message
+was announced again after each discarded press. It sounds like a replay and is not
+one. Presses timed to when the text has stopped changing advance cleanly every
+time.
+
 ## What was fixed here
 
 - Entering a map says where you are. It used to say `New area.` and stop, so
