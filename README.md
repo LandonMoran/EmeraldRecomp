@@ -137,6 +137,14 @@ a **Back gesture on the overworld**, a pad's **L3/R3** click or the
 state**. The app also keeps one automatic suspend point: backgrounding the game
 and being killed by Android resumes where you left off.
 
+Without sight the menu is not needed: in the overworld, **tap the top-left
+corner of the game image** and the game speaks a save-state sheet — tap saves
+the slot, swipe up loads it, swipe left or right changes the slot, a two-finger
+tap closes it — and each action ends with what actually happened ("Saved to
+slot 3.", "Loaded slot 3.", "Nothing saved in slot 3."). With TalkBack on, the
+same three commands are **Save state / Load state / Next state slot** buttons in
+the accessibility tree. The menu itself is unchanged.
+
 ## Accessibility: spoken interface and TalkBack
 
 EmeraldRecomp can be played by ear. **Mods → Accessibility → Spoken

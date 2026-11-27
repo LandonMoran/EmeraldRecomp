@@ -58,6 +58,9 @@ target_include_directories(emerald_settings_test PRIVATE src)
 # check that every option id and value the pad writes is a real choice.
 add_test(NAME emerald_settings_test COMMAND emerald_settings_test
          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+add_executable(emerald_state_slots_test tests/state_slots_test.cpp)
+target_include_directories(emerald_state_slots_test PRIVATE src)
+add_test(NAME emerald_state_slots_test COMMAND emerald_state_slots_test)
 add_executable(emerald_view_capture_check
     tools/widescreen_capture_check.cpp src/emerald_extended_view.cpp src/emerald_object_view.cpp)
 target_include_directories(emerald_view_capture_check PRIVATE src "${GBARECOMP_ROOT}/src/gba")

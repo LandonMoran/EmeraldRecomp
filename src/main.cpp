@@ -89,6 +89,9 @@ int emerald_main(int argc, char** argv) {
     mobile.game_config = GBARECOMP_DEFAULT_GAME_CONFIG;
     mobile.program_name = "./EmeraldRecomp";
     const bool on_mobile = gbarecomp::mobile_prepare_process(args, mobile);
+    // Save states: the spoken layer names the file a slot lives in (to confirm a
+    // save) from the same inputs the runtime resolves them from.
+    emerald::accessibility::set_launch_arguments(args);
 
     g_runtime_ram_dispatch_hook = &emerald::ram_dispatch;
 

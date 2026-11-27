@@ -447,6 +447,39 @@ class Session:
             self.speech(tag)
         return False
 
+    def state_sheet(self):
+        """The spoken save/load sheet, opened and closed by touch alone.
+
+        Nothing here uses a menu row: a tap in the top-left corner of the game
+        image opens the sheet, a swipe changes the slot, and a two-finger tap
+        closes it. Save and load themselves need the host's slot hotkey, which a
+        headless (--tcp) session has no event queue for, so the sheet says so
+        instead of claiming a save.
+        """
+        f = self.f
+        self.beat("spoken-state-sheet", "corner tap opens the spoken save/load sheet")
+        st = f.status()
+        self.line(f"[sheet] before: scene={st.get('scene')} slot={st.get('state_slot')} "
+                  f"open={st.get('state_menu')}")
+        f.ask(cmd="touch_tap", x=8, y=8)
+        f.frames(12)
+        self.speech("sheet-open")
+        st = f.status()
+        self.line(f"[sheet] after corner tap: open={st.get('state_menu')} "
+                  f"slot={st.get('state_slot')}")
+        f.ask(cmd="touch_drag", points=[[120, 110], [200, 110]], frames_per_point=1)
+        f.frames(16)
+        self.speech("sheet-slot")
+        st = f.status()
+        self.line(f"[sheet] after swipe: open={st.get('state_menu')} "
+                  f"slot={st.get('state_slot')}")
+        f.ask(cmd="touch_two_finger_tap", x=120, y=100)
+        f.frames(18)
+        self.speech("sheet-close")
+        st = f.status()
+        self.line(f"[sheet] after close: open={st.get('state_menu')} "
+                  f"slot={st.get('state_slot')}")
+
     def town_walk(self):
         f = self.f
         self.beat("overworld-walking", "steps, facing and proximity cues")
@@ -832,6 +865,7 @@ class Session:
             self.into_field()
             self.truck()
             self.town_walk()
+            self.state_sheet()
             self.readables()
             self.house_readables()
             self.route101()

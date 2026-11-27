@@ -51,6 +51,9 @@ public final class EmeraldAccessibility {
     private static final int ACTION_REPEAT = 9;
     private static final int ACTION_STOP = 10;
     private static final int ACTION_SELECT_ITEM = 11;
+    private static final int ACTION_SAVE_STATE = 14;
+    private static final int ACTION_LOAD_STATE = 15;
+    private static final int ACTION_NEXT_STATE_SLOT = 16;
 
     private static final int NODE_STATUS = 1;
     private static final int NODE_ITEMS = 2;
@@ -61,11 +64,15 @@ public final class EmeraldAccessibility {
 
     private static final String[] CONTROL_LABELS = {
         "Up", "Down", "Left", "Right", "A, confirm", "B, cancel", "Start menu",
-        "Read status", "Repeat last message", "Stop speech"
+        "Read status", "Repeat last message", "Stop speech",
+        // Save states: the same slots the engine's menu and hotkeys use. The
+        // game confirms each one aloud ("Saved to slot 3.").
+        "Save state", "Load state", "Next state slot"
     };
     private static final int[] CONTROL_ACTIONS = {
         ACTION_UP, ACTION_DOWN, ACTION_LEFT, ACTION_RIGHT, ACTION_CONFIRM,
-        ACTION_CANCEL, ACTION_START, ACTION_READ_STATUS, ACTION_REPEAT, ACTION_STOP
+        ACTION_CANCEL, ACTION_START, ACTION_READ_STATUS, ACTION_REPEAT, ACTION_STOP,
+        ACTION_SAVE_STATE, ACTION_LOAD_STATE, ACTION_NEXT_STATE_SLOT
     };
 
     private static native void nativeAction(int action, int arg);

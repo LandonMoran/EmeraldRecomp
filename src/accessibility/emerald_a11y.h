@@ -33,6 +33,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 namespace gbarecomp {
 struct TouchFrameInfo;
@@ -57,6 +59,12 @@ enum class Action : int {
     SelectItem = 11,   // arg = absolute item index on the current surface
     NextItem = 12,
     PrevItem = 13,
+    // Save states. arg = slot 1..9 for the save/load commands (0 = the slot the
+    // spoken sheet is on); the cycle command has no argument.
+    SaveState = 14,
+    LoadState = 15,
+    NextStateSlot = 16,
+    StateMenu = 17,    // open/close the spoken save-state sheet
 };
 const char* action_name(Action action);
 
@@ -95,9 +103,19 @@ void speak_now(const char* text, bool interrupt);
 //   Select                  repeat the last utterance
 //   Select, then L          stop speech
 //
+// Save states are not on the pad either: they are the touch sheet below, the
+// TalkBack buttons, or the runtime's own menu rows.
+//
 // A real pad never presses both chord buttons on the same frame, so the chords
 // are separated by order and by a hold (emerald_hotkeys.h): Select alone waits
 // a short window, and L inside it stops speech and drops the pending repeat.
+//
+// The spoken save-state sheet opens from a tap in the top-left corner of the
+// game image (a deliberate, single-finger gesture; a tap there has no meaning
+// in the field), and only while the overworld is free of menus, lists and
+// battles. Inside it: tap saves, swipe up loads, swipe left/right changes the
+// slot, and a two-finger tap closes it. Every action ends with the outcome —
+// "Saved to slot 3.", "Loaded slot 3.", "Nothing saved in slot 3."
 //
 // Settings are not on the pad. The three options (read game text, detail,
 // speech rate) are set on the launcher before play, or in the game's own Mods
@@ -114,6 +132,30 @@ const char* controller_hotkeys_help();
 
 // Queue a command from the accessibility service / TCP (thread-safe).
 void push_action(Action action, int arg = 0);
+
+// ── Save states (spoken) ─────────────────────────────────────────────────
+//
+// The runtime owns save states and reaches them from two places: rows in its
+// settings menu, and the edge-triggered F1..F9 / Shift+F1..F9 slot hotkeys.
+// Both arrive as the same host event, and a game cannot call the runtime's
+// snapshot code, so the layer delivers the hotkey the host already understands
+// and reads back the file the engine wrote (emerald_state_slots.h). Nothing in
+// the menu changes: this is a second, spoken way in.
+//
+// A host event queue only exists while the game window runs (the pad and touch
+// input both arrive through it). The platform bridge installs the sink that
+// types the slot key; without one the layer says save states are unavailable
+// in this session instead of claiming a save happened.
+using SlotHotkeyFn = void (*)(int slot, int save);
+void install_slot_hotkey(SlotHotkeyFn fn);
+
+// The launch arguments, as the runtime parses them. Used only to name the file
+// a slot lives in, so a spoken confirmation can say what actually happened.
+void set_launch_arguments(const std::vector<std::string>& args);
+
+// The slot the spoken save/load path uses (1..9).
+int state_slot();
+void set_state_slot(int slot);
 
 // Mod plugin surface (src/mods/emerald_accessibility_plugin.cpp).
 void activate_from_options();

@@ -44,6 +44,11 @@
 #define EMERALD_HAS_MOD_PROVIDER 0
 #endif
 #include "touch/emerald_touch.h"
+#include "emerald_state_slots.h"
+#include "runtime_bus_bridge.h"   // g_runtime_state_epoch (bumped on restore)
+
+#include <filesystem>
+#include <system_error>
 
 namespace emerald::accessibility {
 
@@ -281,6 +286,181 @@ void say(std::string text, bool interrupt) {
     } else {
         std::fprintf(stderr, "[emerald:a11y] speak%s: %s\n", interrupt ? "!" : "",
                      out.c_str());
+    }
+}
+
+// ── Save states (spoken) ─────────────────────────────────────────────────
+//
+// The runtime owns save states: the menu rows and the F1..F9 / Shift+F1..F9
+// hotkeys both end in one host event (HostWindow::Events::save_slot/
+// load_slot), and a game cannot call its snapshot code. So the layer types the
+// slot hotkey the host already understands and then reads the file the engine
+// wrote (emerald_state_slots.h mirrors the engine's own slot path). The visual
+// menu keeps working exactly as it did; this is a second, spoken way in.
+//
+// A host event queue exists only while the game window runs, which is every
+// real session (pad, touch and the menu all arrive through it). Without one the
+// layer says save states are unavailable rather than claiming a save happened.
+
+SlotHotkeyFn g_slot_hotkey = nullptr;
+LaunchPaths g_paths;          // where this run's slots live (--state-dir / ROM)
+int g_state_slot = 1;         // the slot the spoken path uses, 1..9
+bool g_state_menu = false;    // the spoken save/load sheet is open
+
+// How long a save or load may take before the layer reports it as failed. The
+// engine performs both synchronously at the next present boundary.
+constexpr std::uint64_t kStateOpFrames = 120;
+// Corner-tap zone: the top-left fifth of the game image. A tap there walks the
+// player into the map's corner, which is why it is free to mean "save states".
+constexpr float kStateCornerFraction = 0.2f;
+
+struct StateOp {
+    bool active = false;
+    bool save = false;
+    int slot = 0;
+    std::uint64_t deadline = 0;
+    unsigned long long epoch = 0;  // g_runtime_state_epoch at the request
+    std::string path;              // the file this slot names (empty when unknown)
+    std::string before;            // its stamp when the request was made
+} g_state_op;
+
+// "<mtime>:<size>", or empty when the file is not there. Only a change between
+// two reads matters, so the absolute value is not interesting.
+std::string slot_stamp(const std::string& path) {
+    if (path.empty()) return std::string();
+    std::error_code ec;
+    const auto stamp = std::filesystem::last_write_time(path, ec);
+    if (ec) return std::string();
+    const auto size = std::filesystem::file_size(path, ec);
+    if (ec) return std::string();
+    return std::to_string(
+               static_cast<long long>(stamp.time_since_epoch().count())) +
+           ":" + std::to_string(static_cast<unsigned long long>(size));
+}
+
+void close_state_menu(const char* speech) {
+    if (!g_state_menu) return;
+    g_state_menu = false;
+    if (speech && *speech) say(speech, true);
+}
+
+void open_state_menu() {
+    g_state_menu = true;
+    say(slot_sheet_speech(g_state_slot), true);
+}
+
+void begin_state_op(bool save, int slot) {
+    slot = clamp_state_slot(slot);
+    g_state_slot = slot;
+    if (!g_slot_hotkey) {
+        say(slot_unavailable_speech(), true);
+        return;
+    }
+    const std::string path = state_slot_path(g_paths.state_dir, g_paths.rom, slot);
+    if (!save && !path.empty() && slot_stamp(path).empty()) {
+        // Nothing to restore: saying so beats a silent failed load.
+        say(slot_missing(slot), true);
+        return;
+    }
+    StateOp op;
+    op.active = true;
+    op.save = save;
+    op.slot = slot;
+    op.deadline = g_frame + kStateOpFrames;
+    op.epoch = g_runtime_state_epoch;
+    op.path = path;
+    op.before = save ? slot_stamp(path) : std::string();
+    g_state_op = op;
+    say(save ? slot_save_request(slot) : slot_load_request(slot), true);
+    g_slot_hotkey(slot, save ? 1 : 0);
+}
+
+// The confirmation is evidence, not an assumption: a save is done when the
+// slot's file changed, a load when the runtime's state epoch moved (it is
+// bumped on every restoration, which is why the emulator's own view policy
+// watches it too).
+void poll_state_op() {
+    if (!g_state_op.active) return;
+    const int slot = g_state_op.slot;
+    if (g_state_op.save) {
+        if (!g_state_op.path.empty()) {
+            const std::string now = slot_stamp(g_state_op.path);
+            if (!now.empty() && now != g_state_op.before) {
+                g_state_op.active = false;
+                say(slot_saved(slot), true);
+                return;
+            }
+        }
+    } else if (g_runtime_state_epoch != g_state_op.epoch) {
+        g_state_op.active = false;
+        say(slot_loaded(slot), true);
+        return;
+    }
+    if (g_frame >= g_state_op.deadline) {
+        const bool save = g_state_op.save;
+        const bool known = !g_state_op.path.empty();
+        g_state_op.active = false;
+        if (known) say(save ? slot_save_failed(slot) : slot_load_failed(slot), true);
+    }
+}
+
+// Save states are a field action: offering them mid-menu or mid-battle would
+// put a state in the middle of a screen the player is reading.
+bool state_menu_allowed(const SceneState& s) {
+    return s.kind == SceneKind::Overworld && !s.menu.live && !s.list.live &&
+           !s.battle.active;
+}
+
+bool corner_tap(const gbarecomp::TouchFrameInfo* frame) {
+    if (!frame || !frame->gestures) return false;
+    const float width =
+        frame->view_width ? static_cast<float>(frame->view_width) : 240.0f;
+    const float height =
+        frame->view_height ? static_cast<float>(frame->view_height) : 160.0f;
+    for (std::size_t i = 0; i < frame->gesture_count; ++i) {
+        const gbarecomp::Gesture& g = frame->gestures[i];
+        if (g.kind != gbarecomp::GestureKind::Tap || !g.start_in_view) continue;
+        if (g.start_view_x <= width * kStateCornerFraction &&
+            g.start_view_y <= height * kStateCornerFraction)
+            return true;
+    }
+    return false;
+}
+
+// While the sheet is open it owns the frame's gestures: tap saves, swipe up
+// loads, swipe left/right changes the slot, two-finger tap closes. The frame's
+// synthesized keys are dropped so a tap that dismisses the sheet cannot also
+// walk the player or confirm a game prompt.
+void state_menu_gestures(const gbarecomp::TouchFrameInfo* frame) {
+    if (!frame || !frame->gestures) return;
+    for (std::size_t i = 0; i < frame->gesture_count; ++i) {
+        const gbarecomp::Gesture& g = frame->gestures[i];
+        switch (g.kind) {
+            case gbarecomp::GestureKind::Tap:
+                close_state_menu(nullptr);
+                begin_state_op(true, g_state_slot);
+                break;
+            case gbarecomp::GestureKind::Swipe:
+                if (g.swipe == gbarecomp::SwipeDirection::Up) {
+                    close_state_menu(nullptr);
+                    begin_state_op(false, g_state_slot);
+                } else if (g.swipe == gbarecomp::SwipeDirection::Right) {
+                    g_state_slot = next_state_slot(g_state_slot);
+                    say(slot_sheet_after_slot_speech(g_state_slot), true);
+                } else if (g.swipe == gbarecomp::SwipeDirection::Left) {
+                    g_state_slot = prev_state_slot(g_state_slot);
+                    say(slot_sheet_after_slot_speech(g_state_slot), true);
+                } else {
+                    close_state_menu("Closed.");
+                }
+                break;
+            case gbarecomp::GestureKind::TwoFingerTap:
+            case gbarecomp::GestureKind::Back:
+            case gbarecomp::GestureKind::LongPress:
+                close_state_menu("Closed.");
+                break;
+            default: break;
+        }
     }
 }
 
@@ -994,6 +1174,22 @@ void consume_actions(Core& c, const SceneState& s, const Mem& m) {
             case Action::Repeat:
                 if (!g_last_spoken.empty()) say(g_last_spoken, true);
                 break;
+            case Action::SaveState:
+                begin_state_op(true, arg > 0 ? arg : g_state_slot);
+                break;
+            case Action::LoadState:
+                begin_state_op(false, arg > 0 ? arg : g_state_slot);
+                break;
+            case Action::NextStateSlot:
+                g_state_slot = next_state_slot(g_state_slot);
+                say(slot_sheet_after_slot_speech(g_state_slot), true);
+                break;
+            case Action::StateMenu:
+                if (g_state_menu)
+                    close_state_menu("Closed.");
+                else
+                    open_state_menu();
+                break;
             case Action::StopSpeech:
                 g_nav.active = false;
                 if (g_stop_fn) g_stop_fn();
@@ -1231,6 +1427,10 @@ const char* action_name(Action action) {
         case Action::SelectItem: return "select";
         case Action::NextItem: return "next";
         case Action::PrevItem: return "prev";
+        case Action::SaveState: return "save_state";
+        case Action::LoadState: return "load_state";
+        case Action::NextStateSlot: return "next_state_slot";
+        case Action::StateMenu: return "state_menu";
     }
     return "unknown";
 }
@@ -1247,17 +1447,29 @@ std::uint16_t input_frame(const gbarecomp::TouchFrameInfo* frame) {
     Core& c = emerald::touch::core();
     const SceneState& s = c.scene;
     const Mem m = Mem::current();
+    // The spoken save-state sheet is opened by a tap in the top-left corner and
+    // owns the gestures while it is up. Its frame produces no synthesized keys:
+    // opening, saving and closing must never also play the game.
+    bool swallow_keys = false;
+    if (g_state_menu) {
+        state_menu_gestures(frame);
+        swallow_keys = true;
+    } else if (state_menu_allowed(s) && corner_tap(frame)) {
+        open_state_menu();
+        swallow_keys = true;
+    }
     // Pad commands, serviced this frame. The naming screen is the one scene
     // that reads Select, so its repeat modifier is R.
     retry_speech_sink_if_needed();
     poll_hotkeys(frame->host_keyinput, s.kind == SceneKind::Naming);
     consume_actions(c, s, m);
     watch(s, m);
+    poll_state_op();
     // Audio cues age their interaction expectations, then the navigation layer
     // reports exits, floor changes and whatever the player just walked up to.
     cues_frame();
     nav_frame(s, m);
-    return keys;
+    return swallow_keys ? 0 : keys;
 }
 
 void install_sink(SpeakFn speak, UpdateFn update, void (*stop)(), void (*rate)(float)) {
@@ -1278,7 +1490,8 @@ const char* controller_hotkeys_help() {
     // the launcher (Android) or in the Mods menu, never by the pad.
 #if defined(__ANDROID__)
     return "Press L to read the screen, Select to repeat, "
-           "and Select then L to stop speech. To change the spoken settings, "
+           "and Select then L to stop speech. Tap the top-left corner of the "
+           "screen to save or load a state. To change the spoken settings, "
            "quit the game and set them on the launcher screen.";
 #else
     return "Press L to read the screen, Select to repeat, "
@@ -1306,6 +1519,8 @@ void enable(bool on) {
     g_prints.clear();
     g_labels.clear();
     g_pending_item = false;
+    g_state_menu = false;
+    g_state_op = StateOp{};
     g_nav.active = false;
     cues_reset();
     nav_reset();
@@ -1333,6 +1548,16 @@ void set_rate(float rate) {
     g_rate = std::max(0.5f, std::min(2.0f, rate));
     if (g_rate_fn) g_rate_fn(g_rate);
 }
+
+void install_slot_hotkey(SlotHotkeyFn fn) { g_slot_hotkey = fn; }
+
+void set_launch_arguments(const std::vector<std::string>& args) {
+    g_paths = launch_paths_from_args(args);
+}
+
+int state_slot() { return g_state_slot; }
+
+void set_state_slot(int slot) { g_state_slot = clamp_state_slot(slot); }
 
 void reset() {
     // Mod activation disables every entry hook before reset callbacks run, so
@@ -1422,13 +1647,13 @@ void tcp_status(std::string* out) {
     std::snprintf(head, sizeof(head),
                   "{\"ok\":true,\"prints\":%llu,\"enabled\":%s,\"frame\":%llu,\"scene\":\"%s\","
                   "\"menu\":%s,\"list\":%s,\"battle\":%s,\"speak_text\":%s,"
-                  "\"verbosity\":%d,\"message\":",
+                  "\"verbosity\":%d,\"state_slot\":%d,\"state_menu\":%s,\"message\":",
                   static_cast<unsigned long long>(g_prints_seen),
                   g_enabled ? "true" : "false",
                   static_cast<unsigned long long>(g_frame), scene_name(s.kind),
                   s.menu.live ? "true" : "false", s.list.live ? "true" : "false",
                   s.battle.active ? "true" : "false", g_speak_text ? "true" : "false",
-                  g_verbosity);
+                  g_verbosity, g_state_slot, g_state_menu ? "true" : "false");
     *out = head;
     gbarecomp::json::append_quoted(*out, g_message);
     *out += ",\"last_print\":";
@@ -1459,7 +1684,7 @@ void tcp_status(std::string* out) {
 }
 
 void tcp_action(const std::string& name, int arg) {
-    for (int i = 1; i <= static_cast<int>(Action::PrevItem); ++i) {
+    for (int i = 1; i <= static_cast<int>(Action::StateMenu); ++i) {
         const Action action = static_cast<Action>(i);
         if (name == action_name(action)) {
             push_action(action, arg);

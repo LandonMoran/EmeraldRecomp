@@ -167,6 +167,41 @@ it, so nothing was added for it.
 The card also refuses to write while the game is running (say, in split screen)
 and says to quit first, so a running session cannot overwrite what you just set.
 
+### Save states without sight
+
+The runtime's save states are slots 1–9 (files beside the ROM) and its settings
+menu has rows for them, which nothing reads aloud. The same slots are reachable
+without that menu through a spoken sheet:
+
+* **Tap the top-left corner of the game image.** A tap there is the one tap in
+the field with no meaning of its own — it would walk the player into the map's
+corner — so nothing is taken away from normal play. The sheet opens only in the
+overworld with no menu, list or battle on screen, and opens with the current
+slot: "Save state, slot 3. Tap to save, swipe up to load, swipe left or right to
+change slot, two-finger tap to close."
+* **Tap** saves that slot, **swipe up** loads it, **swipe left/right** changes
+the slot ("Slot 4."), and a **two-finger tap**, Back or a long press closes the
+sheet. While it is open the frame's touch translation is dropped, so opening,
+saving and closing never also walk the player or press a game button.
+* Every action ends with its **outcome**, not with an assumption: "Saved to slot
+3." once the slot's file has changed (its modification time or size differs
+from the instant before the save), "Loaded slot 3." once the runtime's state
+epoch has moved (the counter it bumps on every restoration), "Nothing saved in
+slot 3." when the slot has no file, and "Slot 3 did not save." / "Slot 3 could
+not be loaded." when the engine never delivered.
+* **TalkBack** users get the same commands as tree buttons — **Save state**,
+**Load state**, **Next state slot** — with the same confirmations spoken.
+
+The layer does not snapshot anything itself: a game cannot call the runtime's
+snapshot code. It delivers the runtime's own edge-triggered slot hotkey (F1–F9
+to load, Shift+F1–F9 to save) to the host event queue, which is exactly the
+event the desktop function keys and the menu rows produce, and then reads the
+slot file back; the path mirrors the engine's rule (`--state-dir/stateN`, else
+`<rom>.stateN`, from `--rom` or the game.toml the runtime was started with).
+The menu keeps its rows and its behaviour untouched. A session with no host
+event queue (a headless run) says save states are unavailable in this session
+rather than claiming a save happened.
+
 ## The TalkBack layer
 
 The layer is installed on the SDL activity's content view at startup (no engine
@@ -182,7 +217,8 @@ Game screen
 │   └── Run
 ├── message         the last line the game printed               (click = repeat)
 └── controls        Up, Down, Left, Right, A, B, Start menu,
-                    Read status, Repeat, Stop speech
+                    Read status, Repeat, Stop speech,
+                    Save state, Load state, Next state slot
 ```
 
 * Focusing a choice reads it (TalkBack reads the node text); activating it

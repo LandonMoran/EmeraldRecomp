@@ -157,6 +157,31 @@ void android_rate(float rate) {
     clear(e);
 }
 
+// Save states are host events: the runtime takes them from its settings menu or
+// from the edge-triggered F1..F9 / Shift+F1..F9 slot hotkeys (host_window.cpp),
+// and a game cannot call its snapshot code. This delivers that same key to the
+// queue the pads and touches arrive on. SDL_PushEvent is safe off the main
+// thread, which is where the layer runs (the guest frame callback).
+void android_slot_hotkey(int slot, int save) {
+    if (slot < 1 || slot > 9) return;
+    const int index = slot - 1;
+    SDL_Event down;
+    SDL_zero(down);
+    down.type = SDL_KEYDOWN;
+    down.key.timestamp = SDL_GetTicks();
+    down.key.state = SDL_PRESSED;
+    down.key.keysym.scancode = static_cast<SDL_Scancode>(SDL_SCANCODE_F1 + index);
+    down.key.keysym.sym = static_cast<SDL_Keycode>(SDLK_F1 + index);
+    down.key.keysym.mod = save ? KMOD_LSHIFT : KMOD_NONE;
+    SDL_PushEvent(&down);
+    // Release it too, so the host does not keep the slot key held for the next
+    // pump; the hotkey itself is edge-triggered on the key-down.
+    SDL_Event up = down;
+    up.type = SDL_KEYUP;
+    up.key.state = SDL_RELEASED;
+    SDL_PushEvent(&up);
+}
+
 }  // namespace
 
 bool install_platform_bridge() {
@@ -213,6 +238,7 @@ bool install_platform_bridge() {
     }
 
     install_sink(&android_speak, &android_update, &android_stop, &android_rate);
+    install_slot_hotkey(&android_slot_hotkey);
 
     // Audio cues: same attachment point, separate class, never fatal.
     jclass cues = load_app_class(e, activity, kCuesClass);
@@ -250,6 +276,7 @@ void shutdown_platform_bridge() {
         }
     }
     install_sink(nullptr, nullptr, nullptr, nullptr);
+    install_slot_hotkey(nullptr);
     install_cue_sink(nullptr);
     JNIEnv* e = env();
     if (e) {
