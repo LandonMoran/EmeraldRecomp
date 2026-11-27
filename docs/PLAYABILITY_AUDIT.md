@@ -21,9 +21,9 @@ means a player cannot get it at all.
 | **HP on both sides during a battle** | **fixed in this change** | `Battle. AAAAAAAAAA level 5, 400 of 400 HP. Foe MEDITITE level 17, 39 of 39 HP. Fight, 1 of 4.` |
 | Party members' level and HP | PASS | `Party. AAAAAAAAAA level 5, 400 of 400 HP.` on the party screen, read from the party structures |
 | Start menu items | PASS | `Overworld. POKéMON, 1 of 6.`, then `BAG`, the player's name, `SAVE`, `OPTION`, `EXIT` with their positions, on the first open and on a reopen |
-| Bag item names | unknown | the list-menu path exists for bag/shop/PC lists but no live check has been made |
+| Bag item names | unknown | still unreached: the shop clerk sits behind the same counter that would not release the player after healing |
 | Catching a Pokémon | NOT TESTED | needs a ball in the bag, which needs the bag, which needs the Start menu |
-| Healing at a Pokémon Centre | NOT TESTED | talking to the nurse is ordinary dialogue (PASS path), the rest is walking |
+| Healing at a Pokémon Centre | PARTIAL | walked in through the Centre's door from Mauville City and the whole conversation was spoken, ending `Thank you for waiting. We've restored your POKéMON to full health.` The party was already at full HP, so the recovery itself was not observable, and the message box then would not close (see findings), which kept the counter occupied |
 | Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
@@ -41,6 +41,20 @@ means a player cannot get it at all.
    still has to be walked blind; Mauville's fourth plate is the proof.
 4. **Route knowledge between towns.** Nothing says which exit leads to the next
    town, so travel is exploration rather than navigation.
+
+## Findings from the heal-and-shop run
+
+- **The player's position reads (-1, -1) inside the Centre.** The gym reported
+  (4, 19) correctly and the city reported (22, 6), but on
+  `MauvilleCity_PokemonCenter_1F` every read was `x=-1, y=-1, warp_id=0`, while
+  the nav layer still named the nurse ("Person east. Press A to talk."). Anything
+  that leans on the position - the puzzle grid, "two steps west" wording - cannot
+  be trusted on a map where this happens.
+- **The nurse conversation would not end.** After the closing line the game
+  stayed with `controls_locked = 1` and `message_box = 2`, and every further A
+  replayed "Hello, and welcome to the POKéMON CENTER..." rather than closing the
+  box, so the player could not step away from the counter. Whether this is the
+  game's own state or the way input is being fed into it is not yet known.
 
 ## What was fixed here
 
