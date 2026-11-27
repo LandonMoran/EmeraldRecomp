@@ -83,6 +83,7 @@ constexpr std::uint32_t gBagPosition = 0x0203CE58;
 constexpr std::uint32_t gBagMenu = 0x0203CE54;
 constexpr std::uint32_t gPartyMenu = 0x0203CEC8;
 constexpr std::uint32_t gPlayerPartyCount = 0x020244E9;
+constexpr std::uint32_t gPlayerParty = 0x020244EC;             // 6 x 0x64
 }  // namespace addr
 
 namespace fn {

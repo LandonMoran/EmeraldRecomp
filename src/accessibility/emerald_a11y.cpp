@@ -552,6 +552,54 @@ std::string move_speech(const Mem& m, const emerald::touch::BattleState& b, int 
     return out + tail;
 }
 
+// Every battler on the field, with the one number a fight cannot be played
+// without. The game draws HP bars; a player who cannot see them has no way to
+// know whether to attack, switch or heal, and the message log only says
+// "fainted" once it is too late to decide anything.
+std::string battle_field_speech(const Mem& m) {
+    const int count = std::min<int>(4, m.u8(addr::gBattlersCount));
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gBattleMons + static_cast<std::uint32_t>(i) * 0x58;
+        const int max_hp = m.u16(mon + 0x2C);
+        if (max_hp <= 0) continue;
+        const int hp = m.u16(mon + 0x28);
+        const int level = m.u8(mon + 0x2A);
+        std::string name = decode(m, mon + 0x30, 11);
+        if (name.empty()) name = "Pok\xC3\xA9mon";
+        const bool foe = (i & 1) != 0;
+        char part[128];
+        std::snprintf(part, sizeof(part), "%s%s%s level %d, %d of %d HP%s.",
+                      out.empty() ? "" : " ", foe ? "Foe " : "", name.c_str(), level,
+                      hp, max_hp, hp == 0 ? ", fainted" : "");
+        out += part;
+    }
+    return out;
+}
+
+// The party, as a whole. The party screen's own labels only give names, so
+// choosing which Pokémon to send out was a guess between identical-looking
+// entries: the numbers that decide it live in the party structures.
+std::string party_field_speech(const Mem& m) {
+    const int count = std::min<int>(6, m.u8(addr::gPlayerPartyCount));
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gPlayerParty + static_cast<std::uint32_t>(i) * 0x64;
+        const int level = m.u8(mon + 0x54);
+        const int hp = m.u16(mon + 0x56);
+        const int max_hp = m.u16(mon + 0x58);
+        if (max_hp <= 0) continue;
+        std::string name = decode(m, mon + 0x08, 10);
+        if (name.empty()) name = "Pok\xC3\xA9mon";
+        char part[128];
+        std::snprintf(part, sizeof(part), "%s%s level %d, %d of %d HP%s.",
+                      out.empty() ? "" : " ", name.c_str(), level, hp, max_hp,
+                      hp == 0 ? ", fainted" : "");
+        out += part;
+    }
+    return out;
+}
+
 std::string target_speech(const Mem& m, int battler) {
     const std::uint32_t mon = addr::gBattleMons + static_cast<std::uint32_t>(battler) * 0x58;
     std::string name = decode(m, mon + 0x30, 11);
@@ -749,12 +797,18 @@ std::string status_text(const SceneState& s, const Mem& m) {
     switch (s.kind) {
         case SceneKind::Overworld:
             return what.empty() ? "Overworld." : "Overworld. " + what;
-        case SceneKind::Battle:
-            return what.empty() ? "Battle." : "Battle. " + what;
+        case SceneKind::Battle: {
+            const std::string field = battle_field_speech(m);
+            if (field.empty()) return what.empty() ? "Battle." : "Battle. " + what;
+            return "Battle. " + field + (what.empty() ? "" : " " + what);
+        }
         case SceneKind::Bag:
             return what.empty() ? "Bag." : "Bag. " + what;
-        case SceneKind::Party:
-            return what.empty() ? "Party." : "Party. " + what;
+        case SceneKind::Party: {
+            const std::string members = party_field_speech(m);
+            if (members.empty()) return what.empty() ? "Party." : "Party. " + what;
+            return "Party. " + members + (what.empty() ? "" : " " + what);
+        }
         case SceneKind::TitleMenus:
             return what.empty() ? "Title and main menu." : "Main menu. " + what;
         case SceneKind::Boot:
