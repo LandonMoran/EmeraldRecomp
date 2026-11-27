@@ -133,6 +133,18 @@ public final class A11yCues {
             case "npc":
                 tone = ToneGenerator.TONE_PROP_BEEP;
                 break;
+            case "sign":
+                tone = ToneGenerator.TONE_PROP_BEEP2;
+                break;
+            case "trainer":
+                tone = ToneGenerator.TONE_PROP_ACK;
+                break;
+            case "battle":
+                tone = ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD;
+                break;
+            case "menu":
+                tone = ToneGenerator.TONE_DTMF_1;
+                break;
             case "object":
             default:
                 tone = ToneGenerator.TONE_PROP_BEEP;

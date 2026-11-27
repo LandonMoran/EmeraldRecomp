@@ -41,6 +41,10 @@ constexpr CueSpec kCueTable[] = {
     {"target",           "target",        120,  2,  "a navigation target was reached"},
     {"interact_ok",      "ok",             40,  1,  "an interaction produced game text"},
     {"interact_fail",    "fail",          120,  2,  "an interaction produced nothing"},
+    {"sign",             "sign",          240,  2,  "a sign, clock or TV: something to read"},
+    {"trainer",          "trainer",       240,  3,  "a trainer, not just a person"},
+    {"battle",           "battle",        600,  5,  "a battle started"},
+    {"menu",             "menu",           60,  1,  "a menu or list opened"},
 };
 
 static_assert(static_cast<int>(Cue::Count) ==
@@ -56,10 +60,18 @@ bool g_spoken = true;
 
 bool g_has_cued = false;
 int g_last_cue_frame = -100000;
-int g_last_frame_of[static_cast<int>(Cue::Count)] = {-100000, -100000, -100000,
-                                                    -100000, -100000, -100000,
-                                                    -100000, -100000, -100000,
-                                                    -100000};
+// Every slot starts far in the past, so the first cue of a session is never
+// suppressed by its own cooldown (a zero-filled array would mute each cue until
+// its cooldown had elapsed).
+struct LastFrameOf {
+    int v[static_cast<int>(Cue::Count)];
+    LastFrameOf() {
+        for (int i = 0; i < static_cast<int>(Cue::Count); ++i) v[i] = -100000;
+    }
+    int& operator[](int i) { return v[i]; }
+    const int& operator[](int i) const { return v[i]; }
+};
+LastFrameOf g_last_frame_of;
 int g_priority_of_last = -1;
 
 bool g_expect_open = false;
@@ -102,7 +114,7 @@ void play_cue(Cue cue, const char* say) {
 
     // Per-cue cooldown: the same event must not retrigger while the player is
     // still standing on it.
-    if (g_frame - g_last_frame_of[i] < spec.cooldown) return;
+    if (g_frame - g_last_frame_of.v[i] < spec.cooldown) return;
 
     // Global gap: unless this cue outranks whatever just sounded, drop it
     // rather than queue (a queued cue would be stale by the time it plays).
@@ -111,7 +123,7 @@ void play_cue(Cue cue, const char* say) {
         return;
     }
 
-    g_last_frame_of[i] = g_frame;
+    g_last_frame_of.v[i] = g_frame;
     g_last_cue_frame = g_frame;
     g_has_cued = true;
     g_priority_of_last = spec.priority;

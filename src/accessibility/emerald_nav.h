@@ -69,6 +69,7 @@ struct NavState {
     int lookX = 0, lookY = 0;
     int lookKind = LookNone;
     int lookGraphics = 0;
+    bool lookIsTrainer = false;   // LookPerson that will challenge the player
 };
 
 // Read the player's tile and this map's warp events. Side-effect free.

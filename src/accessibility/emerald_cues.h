@@ -33,6 +33,10 @@ enum class Cue : int {
     Target,             // a navigation target was reached
     InteractOk,         // an interaction produced game text
     InteractFail,       // an interaction produced nothing
+    Sign,               // a sign, the wall clock, the TV: something to read
+    Trainer,            // a trainer, not just a person
+    Battle,             // a battle started
+    Menu,               // a menu or list opened
     Count
 };
 

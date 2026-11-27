@@ -237,12 +237,15 @@ short sound:
 | Door or exit warp adjacent, or one tile away | "Door two steps north. Press A to exit." | `door` |
 | Stairs near | "Stairs up two steps west. Walk onto them." | `stairs_up` / `stairs_down` |
 | Person adjacent | "Person west. Press A to talk." | `npc` |
+| Trainer adjacent or faced | "Trainer west. Press A to talk." | `trainer` |
 | Item ball adjacent | "Item south. Press A to pick it up." | `item` |
 | Sign, PC, machine, script object adjacent | "Object east. Press A." | `object` |
-| Sign, wall clock, TV or other background event faced | "Something to read here. Press A." | `object` |
-| Warp, stairs or a script moved you to another map | "New area." | `map_transition` |
-| A press made the game respond | (the game's own text follows) | `interact_ok` |
-| A press did nothing | nothing (the cue alone) | `interact_fail` |
+| Sign, wall clock, TV or other background event faced | "Something to read here. Press A." | `sign` |
+| A battle starts | (the game's own "Wild … appeared!") | `battle` |
+| A menu or list opens, including the battle action menu | (the menu's own labels) | `menu` |
+| Warp, stairs or a script moved you to another map | "New area." | `map` |
+| A press made the game respond | (the game's own text follows) | `ok` |
+| A press did nothing | nothing (the cue alone) | `fail` |
 
 The first line in that table is the important one for normal play: turning to
 face something describes *that* tile, and only that tile. Walking with your back

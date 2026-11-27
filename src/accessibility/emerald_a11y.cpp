@@ -128,6 +128,7 @@ bool g_surface_changed = false;
 std::uint32_t g_surface = 0;
 
 bool g_menu_live = false;
+bool g_battle_live = false;   // a battle is on screen (its start gets a sound)
 std::uint8_t g_menu_window = 0xFF;
 int g_menu_cursor = -9999;
 
@@ -1031,12 +1032,33 @@ void watch(const SceneState& s, const Mem& m) {
     consume_prints(s, m);
     poll_message_text(s, m);
 
+    // A battle starting is the biggest thing that can happen to a player who
+    // cannot see the screen, and it used to arrive as speech only. It gets its
+    // own sound, once per battle, not once per turn.
+    // The battle flag can flicker while the battle is being set up or torn
+    // down (a script hand-off, a save prompt), so the sting waits for the
+    // scene classifier to report Battle steadily, and only one battle's end
+    // re-arms it — otherwise a single fight could announce itself repeatedly.
+    const bool battle_settled = s.kind == SceneKind::Battle && s.battle.active &&
+                                g_frame - g_kind_since >= kSceneStableFrames;
+    if (battle_settled && !g_battle_live) {
+        g_battle_live = true;
+        play_cue(Cue::Battle);
+    } else if (g_battle_live && s.kind == SceneKind::Overworld &&
+               g_frame - g_kind_since >= kSceneStableFrames) {
+        // Only a settled return to the field re-arms the sting: the classifier
+        // can drop out of Battle for a frame or two while a throw plays out,
+        // and that must not announce the same battle again.
+        g_battle_live = false;
+    }
+
     // Menus (Start menu, script multichoice, Yes/No, context menus).
     if (s.menu.live) {
         const bool opened = !g_menu_live || s.menu.window != g_menu_window || g_surface_changed;
         if (opened) {
             g_menu_live = true;
             g_menu_window = s.menu.window;
+            play_cue(Cue::Menu);   // a menu changes what the pad does
             std::string text;
             if (!item_speech(s, m, &text)) {
                 g_pending_item = true;
@@ -1063,6 +1085,7 @@ void watch(const SceneState& s, const Mem& m) {
         if (opened) {
             g_list_live = true;
             g_list_task = s.list.task;
+            play_cue(Cue::Menu);   // a list changes what the pad does
             std::string text;
             item_speech(s, m, &text);
             say(text, false);
@@ -1084,6 +1107,7 @@ void watch(const SceneState& s, const Mem& m) {
         const bool opened = s.battle.control != g_control || g_surface_changed;
         if (opened) {
             g_control = s.battle.control;
+            play_cue(Cue::Menu);   // FIGHT / BAG / POKéMON / RUN came up
             std::string text;
             item_speech(s, m, &text);
             say(text, false);
@@ -1358,6 +1382,7 @@ void enable(bool on) {
     g_had_scene = false;
     g_kind = SceneKind::Unknown;
     g_menu_live = false;
+    g_battle_live = false;
     g_menu_cursor = -9999;
     g_list_live = false;
     g_list_index = -9999;

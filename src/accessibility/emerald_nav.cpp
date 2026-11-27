@@ -279,6 +279,7 @@ bool read_nav(const Mem& m, NavState* out) {
             n.lookGraphics = m.u8(e + kEventGraphics);
             const bool item = n.lookGraphics == kItemBallGraphics;
             const bool trainer = m.u8(e + kEventTrainerType) != 0;
+            n.lookIsTrainer = trainer;
             n.lookKind = item ? LookItem : (trainer ? LookPerson : LookObject);
             break;
         }
@@ -436,7 +437,13 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
                 play_cue(Cue::StairsDown, "Stairs down here. Walk onto them.");
                 break;
             case LookPerson:
-                play_cue(Cue::Npc, "Person here. Press A to talk.");
+                // A trainer gets its own sound: "someone here" and "someone
+                // who will challenge you" are different news.
+                if (n.lookIsTrainer) {
+                    play_cue(Cue::Trainer, "Trainer here. Press A to talk.");
+                } else {
+                    play_cue(Cue::Npc, "Person here. Press A to talk.");
+                }
                 break;
             case LookItem:
                 play_cue(Cue::Item, "Item here. Press A to pick it up.");
@@ -447,8 +454,9 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
             case LookReadable:
                 // A sign, the wall clock, the TV: the game has text for it but
                 // no sprite, so naming the kind would be a guess. What matters
-                // is that there is something to read on this tile.
-                play_cue(Cue::Object, "Something to read here. Press A.");
+                // is that there is something to read on this tile. Its own
+                // sound keeps it apart from the things you interact with.
+                play_cue(Cue::Sign, "Something to read here. Press A.");
                 break;
             default:
                 break;   // nothing in front: silence
@@ -509,7 +517,7 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
             play_cue(Cue::Item, say.c_str());
         } else if (n.npcIsTrainer) {
             const std::string say = join("Trainer ", where + ". Press A to talk.", "");
-            play_cue(Cue::Npc, say.c_str());
+            play_cue(Cue::Trainer, say.c_str());
         } else if (n.npcGraphics == kMovingBoxGraphics) {
             const std::string say = join("Box ", where + ". Press A.", "");
             play_cue(Cue::Object, say.c_str());
