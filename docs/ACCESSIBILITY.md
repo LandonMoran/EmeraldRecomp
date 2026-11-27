@@ -239,6 +239,7 @@ short sound:
 | Person adjacent | "Person west. Press A to talk." | `npc` |
 | Item ball adjacent | "Item south. Press A to pick it up." | `item` |
 | Sign, PC, machine, script object adjacent | "Object east. Press A." | `object` |
+| Sign, wall clock, TV or other background event faced | "Something to read here. Press A." | `object` |
 | Warp, stairs or a script moved you to another map | "New area." | `map_transition` |
 | A press made the game respond | (the game's own text follows) | `interact_ok` |
 | A press did nothing | nothing (the cue alone) | `interact_fail` |
@@ -259,6 +260,20 @@ guessing from tiles. Two rules keep it usable:
   stairs, otherwise it is a door.
 * A door is announced when it is within two tiles and the player is standing
   still, so walking past a row of houses does not narrate each one at speed.
+
+Signs, the wall clock, the TV and the rest of the furniture are not objects: the
+map lists them in a separate `bgEvents` table (`struct BgEvent`: tile,
+elevation, a facing kind and the script that runs on A). They have no sprite, so
+before this they were the one silence left — turning to the clock said nothing.
+The look probe now walks that table with the same rules as the engine's
+`GetBackgroundEventAtPosition`: the tile you face, your elevation (or a record
+that accepts any elevation), and the authored side from
+`BG_EVENT_PLAYER_FACING_*`, so a sign that is only readable from the south says
+nothing when you face it from the north. Hidden-item and secret-base records
+are skipped: naming them would hand the player something the game means them to
+find. The wording stays neutral ("Something to read here") because the table
+carries a script pointer, not a name; pressing A then reads the game's own text
+for that clock or sign.
 
 Nothing repeats on a timer. A thing is described when it becomes what you are
 facing or what you have just walked up to, and standing still afterwards is

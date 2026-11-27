@@ -24,7 +24,9 @@ MAP_NAME = {
     (0, 16): "Route101",
     (0, 17): "OldaleTown",
     (25, 40): "InsideOfTruck",
-    (0, 10): "PlayersHouse1F",
+    (0, 10): "OldaleTown",        # proven by the town sign it reads
+    (1, 0): "PlayersHouse1F",
+    (1, 1): "PlayersHouse2F",     # the bedroom: wall clock, PC, posters
     (25, 1): "BrendansHouse2F",   # not used; kept for older saves
 }
 

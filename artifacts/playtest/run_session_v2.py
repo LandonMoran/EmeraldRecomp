@@ -109,6 +109,41 @@ def grant_balls(f, poke_balls=30, master_balls=1):
     return {"pocket": hex(sb1 + SB1_BALL_POCKET), "slots": out}
 
 
+# ── Background events (signs, the wall clock, the TV) ────────────────────
+
+GMAPHDR = 0x02037318          # gMapHeader (MapHeader.events at +4)
+BG_EVENT_SIZE = 12            # struct BgEvent: x u16, y u16, elev u8, kind u8, script u32
+KIND_FACING = {0: None, 1: 2, 2: 1, 3: 4, 4: 3}   # BG_EVENT_PLAYER_FACING_* -> facing
+FACING_STEP = {1: (0, 1), 2: (0, -1), 3: (-1, 0), 4: (1, 0)}   # 1 south .. 4 east
+FACE_KEY = {1: "down", 2: "up", 3: "left", 4: "right"}
+
+
+def bg_events(f):
+    """This map's background events, read from the ROM table the game uses.
+
+    The harness reads the same MapEvents.bgEvents array the engine's
+    GetBackgroundEventAtPosition walks, so the coordinates it stands on are the
+    game's own, not a crib sheet.
+    """
+    hdr = f.c.read_ewram(GMAPHDR, 0x14)
+    events = struct.unpack("<I", hdr[4:8])[0]
+    if not (0x08000000 <= events < 0x0A000000):
+        return []
+    e = f.c.read("rom", events, 0x14)
+    count = e[3]
+    ptr = struct.unpack("<I", e[0x10:0x14])[0]
+    if not (0x08000000 <= ptr < 0x0A000000) or not count:
+        return []
+    raw = f.c.read("rom", ptr, BG_EVENT_SIZE * count)
+    out = []
+    for i in range(count):
+        b = raw[BG_EVENT_SIZE * i:BG_EVENT_SIZE * (i + 1)]
+        x, y, elev, kind = struct.unpack("<HHBB", b[:6])
+        script = struct.unpack("<I", b[8:12])[0]
+        out.append({"x": x, "y": y, "elev": elev, "kind": kind, "script": script})
+    return out
+
+
 def force_map(f, group, num, x, y):
     """Harness-only: SaveBlock1 position + CB2_LoadMap, i.e. the game's own
     map load from a chosen tile."""
@@ -433,6 +468,131 @@ class Session:
         self.line(f"[silence] lines={len(quiet)} "
                   f"(0 means nothing was announced about what we are not looking at)")
 
+    def try_readable(self, tag, group, num, ev, facing):
+        """Stand on the side an event is authored for, face it, and read it."""
+        f = self.f
+        dx, dy = FACING_STEP[facing]
+        stand = (ev["x"] - dx, ev["y"] - dy)      # one step back from the event
+        force_map(f, group, num, stand[0], stand[1])
+        said = self.harvest(f"{tag}-load")
+        f.frames(90)          # let the forced load finish before anything else
+        said += self.harvest(f"{tag}-settle")
+        # Turn toward the event. A short tap turns in place; a long press would
+        # walk, and walking changes which tile is in front of you. The proof the
+        # harness looks for is the layer's own announcement, not the nav cursor,
+        # because a late frame can only make the cursor stale, never the line.
+        cue = False
+        for attempt in range(5):
+            # One frame of direction is a turn, not a step: the game turns the
+            # avatar on that frame and only walks while the key stays down.
+            # Holding it (the first version used six frames) walked the player
+            # off the tile, so the A press afterwards read empty air.
+            f.action(FACE_KEY[facing], 1)
+            f.frames(28)
+            said += self.harvest(f"{tag}-turn{attempt}")
+            look = (f.nav().get("look") or {})
+            cue = cue or any("something to read" in s for s in said)
+            if cue or look.get("kind") == "readable":
+                break
+        look = (f.nav().get("look") or {})
+        self.line(f"[bg] map={f.map_name()} event=({ev['x']},{ev['y']}) "
+                  f"kind={ev['kind']} stand={stand} facing={FACE_KEY[facing]} "
+                  f"look={look.get('kind')} tile={f.tile()} "
+                  f"facing={f.obj()['facing']} said={said}")
+        if not cue and look.get("kind") != "readable":
+            return False
+        read = []
+        for press in range(5):
+            f.confirm(40)
+            got = self.harvest(f"{tag}-press{press}")
+            said += got
+            read += [s for s in got if "something to read" not in s]
+            for _ in range(6):
+                if not f.box():
+                    break
+                f.confirm(36)
+                got = self.harvest(f"{tag}-text{press}")
+                said += got
+                read += got
+            if read:
+                break
+        self.line(f"[bg] read the thing at ({ev['x']},{ev['y']}): {said}")
+        return bool(read) or cue
+
+    def readables(self):
+        """Background events: signs outside, the clock and TV inside.
+
+        These have no sprite, so nothing in the object list can announce them;
+        before this they were the last silence in the world. Each one is found
+        in the map's own bgEvents table, faced from the side the game authored
+        it for, and then read with A.
+        """
+        f = self.f
+        self.beat("background-readables",
+                  "signs and house fixtures speak when faced and read")
+        # (tag, map group, map num, probe tile x/y, events wanted). Littleroot
+        # itself is left out: forcing a load of it re-runs the move-in script,
+        # which owns the player and walks him away from any tile the harness
+        # picks. Oldale has plain street signs and the bedroom has the clock.
+        plans = [("oldale", 0, 10, 11, 11, 2)]
+        for tag, group, num, cx, cy, want in plans:
+            force_map(f, group, num, cx, cy)      # load the map to read its table
+            f.frames(200)
+            self.speech(f"{tag}-probe")
+            events = bg_events(f)
+            listed = [(e["x"], e["y"], e["kind"]) for e in events]
+            self.line(f"[bg] {f.map_name()}: {len(events)} background events {listed}")
+            done = 0
+            for ev in events:
+                if done >= want:
+                    break
+                if ev["kind"] not in KIND_FACING:
+                    continue          # hidden item / secret base markers
+                if not (0x08000000 <= ev["script"] < 0x0A000000):
+                    continue          # no script: nothing to read
+                authored = KIND_FACING[ev["kind"]]
+                for facing in ([authored] if authored else [2, 1, 3, 4]):
+                    if self.try_readable(f"{tag}{done}-{facing}", group, num,
+                                         ev, facing):
+                        done += 1
+                        break
+            self.line(f"[bg] {f.map_name()}: read {done} of {len(events)}")
+
+    def house_readables(self):
+        """The player's bedroom: the wall clock and the rest of the fixtures.
+
+        The room is reached with force_map (the harness's disclosed map write)
+        rather than through Littleroot's front door, because every forced load
+        of Littleroot re-runs the move-in script and the script, not the pad,
+        then owns the player. Inside the bedroom nothing else is running.
+        """
+        f = self.f
+        self.beat("house-readables",
+                  "the bedroom wall clock and fixtures, faced and read")
+        force_map(f, 1, 1, 0, 2)
+        f.frames(240)
+        self.speech("house-load")
+        events = bg_events(f)
+        listed = [(e["x"], e["y"], e["kind"]) for e in events]
+        self.line(f"[bg] walked in: map={f.map_name()} tile={f.tile()} "
+                  f"scene={f.scene()}")
+        self.line(f"[bg] {f.map_name()}: {len(events)} background events {listed}")
+        g, n = f.map()
+        done = 0
+        for ev in events:
+            if done >= 4:
+                break
+            if ev["kind"] not in KIND_FACING:
+                continue
+            if not (0x08000000 <= ev["script"] < 0x0A000000):
+                continue
+            authored = KIND_FACING[ev["kind"]]
+            for facing in ([authored] if authored else [2, 1, 3, 4]):
+                if self.try_readable(f"house{done}-{facing}", g, n, ev, facing):
+                    done += 1
+                    break
+        self.line(f"[bg] {f.map_name()}: read {done} of {len(events)}")
+
     def route101(self):
         f = self.f
         self.beat("route-101-scaffold", "force_map + VAR_ROUTE101_STATE=1 (harness-only)")
@@ -672,6 +832,8 @@ class Session:
             self.into_field()
             self.truck()
             self.town_walk()
+            self.readables()
+            self.house_readables()
             self.route101()
             self.rescue()
             self.walk_to_bag()

@@ -3,10 +3,21 @@
 // Facts come from the pinned pokemerald revision (see emerald_guest.h):
 //   gMapHeader            MapHeader   @0x02037318
 //     +0x04               const struct MapEvents *events        (ROM pointer)
-//   struct MapEvents      objectEventCount u8 @0, warpCount u8 @1,
-//                         objectEvents * @4, warps * @8
+// struct MapEvents      objectEventCount u8 @0, warpCount u8 @1,
+//                         objectEvents * @4, warps * @8,
+//                         coordEventCount u8 @2, bgEventCount u8 @3,
+//                         bgEvents * @0x10
 //   struct WarpEvent      s16 x, s16 y, u8 elevation, u8 warpId, u8 mapNum,
 //                         u8 mapGroup                        (8 bytes)
+//   struct BgEvent        u16 x @0, u16 y @2, u8 elevation @4, u8 kind @5,
+//                         const u8 *script @8                 (12 bytes)
+//                         BG_EVENT_PLAYER_FACING_* (constants/event_bg.h):
+//                         0 any, 1 north, 2 south, 3 east, 4 west,
+//                         7 hidden item, 8 secret base
+//   The engine's own GetBackgroundEventAtPosition walks that 12-byte table,
+//   matching x, y and (record elevation == 0 or == the player's); its caller
+//   GetInteractedBackgroundEventScript then gates on kind, so a sign is only
+//   readable from the side it was authored for. Both are mirrored here.
 //   struct ObjectEvent    active:1 @0, invisible:1 @1.5, isPlayer:1 @2,
 //                         graphicsId @0x05, trainerType @0x07,
 //                         mapNum @0x09, mapGroup @0x0A,
@@ -31,8 +42,27 @@ using emerald::guest::Mem;
 
 constexpr std::uint32_t kMapEventsPtr = 0x04;
 constexpr std::uint32_t kMapEventsWarpCount = 0x01;
+constexpr std::uint32_t kMapEventsBgCount = 0x03;
 constexpr std::uint32_t kMapEventsWarps = 0x08;
+constexpr std::uint32_t kMapEventsBgEvents = 0x10;
 constexpr std::uint32_t kWarpEventSize = 8;
+
+// Background events: signs, the wall clock, the TV, shelves. They have no
+// sprite, so nothing in the object list can say where they are.
+constexpr std::uint32_t kBgEventSize = 12;
+constexpr std::uint32_t kBgEventX = 0x00;
+constexpr std::uint32_t kBgEventY = 0x02;
+constexpr std::uint32_t kBgEventElevation = 0x04;
+constexpr std::uint32_t kBgEventKind = 0x05;
+constexpr std::uint32_t kBgEventScript = 0x08;
+constexpr int kBgEventCountMax = 32;     // generous: real maps carry 0..12
+
+// BG_EVENT_PLAYER_FACING_* — which way the player must face to read one.
+constexpr int kBgFacingAny = 0;
+constexpr int kBgFacingNorth = 1;
+constexpr int kBgFacingSouth = 2;
+constexpr int kBgFacingEast = 3;
+constexpr int kBgFacingWest = 4;
 
 constexpr std::uint32_t kEventSize = 0x24;
 constexpr std::uint32_t kEventCoords = 0x10;
@@ -77,6 +107,20 @@ Target g_target;
 
 std::string join(const char* a, const std::string& b, const char* c) {
     return std::string(a) + b + c;
+}
+
+// Background-event kind to the facing it demands (0 = read from any side,
+// -1 = not something the player reads: hidden items, secret bases).
+// Facing codes are the object's own: 1 south, 2 north, 3 west, 4 east.
+int bg_event_required_facing(int kind) {
+    switch (kind) {
+        case kBgFacingAny: return 0;
+        case kBgFacingNorth: return 2;
+        case kBgFacingSouth: return 1;
+        case kBgFacingEast: return 4;
+        case kBgFacingWest: return 3;
+        default: return -1;
+    }
 }
 
 const char* facing_word(int facing) {
@@ -239,6 +283,30 @@ bool read_nav(const Mem& m, NavState* out) {
             break;
         }
     }
+
+    // Background events: the things with no sprite that the game still lets you
+    // read by pressing A — signs, the wall clock, the TV. Same rule the engine
+    // uses (GetBackgroundEventAtPosition): the faced tile, the player's
+    // elevation (or the record's own "any elevation" 0), and the authored
+    // facing from the record's kind.
+    if (n.lookKind == LookNone && have_events) {
+        const int bg_count = m.u8(events + kMapEventsBgCount);
+        const std::uint32_t bg_events = m.u32(events + kMapEventsBgEvents);
+        for (int i = 0; bg_events >= 0x08000000u && i < bg_count &&
+                        i < kBgEventCountMax; ++i) {
+            const std::uint32_t b = bg_events + static_cast<std::uint32_t>(i) * kBgEventSize;
+            if (m.u16(b + kBgEventX) != n.lookX - kMapOffset) continue;
+            if (m.u16(b + kBgEventY) != n.lookY - kMapOffset) continue;
+            const int elevation = m.u8(b + kBgEventElevation);
+            if (elevation != 0 && elevation != n.elevation) continue;
+            const int required = bg_event_required_facing(m.u8(b + kBgEventKind));
+            if (required < 0) continue;
+            if (required != 0 && required != n.facing) continue;
+            if (m.u32(b + kBgEventScript) < 0x08000000u) continue;  // no script: inert
+            n.lookKind = LookReadable;
+            break;
+        }
+    }
     return n.ok;
 }
 
@@ -282,6 +350,7 @@ std::string nav_json(const NavState& n) {
         case LookPerson: out += "person"; break;
         case LookItem: out += "item"; break;
         case LookObject: out += "object"; break;
+        case LookReadable: out += "readable"; break;
         default: out += "nothing"; break;
     }
     out += "\",\"x\":" + std::to_string(n.lookX) + ",\"y\":" + std::to_string(n.lookY);
@@ -374,6 +443,12 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
                 break;
             case LookObject:
                 play_cue(Cue::Object, "Object here. Press A.");
+                break;
+            case LookReadable:
+                // A sign, the wall clock, the TV: the game has text for it but
+                // no sprite, so naming the kind would be a guess. What matters
+                // is that there is something to read on this tile.
+                play_cue(Cue::Object, "Something to read here. Press A.");
                 break;
             default:
                 break;   // nothing in front: silence

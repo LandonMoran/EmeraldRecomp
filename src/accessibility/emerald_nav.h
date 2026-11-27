@@ -41,6 +41,7 @@ enum LookKind {
     LookPerson,
     LookItem,
     LookObject,
+    LookReadable,   // a background event: a sign, the wall clock, the TV
 };
 
 struct NavState {

@@ -35,7 +35,7 @@
 [intro f4186] YES.
 [intro f4243] Ah, okay! You’re AA who’s moving to my hometown of LITTLEROOT. I get it now!
 [intro f4727] All right, are you ready? Your very own adventure is about to unfold. Take courage, and leap into the world of POKéMON where dreams, adventure, and friendships await! Well, I’ll be expecting you later. Come see me in my POKéMON LAB.
-[intro f5761] Box south. Press A.
+[intro f5761] Something to read here. Press A.
 [intro f5785] Overworld.
 [state] map=InsideOfTruck tile=(2,2) facing=1 scene=overworld
 
@@ -62,100 +62,182 @@
 === BEAT facing-silence ===  (nothing in front: the mod must stay quiet)
 [silence] lines=0 (0 means nothing was announced about what we are not looking at)
 
+=== BEAT background-readables ===  (signs and house fixtures speak when faced and read)
+[oldale-probe f8887] New area.
+[bg] OldaleTown: 5 background events [(11, 9, 0), (7, 16, 1), (15, 6, 1), (8, 16, 1), (16, 6, 1)]
+[oldale0-2-turn0 f9770] Something to read here. Press A.
+[bg] map=OldaleTown event=(11,9) kind=0 stand=(11, 10) facing=up look=readable tile=(11, 10) facing=2 said=['something to read here. press a.']
+[oldale0-2-press0 f9805] OLDALE TOWN “Where things start off scarce.”
+[bg] read the thing at (11,9): ['something to read here. press a.', 'oldale town “where things start off scarce.”']
+[oldale1-2-load f10000] Door two steps north-west. Press A to exit.
+[oldale1-2-turn0 f10383] Something to read here. Press A.
+[bg] map=OldaleTown event=(7,16) kind=1 stand=(7, 17) facing=up look=readable tile=(7, 17) facing=2 said=['door two steps north-west. press a to exit.', 'something to read here. press a.']
+[oldale1-2-press0 f10418] “Rejuvenate your tired partners!” POKéMON CENTER
+[bg] read the thing at (7,16): ['door two steps north-west. press a to exit.', 'something to read here. press a.', '“rejuvenate your tired partners!” pokémon center']
+[bg] OldaleTown: read 2 of 5
+
+=== BEAT house-readables ===  (the bedroom wall clock and fixtures, faced and read)
+[house-load f10614] New area.
+[bg] walked in: map=PlayersHouse2F tile=(0, 2) scene=overworld
+[bg] PlayersHouse2F: 4 background events [(0, 1, 1), (1, 1, 0), (5, 1, 0), (3, 1, 0)]
+[house0-2-turn0 f11536] Something to read here. Press A.
+[bg] map=PlayersHouse2F event=(0,1) kind=1 stand=(0, 2) facing=up look=readable tile=(0, 2) facing=2 said=['something to read here. press a.']
+[house0-2-press0 f11571] AA booted up the PC.
+[bg] read the thing at (0,1): ['something to read here. press a.', 'aa booted up the pc.']
+[house1-2-turn0 f12073] Something to read here. Press A.
+[bg] map=PlayersHouse2F event=(1,1) kind=0 stand=(1, 2) facing=up look=readable tile=(1, 2) facing=2 said=['something to read here. press a.']
+[house1-2-press0 f12108] AA flipped open the notebook. ADVENTURE RULE NO. 1 Open the MENU with START. ADVENTURE RULE NO. 2 Record your progress with SAVE. The remaining pages are blank…
+[bg] read the thing at (1,1): ['something to read here. press a.', 'aa flipped open the notebook. adventure rule no. 1 open the menu with start. adventure rule no. 2 record your progress with save. the remaining pages are blank…']
+[house2-2-turn0 f12762] Something to read here. Press A.
+[bg] map=PlayersHouse2F event=(5,1) kind=0 stand=(5, 2) facing=up look=readable tile=(5, 2) facing=2 said=['something to read here. press a.']
+[house2-2-press0 f12797] The clock is stopped…. Better set it and start it!
+[bg] read the thing at (5,1): ['something to read here. press a.', 'the clock is stopped…. better set it and start it!']
+[house3-2-turn0 f13413] Something to read here. Press A.
+[bg] map=PlayersHouse2F event=(3,1) kind=0 stand=(3, 2) facing=up look=readable tile=(3, 2) facing=2 said=['something to read here. press a.']
+[house3-2-press0 f13448] It’s a Nintendo GameCube. A Game Boy Advance is connected to serve as the Controller.
+[bg] read the thing at (3,1): ['something to read here. press a.', 'it’s a nintendo gamecube. a game boy advance is connected to serve as the controller.']
+[bg] PlayersHouse2F: read 4 of 4
+
 === BEAT route-101-scaffold ===  (force_map + VAR_ROUTE101_STATE=1 (harness-only))
-[route-load f8887] New area.
+[route-load f13719] New area.
 [state] map=Route101 tile=(10,18) facing=1
 
 === BEAT birch-rescue ===  (step onto the coord event at (10,19))
-[rescue-step f9199] H-help me!
+[rescue-step f14031] H-help me!
 [walk] down moved=True tile=(10,19)
-[rescue10 f9605] Hello! You over there! Please! Help! In my BAG! There’s a POKé BALL!
+[rescue10 f14437] Hello! You over there! Please! Help! In my BAG! There’s a POKé BALL!
 [state] cutscene over: var=2 box=False scene=overworld tile=(10, 15) facing=3
 
 === BEAT birch-bag ===  (walk to the bag and press A for the starter choice)
-[bag-walk3 f10262] Person west. Press A to talk.
+[bag-walk3 f15094] Person west. Press A to talk.
 [walk] at bag-side tile (8, 14) after 3 steps
-[bag-press f10428] CHICK POKéMON TORCHIC PROF. BIRCH is in trouble! Release a POKéMON and rescue him!
-[bag2 f10473] Do you choose this POKéMON?
-[bag2 f10474] YES.
+[bag-press f15260] CHICK POKéMON TORCHIC PROF. BIRCH is in trouble! Release a POKéMON and rescue him!
+[bag2 f15305] Do you choose this POKéMON?
+[bag2 f15306] YES.
 [surface] menu=True list=False items=['YES', 'NO'] selected=0
 [state] battle started from the bag choice
 [state] after bag: scene=battle menu=False list=False items=[]
 
 === BEAT battle ===  (action menu, move selection, damage and HP)
 [battle] scene=battle battle=True menu=False items=[]
-[battle1 f10635] Battle.
-[battle8 f10873] Wild ZIGZAGOON appeared!
-[battle12 f10979] Go! TORCHIC!
-[battle18 f11179] Fight, 1 of 4.
-[battle19 f11200] SCRATCH, NORMAL, PP 35 of 35. 1 of 2
-[battle20 f11239] TORCHIC used SCRATCH!
-[battle26 f11439] Wild ZIGZAGOON used GROWL!
-[battle34 f11677] TORCHIC’s ATTACK fell!
-[battle39 f11842] Fight, 1 of 4.
-[battle40 f11872] SCRATCH, NORMAL, PP 34 of 35. 1 of 2
-[battle41 f11911] TORCHIC used SCRATCH!
-[battle47 f12105] Wild ZIGZAGOON used TACKLE!
-[battle54 f12329] Fight, 1 of 4.
-[battle55 f12352] SCRATCH, NORMAL, PP 33 of 35. 1 of 2
-[battle56 f12391] TORCHIC used SCRATCH!
-[battle64 f12658] Wild ZIGZAGOON fainted!
-[battle68 f12778] TORCHIC gained 17 EXP. Points!
-[state] battle over after 75 presses
+[battle1 f15467] Battle.
+[battle8 f15705] Wild ZIGZAGOON appeared!
+[battle12 f15811] Go! TORCHIC!
+[battle18 f16011] Fight, 1 of 4.
+[battle19 f16032] SCRATCH, NORMAL, PP 35 of 35. 1 of 2
+[battle20 f16071] TORCHIC used SCRATCH!
+[battle26 f16275] Wild ZIGZAGOON used GROWL!
+[battle34 f16513] TORCHIC’s ATTACK fell!
+[battle39 f16680] Fight, 1 of 4.
+[battle40 f16704] SCRATCH, NORMAL, PP 34 of 35. 1 of 2
+[battle41 f16743] TORCHIC used SCRATCH!
+[battle47 f16937] Wild ZIGZAGOON used TACKLE!
+[battle61 f17381] Wild ZIGZAGOON’s ORAN BERRY restored health!
+[battle70 f17665] Fight, 1 of 4.
+[battle71 f17696] SCRATCH, NORMAL, PP 33 of 35. 1 of 2
+[battle72 f17735] TORCHIC used SCRATCH!
+[battle78 f17931] Wild ZIGZAGOON used GROWL!
+[battle85 f18169] TORCHIC’s ATTACK fell!
+[battle91 f18334] Fight, 1 of 4.
+[battle92 f18368] SCRATCH, NORMAL, PP 32 of 35. 1 of 2
+[battle93 f18407] TORCHIC used SCRATCH!
+[battle99 f18603] Wild ZIGZAGOON used GROWL!
+[battle106 f18841] TORCHIC’s ATTACK fell!
+[battle112 f19006] Fight, 1 of 4.
+[battle113 f19040] SCRATCH, NORMAL, PP 31 of 35. 1 of 2
+[battle114 f19079] TORCHIC used SCRATCH!
+[battle120 f19268] Wild ZIGZAGOON used GROWL!
+[battle127 f19505] TORCHIC’s ATTACK fell!
+[battle132 f19670] Fight, 1 of 4.
+[battle133 f19680] SCRATCH, NORMAL, PP 30 of 35. 1 of 2
+[battle134 f19719] TORCHIC used SCRATCH!
+[battle140 f19906] Wild ZIGZAGOON used TACKLE!
+[battle147 f20125] Fight, 1 of 4.
+[battle148 f20160] SCRATCH, NORMAL, PP 29 of 35. 1 of 2
+[battle149 f20199] TORCHIC used SCRATCH!
+[battle157 f20455] Wild ZIGZAGOON fainted!
+[battle160 f20554] TORCHIC gained 17 EXP. Points!
+[state] battle over after 167 presses
 [state] after battle scene=overworld map=Route101 tile=(6, 13)
 
 === BEAT grant-poke-balls ===  (SaveBlock1 ball pocket (harness-only))
 [scaffold] {'pocket': '0x20260b8', 'slots': [{'item': 4, 'quantity': 30}, {'item': 1, 'quantity': 1}]}
 
 === BEAT wild-encounter ===  (force_map onto Route 101 tall grass)
-[grass-load f13051] Overworld.
+[grass-load f20827] Overworld.
 [state] map=Route101 tile=(5, 16)
 [state] encounter: scene=battle
 
 === BEAT throw-ball ===  (Bag -> ball pocket -> POKé BALL -> USE)
-[try0-intro0 f14478] Battle.
-[try0-intro12 f14733] Wild POOCHYENA appeared!
-[try0-intro17 f14838] Go! TORCHIC!
-[try0-intro26 f15033] Fight, 1 of 4.
+[try0-intro0 f21578] Battle.
+[try0-intro11 f21833] Wild POOCHYENA appeared!
+[try0-intro16 f21932] Go! TORCHIC!
+[try0-intro25 f22127] Fight, 1 of 4.
 [bag] action menu: 'Battle. Fight, 1 of 4.'
-[try0-right f15054] Bag, 2 of 4.
+[try0-right f22148] Bag, 2 of 4.
 [bag] after right: 'Battle. Bag, 2 of 4.'
-[try0-open0 f15102] ITEMS, CLOSE BAG Return to the battle.
-[try0-open3 f15127] CLOSE BAG, 1 of 1.
-[try0-open3 f15128] Bag.
+[try0-open0 f22195] ITEMS
+[try0-open0 f22196] CLOSE BAG Return to the battle.
+[try0-open3 f22221] CLOSE BAG, 1 of 1.
+[try0-open3 f22222] Bag.
 [bag] open: scene=bag items=['CLOSE BAG']
-[try0-right0 f15137] ITEMS POKé BALLS
-[try0-rightwait00 f15155] 30 POKé BALL 1 MASTER BALL, CLOSE BAG
-[try0-rightwait00 f15156] A tool used for catching wild POKéMON.
-[try0-rightwait00 f15158] POKé BALL, 1 of 3.
+[try0-right0 f22231] ITEMS POKé BALLS
+[try0-rightwait00 f22249] 30 POKé BALL 1 MASTER BALL, CLOSE BAG
+[try0-rightwait00 f22250] A tool used for catching wild POKéMON.
+[try0-rightwait00 f22252] POKé BALL, 1 of 3.
 [bag] pocket 0: items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
 [bag] at balls: items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
-[try0-ball f15165] POKé BALL is selected. USE, CANCEL
-[try0-ball f15174] Option 1 of 2.
+[try0-ball f22259] POKé BALL is selected. USE, CANCEL
+[try0-ball f22268] Option 1 of 2.
 [throw] ball selected: 'POKé BALL is selected. USE, CANCEL'
 
 === BEAT catch ===  (the ball flies, wobbles, catches or breaks free)
-[catch0-1 f15238] 5 17/ 20 TORCHIC♂
-[catch0-1 f15240] 2 POOCHYENA♂
-[catch0-2 f15267] Battle.
-[catch0-2 f15270] AA used POKé BALL!
-[catch0-16 f15791] Gotcha! POOCHYENA was caught!
-[throw] attempt 0 (slot 0): caught
+[catch0-1 f22332] 5 14/ 20 TORCHIC♀
+[catch0-1 f22334] 3 POOCHYENA♀
+[catch0-2 f22361] Battle.
+[catch0-2 f22364] AA used POKé BALL!
+[catch0-10 f22655] Oh, no! The POKéMON broke free!
+[throw] attempt 0 (slot 0): broke-free
+[try1-intro7 f22836] Wild POOCHYENA used TACKLE!
+[try1-intro16 f23041] Bag, 2 of 4.
+[try1-intro17 f23060] Fight, 1 of 4.
+[bag] action menu: 'Battle. Fight, 1 of 4.'
+[try1-right f23072] Bag, 2 of 4.
+[bag] after right: 'Battle. Bag, 2 of 4.'
+[try1-open0 f23119] POKé BALLS
+[try1-open0 f23120] 29 POKé BALL 1 MASTER BALL, CLOSE BAG
+[try1-open0 f23121] A tool used for catching wild POKéMON.
+[try1-open3 f23146] POKé BALL, 1 of 3.
+[try1-open3 f23147] Bag.
+[bag] open: scene=bag items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
+[bag] at balls: items=['POKÉ BALL', 'MASTER BALL', 'CLOSE BAG']
+[try1-cursor f23154] MASTER BALL, 2 of 3.
+[try1-cursor f23155] The best BALL that catches a POKéMON without fail.
+[try1-cursor f23156] MASTER BALL, 2 of 3.
+[try1-ball f23171] MASTER BALL is selected. USE, CANCEL
+[try1-ball f23180] Option 1 of 2.
+[throw] ball selected: 'MASTER BALL is selected. USE, CANCEL'
+[catch1-1 f23244] 5 12/ 20 TORCHIC♀
+[catch1-1 f23246] 3 POOCHYENA♀
+[catch1-2 f23273] Battle.
+[catch1-2 f23276] AA used MASTER BALL!
+[catch1-17 f23805] Gotcha! POOCHYENA was caught!
+[throw] attempt 1 (slot 1): caught
 [state] throw result: caught
 
 === BEAT nickname ===  (answer the nickname prompt and type a name)
-[nick-prompt9 f16041] POOCHYENA’s data was added to the POKéDEX.
-[nick-prompt16 f16248] POKéDEX registration completed.
-[nick-prompt16 f16249] 010 POOCHYENA BITE POKéMON HT, WT 1’08”
-[nick-prompt16 f16250] 30.0 lbs. It savagely threatens foes with bared fangs. It chases after fleeing targets tenaciously. It turns tail and runs, however, if the foe strikes back.
-[nick-prompt18 f16329] Give a nickname to the captured POOCHYENA?
+[nick-prompt8 f24053] POOCHYENA’s data was added to the POKéDEX.
+[nick-prompt15 f24260] POKéDEX registration completed.
+[nick-prompt15 f24261] 010 POOCHYENA BITE POKéMON HT, WT 1’08”
+[nick-prompt15 f24262] 30.0 lbs. It savagely threatens foes with bared fangs. It chases after fleeing targets tenaciously. It turns tail and runs, however, if the foe strikes back.
+[nick-prompt17 f24341] Give a nickname to the captured POOCHYENA?
 [state] nickname screen: naming=True status='Name entry. Upper case letters. A, row 1 of 4, column 1 of 8.' msg='Give a nickname to the captured POOCHYENA?'
 [state] saved nickname.state for iteration
-[nick-letter0 f16531] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
-[nick-letter0 f16555] Name entry.
-[nick-letter1 f16576] Name: A
-[nick-letter2 f16606] Name: AA
-[nick-ok f16636] OK
+[nick-letter0 f24543] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[nick-letter0 f24567] Name entry.
+[nick-letter1 f24588] Name: A
+[nick-letter2 f24618] Name: AA
+[nick-ok f24648] OK
 [state] end: scene=battle map=Route101
 
 === beats reached ===
@@ -167,6 +249,8 @@
 * walk-out-of-truck
 * overworld-walking
 * facing-silence
+* background-readables
+* house-readables
 * route-101-scaffold
 * birch-rescue
 * birch-bag

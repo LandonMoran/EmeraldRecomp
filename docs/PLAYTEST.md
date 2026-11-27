@@ -103,6 +103,7 @@ New in this round (all read back from the layer's own log):
 | Doors by proximity | `Door two steps north. Press A to exit.` when inside a house |
 | People by proximity | `Person west. Press A to talk.` / `Person east. Press A to talk.` |
 | Objects by facing | `Object here. Press A.` (with `cue: object`) |
+| Signs and fixtures by facing | `Something to read here. Press A.`, then the game's own text: Oldale's town sign (`OLDALE TOWN “Where things start off scarce.”`) and its Pokémon Center sign; in the bedroom the PC (`AA booted up the PC.`), the diary (`ADVENTURE RULE No. 1…`), the wall clock (`The clock is stopped… Better set it and start it!`) and the GameCube |
 | Nothing on a timer | the same tile walked over twice in a row produced one announcement per *change*, not per step |
 
 ## What the automated run covers now
@@ -201,8 +202,8 @@ transcript is evidence about the game, not about the test.
   `(2,2)` is `(9,9)` in `gObjectEvents`, so "player parked off the 5x5 map" in
   the earlier notes was a misreading, not a defect.
 * The whole opening is spoken: greeting, title, Birch's speech, the boy/girl
-  options, name entry with its row/column readout, the truck, "New area", Mom's
-  dialogue, the move-in lines and the clock.
+  options, name entry with its row/column readout, the truck and its moving
+  box, "New area", Mom's dialogue and the move-in lines.
 
 ## Gaps the harness opened
 
@@ -210,11 +211,13 @@ transcript is evidence about the game, not about the test.
    `AddTextPrinter` entry hook live, the labels the game prints for these menus
    are captured, so the boy/girl choice says `BOY.` and the confirm prompt says
    `YES.` instead of `Option 1 of 2.` (see *Verified spoken session*).
-2. **Signs and appliances are silent.** Facing the wall clock reports
-   `look: nothing` until it is pressed; the clock, the PC and the house signs
-   are `bg_events`, and the look probe only covers warps, stairs and object
-   events. "Facing the clock" is exactly the kind of thing the mission asks to
-   hear.
+2. ~~**Signs and appliances are silent.**~~ Fixed: the look probe now walks the
+   map's `bgEvents` table (`struct BgEvent`, 12 bytes: tile, elevation, facing
+   kind, script) under the same rules as the engine's own
+   `GetBackgroundEventAtPosition` / `GetInteractedBackgroundEventScript`, so
+   facing a sign, the wall clock or the TV says "Something to read here. Press
+   A." and A reads the game's text for it. Hidden-item and secret-base records
+   are skipped. The `background-readables` beat proves it.
 
 ## Real playthrough: the earlier gate, for the record
 
