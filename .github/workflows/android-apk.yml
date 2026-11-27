@@ -1,0 +1,60 @@
+name: Android APK
+
+# Builds the installable debug APK on a GitHub runner (no local Android
+# toolchain needed) and leaves it as a downloadable artifact on the run.
+#
+# The APK still asks for the player's own ROM dump and BIOS on first launch;
+# nothing copyrighted is bundled.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    name: assembleDebug
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Check out the game and its engine submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android command-line tools
+        uses: android-actions/setup-android@v3
+
+      # The versions the Gradle files pin: compileSdk 35, NDK 27.1, CMake 3.22.
+      - name: Install SDK packages, NDK and CMake
+        run: |
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0" \
+            "ndk;27.1.12297006" \
+            "cmake;3.22.1"
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build the debug APK
+        working-directory: android
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: emeraldrecomp-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
