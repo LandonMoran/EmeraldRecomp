@@ -83,6 +83,18 @@ struct PuzzleState {
     int totalChanges = 0;           // how many times this map's room has changed
     int lastMoveTiles = 0;          // last forced (input-free) move
     bool puzzleMap = false;         // this map's geometry has changed once
+
+    // Passability of the four neighbouring tiles. This is the same fact the
+    // layer speaks as "Blocked east." when a step is refused, so a harness can
+    // route a maze without guessing and without reading anything the player
+    // cannot hear.
+    bool openN = false, openE = false, openS = false, openW = false;
+
+    // The grid those answers came from, and the raw blocks, for diagnosing a
+    // read that disagrees with the game.
+    int gridWidth = 0, gridHeight = 0;
+    unsigned gridBlocks = 0;
+    unsigned blockN = 0, blockE = 0, blockS = 0, blockW = 0;
 };
 
 // Read terrain, triggers and the local geometry snapshot. Side-effect free.

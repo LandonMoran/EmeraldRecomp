@@ -100,6 +100,11 @@ facing south, `VAR_MAUVILLE_GYM_STATE = 0`,
 | --- | --- |
 | standing at (4, 13), plate at (4, 12) | `Step plate one step north.` |
 | after stepping onto the plate | `The room changed south-east.` |
+| pressing into a closed beam or a wall | `Blocked west.` |
+
+The blocked-step line is announced once per tile, direction and blocking block, so
+repeating the same press stays quiet but a press that flips the beams and changes
+what blocks the tile is announced again.
 
 **Actions performed.** Load `mauville-start` → warp to (4, 13) → `up` once →
 read the log. No map data was consulted to decide the move; the plate was
@@ -140,12 +145,9 @@ after the fixes below. Still missing for a *full* run:
 - Nothing announces that a plate has already been used (`VAR_MAUVILLE_GYM_STATE`
   makes repeat presses do nothing). A player can step on a dead plate and hear
   nothing, which reads as a broken switch.
-- A step that is refused by a beam says nothing at all. The mod announces
-  objects next to the player (`Trainer west. Press A to talk.`) but not that the
-  tile ahead is impassable, so probing a maze is silent and a player cannot
-  tell a beam from a wall or a dead step.
-- After a press, nothing says where the room changed, so a player can seal
-  themselves into a pocket without noticing (the (4,10) trap above).
+- After a press, the change direction is spoken, but not whether the corridor you
+  are standing in is still open, so a player can seal themselves into a pocket
+  without noticing (the (4,10) trap above).
 
 **Fixes implemented while testing this gym.**
 
@@ -161,34 +163,37 @@ after the fixes below. Still missing for a *full* run:
    `MAP_TYPE_INDOOR`) now get plate guidance from the first step.
 4. Change feedback said only "The room changed." It now names the direction of
    the change, which is what makes the plate-to-beam link audible.
+5. A refused step was silent. It is now spoken once per tile, direction and
+   blocking block (`Blocked west.`), so a closed beam can be told from a wall
+   and a press that moves the beams is heard again.
+6. The grid the mod read came from `gBackupMapLayout` alone, which on this map
+   still described Birch's lab (25×35). Every tile therefore read as walkable and
+   nothing could ever be blocked. The header's live layout is used, with the
+   backup copy taking over when it describes the same map (that copy is what
+   `setmetatile` writes).
+7. The grid was rejected unless it lived in EWRAM, so a map the game has not
+   rewritten yet (this gym) was unreadable entirely; ROM-backed maps are read
+   too.
+8. The refused-step detector watched only the host's pad. A walk driven through
+   the mod's own action command arrives as a synthesised tap, so it now consults
+   the synthesiser as well.
 
 **Regression result.** The same checkpoint replayed twice produced the same
 tile and the same line (`The room changed south-east.`), `REPRODUCIBLE: True`.
 
-**Full run: NOT TESTED — blocked by the build, at the end of the trainer battle.**
+**Full run: PARTIAL — trainer battle proven, plates 1-3 pressed, plate 4 open.**
 
-Party and routing are both solved. `party-lab` carries the Torchic the game
-gives on Route 101 with a level-50 test stat block, and `gym_walk.py` plans the
-walk from the layout's own blockdata, so it reaches the trainers behind the
-beams: entrance (4,19) → (4,17) → (2,17) → (2,16), then A facing Battle Girl
-Vivian at (1,16).
+`gym_walk.py` reaches the trainers behind the beams: entrance (4,19) → (4,17)
+→ (2,17) → (2,16), then A facing Battle Girl Vivian at (1,16). That battle is
+played and **won** with the pad alone, and the game leaves it correctly — the
+earlier "engine fault" reading was wrong, and the true cause (a forged level
+byte over real experience underflowing the EXP bar's u32 arithmetic) is in
+[the hang report](../artifacts/playtest/reports/mauville-trainer-battle-hang.md).
 
-That battle is played and **won** with the pad alone — `BATTLE GIRL VIVIAN
-would like to battle!` … `Foe MEDITITE fainted!` … `gained 331 EXP. Points!`.
-After that last line the build never leaves the battle: `gMain.callback2` stays
-`BattleMainCB2` (0x08038420), `gBattleOutcome` is never set, `gBattleMainFunc`
-stays parked in `RunBattleScriptCommands_PopCallbacksStack`, and
-`sLockFieldControls` keeps the field locked with the avatar's `CONTROLLABLE`
-flag never restored. A presses are delivered (`heldKeys` shows the tap) but
-`gBattleScripting` never changes again. Waiting, B, Start and clearing the lock
-by hand all leave the same state.
-
-That is an engine fault, not an accessibility one: the same party and mod won
-the wild rescue battle and returned to the field normally, and the mod's text
-hook is observe-only. Full evidence, including every memory value, is in
-[artifacts/playtest/reports/mauville-trainer-battle-hang.md](../artifacts/playtest/reports/mauville-trainer-battle-hang.md).
-Until that is fixed, no gym with a trainer in the way can be finished, so no
-gym can be called PASS.
+Plate 4 at (8,9) is still unreached: a press can seal the pocket at (4,10)
+before the run gets there. `plan_gym.py` plans over the mod's own announcement
+of which neighbouring tiles a step would be refused by, which is the same fact
+now spoken as `Blocked west.`
 
 ## Rustboro City Gym — 11 / 3
 

@@ -18,9 +18,12 @@
 //   Map grid block         bits 0-9 metatile, 10-11 collision, 12-15 elevation
 //   Metatile attribute     bits 0-7 behavior, 12-15 layer type
 //
-// Reading the backup grid (rather than the ROM layout) is what makes a switch
-// press visible: map scripts change the room with `setmetatile`, which writes
-// that grid.
+// The grid comes from the header's live layout, with the backup copy taking
+// over whenever it describes the same map. Both halves matter: the backup is
+// what makes a switch press visible (map scripts change the room with
+// `setmetatile`, which writes that copy), and the header is what keeps the
+// report honest on a map nothing has rewritten yet, where the backup still
+// holds the previous room and every tile of this one looks walkable.
 
 #include "emerald_puzzle.h"
 
@@ -118,11 +121,34 @@ struct Grid {
 
 Grid grid_of(const Mem& m) {
     Grid g;
-    g.width = static_cast<int>(m.u32(kBackupMapLayout));
-    g.height = static_cast<int>(m.u32(kBackupMapLayout + 4));
-    g.blocks = m.u32(kBackupMapLayout + 8);
+    // The map the player is actually on comes from the header. The backup copy
+    // is left over from whatever map was loaded before until a script rewrites
+    // the room, so reading it first reported another map's size and made every
+    // tile look walkable.
+    const std::uint32_t layout = m.u32(addr::gMapHeader + kMapLayoutPtr);
+    if (layout >= 0x08000000u) {
+        g.width = static_cast<int>(m.u32(layout));
+        g.height = static_cast<int>(m.u32(layout + 4));
+        g.blocks = m.u32(layout + 12);   // MapLayout.map, after border
+    }
+    // setmetatile (gym beams, turnstiles, statues) writes into the backup copy,
+    // so take its block pointer once it describes the same map. The header's
+    // layout usually still points at the ROM original, which never sees those
+    // writes.
+    const int backup_w = static_cast<int>(m.u32(kBackupMapLayout));
+    const int backup_h = static_cast<int>(m.u32(kBackupMapLayout + 4));
+    const std::uint32_t backup_blocks = m.u32(kBackupMapLayout + 8);
+    if (backup_w == g.width && backup_h == g.height && backup_blocks >= 0x02000000u &&
+        backup_blocks < 0x02040000u)
+        g.blocks = backup_blocks;
+    // Map data can live in EWRAM (a map a script has rewritten) or in ROM (the
+    // original; the gym reads straight out of ROM because nothing has written
+    // to it yet). Requiring EWRAM here made every tile on a ROM-backed map look
+    // walkable, which is exactly the map a beam maze is built on.
+    const bool readable_map = (g.blocks >= 0x02000000u && g.blocks < 0x02040000u) ||
+                              (g.blocks >= 0x08000000u && g.blocks < 0x0A000000u);
     g.ok = g.width > 0 && g.width <= 512 && g.height > 0 && g.height <= 512 &&
-           g.blocks >= 0x02000000u && g.blocks < 0x02040000u;
+           readable_map;
     return g;
 }
 
@@ -291,6 +317,14 @@ struct Tracker {
     int last_opened = 0, last_closed = 0, last_changed = 0;
     int total_changes = 0;   // room changes seen on this map (diagnostics)
     int last_move_tiles = 0;
+
+    // Refused steps: a press that ends without the player leaving the tile.
+    bool press_active = false;
+    int press_x = 0, press_y = 0;      // the direction that was pressed
+    bool press_moved = false;
+    int block_dx = 0, block_dy = 0;    // the last refused direction, spoken
+    int block_x = -999, block_y = -999;
+    int block_value = -1;
 };
 Tracker g_t;
 
@@ -324,6 +358,11 @@ void reset_map_state() {
     g_t.trigger_notice_x = g_t.trigger_notice_y = -999;
     g_t.last_opened = g_t.last_closed = g_t.last_changed = 0;
     g_t.last_move_tiles = 0;
+    g_t.press_active = false;
+    g_t.press_moved = false;
+    g_t.block_dx = g_t.block_dy = 0;
+    g_t.block_x = g_t.block_y = -999;
+    g_t.block_value = -1;
 }
 
 }  // namespace
@@ -425,6 +464,20 @@ bool read_puzzle(const Mem& m, PuzzleState* out) {
             p.triggerDy = dy;
         }
     }
+    const Grid grid = grid_of(m);
+    p.gridWidth = grid.width;
+    p.gridHeight = grid.height;
+    p.gridBlocks = grid.ok ? grid.blocks : 0;
+    if (grid.ok) {
+        p.blockN = block_at(m, grid, pl.x, pl.y - 1);
+        p.blockE = block_at(m, grid, pl.x + 1, pl.y);
+        p.blockS = block_at(m, grid, pl.x, pl.y + 1);
+        p.blockW = block_at(m, grid, pl.x - 1, pl.y);
+        p.openN = passable_block(static_cast<std::uint16_t>(p.blockN));
+        p.openE = passable_block(static_cast<std::uint16_t>(p.blockE));
+        p.openS = passable_block(static_cast<std::uint16_t>(p.blockS));
+        p.openW = passable_block(static_cast<std::uint16_t>(p.blockW));
+    }
     p.lastMoveTiles = g_t.last_move_tiles;
     p.openedBlocks = g_t.last_opened;
     p.closedBlocks = g_t.last_closed;
@@ -435,18 +488,25 @@ bool read_puzzle(const Mem& m, PuzzleState* out) {
 }
 
 std::string puzzle_json(const PuzzleState& p) {
-    char head[256];
+    char head[768];
     std::snprintf(head, sizeof(head),
                   "{\"ok\":%s,\"map\":[%d,%d],\"x\":%d,\"y\":%d,"
                   "\"underfoot\":\"%s\",\"facing\":\"%s\",\"triggers\":%d,"
                   "\"trigger_dist\":%d,\"trigger_dx\":%d,\"trigger_dy\":%d,"
                   "\"changed\":%d,\"opened\":%d,\"closed\":%d,\"changes\":%d,"
-                  "\"last_move\":%d,\"puzzle_map\":%s}",
+                  "\"last_move\":%d,\"puzzle_map\":%s,"
+                  "\"open\":{\"n\":%s,\"e\":%s,\"s\":%s,\"w\":%s},"
+                  "\"grid\":[%d,%d,%lu],\"blocks\":[%lu,%lu,%lu,%lu]}",
                   p.ok ? "true" : "false", p.mapGroup, p.mapNum, p.x, p.y,
                   terrain_name(p.underfoot), terrain_name(p.facing),
                   p.coordEventCount, p.triggerDist, p.triggerDx, p.triggerDy,
                   p.changedBlocks, p.openedBlocks, p.closedBlocks, p.totalChanges,
-                  p.lastMoveTiles, p.puzzleMap ? "true" : "false");
+                  p.lastMoveTiles, p.puzzleMap ? "true" : "false",
+                  p.openN ? "true" : "false", p.openE ? "true" : "false",
+                  p.openS ? "true" : "false", p.openW ? "true" : "false",
+                  p.gridWidth, p.gridHeight, static_cast<unsigned long>(p.gridBlocks),
+                  static_cast<unsigned long>(p.blockN), static_cast<unsigned long>(p.blockE),
+                  static_cast<unsigned long>(p.blockS), static_cast<unsigned long>(p.blockW));
     return head;
 }
 
@@ -518,11 +578,65 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
     // A pad direction the host is holding, or a tap the layer queued, is a
     // player move. Anything else that changes the tile is the game moving the
     // player: an ice slide, a warp panel, a fall, a scripted push.
-    const bool direction_held = ((~host_keys) & 0x00F0u) != 0;
+    // Two sources press directions: the host's own pad (active low) and the
+    // synthesised pad the mod's action command drives (active high). A walk the
+    // harness asks for arrives through the second one, so a refused step would
+    // go unseen while only the host keys were consulted.
+    const std::uint16_t pressed_directions = static_cast<std::uint16_t>(
+        ((~host_keys) & 0x00F0u) |
+        (emerald::touch::core().synth.last_pressed() & 0x00F0u));
+    const bool direction_held = pressed_directions != 0;
     const bool input_idle = emerald::touch::core().synth.idle();
     const int dx = p.x - g_t.last_x;
     const int dy = p.y - g_t.last_y;
     const bool moved = g_t.have_pos && (dx != 0 || dy != 0);
+
+    // ── Refused step ─────────────────────────────────────────────────────
+    // Press a direction against a wall, a closed energy beam or a fence and
+    // nothing at all happens: no sound, no hint, no change on screen a player
+    // without sight can use. That makes a switchable maze impossible to probe
+    // by ear, so a direction held for several frames against an impassable
+    // tile is spoken once per tile, direction and blocking block. The block
+    // value is part of the key because a beam that flips is a different
+    // metatile, so a plate press that changes what blocks a step is heard
+    // again rather than staying silent.
+    int want_x = 0, want_y = 0;
+    if (pressed_directions & 0x0010u) want_x = 1;         // KEY_RIGHT
+    else if (pressed_directions & 0x0020u) want_x = -1;   // KEY_LEFT
+    else if (pressed_directions & 0x0040u) want_y = -1;   // KEY_UP
+    else if (pressed_directions & 0x0080u) want_y = 1;    // KEY_DOWN
+    if ((want_x || want_y) && g_t.have_pos) {
+        if (!g_t.press_active) {         // a new press starts
+            g_t.press_active = true;
+            g_t.press_x = want_x;
+            g_t.press_y = want_y;
+            g_t.press_moved = false;
+        }
+        if (moved) g_t.press_moved = true;
+    } else if (g_t.press_active) {       // the press ended: did it move us?
+        g_t.press_active = false;
+        if (!g_t.press_moved) {
+            const Grid g = grid_of(m);
+            if (g.ok) {
+                const std::uint16_t block = block_at(m, g, p.x + g_t.press_x, p.y + g_t.press_y);
+                const bool changed_block = block != g_t.block_value || p.x != g_t.block_x ||
+                                           p.y != g_t.block_y ||
+                                           g_t.press_x != g_t.block_dx ||
+                                           g_t.press_y != g_t.block_dy;
+                if (!passable_block(block) && changed_block) {
+                    g_t.block_value = block;
+                    g_t.block_x = p.x;
+                    g_t.block_y = p.y;
+                    g_t.block_dx = g_t.press_x;
+                    g_t.block_dy = g_t.press_y;
+                    const std::string line =
+                        "Blocked " + std::string(compass(g_t.press_x, g_t.press_y)) + ".";
+                    speak_now(line.c_str(), false);
+                }
+            }
+        }
+    }
+
     if (moved && !direction_held && input_idle) {
         g_t.forced_tiles += std::abs(dx) + std::abs(dy);
         g_t.forced_dx += dx;
