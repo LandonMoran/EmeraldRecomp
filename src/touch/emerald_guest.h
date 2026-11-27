@@ -94,6 +94,13 @@ constexpr std::uint32_t kItemSize = 0x2C;
 constexpr std::uint32_t kBagItems = 0x560;      // 30 slots
 constexpr std::uint32_t kBagKeyItems = 0x5D8;   // 30 slots
 constexpr std::uint32_t kBagPokeBalls = 0x650;  // 16 slots
+constexpr std::uint32_t kBagTmHm = 0x690;       // 64 slots
+constexpr std::uint32_t kBagBerries = 0x790;    // 46 slots
+// struct BagPosition: exitCallback +0, location +4, pocket +5,
+// pocketSwitchArrowPos +6, cursorPosition[5] +8 (u16 each), scrollPosition[5].
+// The bag screen's own cursor, since its item rows are not a ListMenu.
+constexpr std::uint32_t kBagPocket = 5;
+constexpr std::uint32_t kBagCursor = 8;
 }  // namespace addr
 
 namespace fn {

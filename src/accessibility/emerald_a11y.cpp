@@ -165,6 +165,7 @@ bool g_naming_button = false;
 std::string g_naming_typed;
 
 bool g_pending_item = false;
+int g_bag_row = -1;   // (pocket << 16) | cursor, to hear every move in the bag
 int g_pending_deadline = 0;
 
 // ── Navigation ("select this item") ─────────────────────────────────────
@@ -647,38 +648,76 @@ std::string item_name(const Mem& m, int id) {
     return name;
 }
 
-// A bag quantity is stored XORed with the save's encryption key (item.c's
-// GetBagItemQuantity), so the raw word is not the number of items: a single
-// Poké Ball reads back as 4762 until the key is applied.
-std::string pocket_speech(const Mem& m, std::uint32_t sb1, std::uint32_t offset, int slots,
-                          int key) {
-    std::string out;
-    for (int i = 0; i < slots; ++i) {
-        const std::uint32_t slot = sb1 + offset + static_cast<std::uint32_t>(i) * 4;
-        const int id = m.u16(slot);
-        const int count = m.u16(slot + 2) ^ key;
-        if (id <= 0 || count <= 0) continue;
-        std::string name = item_name(m, id);
-        if (name.empty()) name = "Item " + std::to_string(id);
-        char part[96];
-        std::snprintf(part, sizeof(part), "%s%s, %d", out.empty() ? "" : "; ", name.c_str(), count);
-        out += part;
-    }
-    return out;
+// The bag works like any other menu, so it reads like one: whichever row the
+// cursor is on, with where it sits and how many are carried. The bag's own
+// pocket and cursor live in gBagPosition; its rows are not a ListMenu, so
+// nothing else reports them.
+struct BagPocket {
+    std::uint32_t offset;
+    int slots;
+    const char* name;
+};
+// gBagPosition.pocket is the *display* order of the tabs - ITEMS, POKE BALLS,
+// TM/HM, BERRIES, KEY ITEMS (constants/item.h's ITEMS_POCKET..KEY_ITEMS_POCKET) -
+// not the POCKET_* enum, which numbers key items second. Reading it as the enum
+// made the Poké Balls tab answer "Empty" while the ball was plainly there.
+const BagPocket kBagPockets[5] = {
+    {addr::kBagItems, 30, "Items"},
+    {addr::kBagPokeBalls, 16, "Pok\xC3\xA9 balls"},
+    {addr::kBagTmHm, 64, "TMs and HMs"},
+    {addr::kBagBerries, 46, "Berries"},
+    {addr::kBagKeyItems, 30, "Key items"},
+};
+
+int bag_pocket(const Mem& m) {
+    const int pocket = m.u8(addr::gBagPosition + addr::kBagPocket);
+    return pocket >= 0 && pocket < 5 ? pocket : -1;
 }
 
-std::string bag_speech(const Mem& m) {
+int bag_cursor(const Mem& m, int pocket) {
+    if (pocket < 0) return 0;
+    return m.u16(addr::gBagPosition + addr::kBagCursor + static_cast<std::uint32_t>(pocket) * 2);
+}
+
+// "Poké balls. POKé BALL, 1 of 1, 1 in the bag." A quantity is stored XORed with
+// the save's encryption key (item.c's GetBagItemQuantity), so the raw word is not
+// the number carried: one Poké Ball reads back as 4762 until the key is applied.
+std::string bag_cursor_speech(const Mem& m, bool with_pocket) {
     const std::uint32_t sb1 = m.u32(addr::gSaveBlock1Ptr);
     if (sb1 < 0x02000000u || sb1 > 0x02040000u) return {};
-    const std::uint32_t sb2 = m.u32(addr::gSaveBlock2Ptr);
-    const int key = m.u16(sb2 + 0xAC);   // SaveBlock2.encryptionKey, low half
-    const std::string items = pocket_speech(m, sb1, addr::kBagItems, 30, key);
-    const std::string keyItems = pocket_speech(m, sb1, addr::kBagKeyItems, 30, key);
-    const std::string balls = pocket_speech(m, sb1, addr::kBagPokeBalls, 16, key);
-    std::string out = "Items: " + (items.empty() ? "none" : items) + ". ";
-    out += "Key items: " + (keyItems.empty() ? "none" : keyItems) + ". ";
-    out += "Pok\xC3\xA9 balls: " + (balls.empty() ? "none" : balls) + ".";
-    return out;
+    const int pocket = bag_pocket(m);
+    if (pocket < 0) return {};
+    const int key = m.u16(m.u32(addr::gSaveBlock2Ptr) + 0xAC);
+    const BagPocket& p = kBagPockets[pocket];
+    const int cursor = bag_cursor(m, pocket);
+
+    int total = 0;
+    int id = 0;
+    int count = 0;
+    for (int i = 0; i < p.slots; ++i) {
+        const std::uint32_t slot = sb1 + p.offset + static_cast<std::uint32_t>(i) * 4;
+        const int slotId = m.u16(slot);
+        if (slotId <= 0) continue;
+        if (total == cursor) {
+            id = slotId;
+            count = m.u16(slot + 2) ^ key;
+        }
+        ++total;
+    }
+
+    std::string out;
+    if (with_pocket) {
+        out += p.name;
+        out += ". ";
+    }
+    if (total == 0) return out + "Empty.";
+    if (cursor >= total) return out + "Close bag.";
+    std::string name = item_name(m, id);
+    if (name.empty()) name = "Item " + std::to_string(id);
+    char tail[96];
+    std::snprintf(tail, sizeof(tail), "%s, %d of %d, %d in the bag.", name.c_str(), cursor + 1,
+                  total, count);
+    return out + tail;
 }
 
 std::string target_speech(const Mem& m, int battler) {
@@ -813,6 +852,15 @@ bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
         *out += ".";
         return true;
     }
+    // The bag's rows are its own, so both the list path and read-status ask the
+    // pockets rather than the list: that is where the quantity is.
+    if (s.kind == SceneKind::Bag) {
+        const std::string here = bag_cursor_speech(m, false);
+        if (!here.empty()) {
+            *out = here;
+            return true;
+        }
+    }
     if (s.list.live) {
         const ListState& l = s.list;
         const int index = list_index(l);
@@ -884,9 +932,11 @@ std::string status_text(const SceneState& s, const Mem& m) {
             return "Battle. " + field + (what.empty() ? "" : " " + what);
         }
         case SceneKind::Bag: {
-            const std::string contents = bag_speech(m);
-            if (contents.empty()) return what.empty() ? "Bag." : "Bag. " + what;
-            return "Bag. " + contents + (what.empty() ? "" : " " + what);
+            // The cursor row is the whole answer; appending the generic surface
+            // text would say the same item twice.
+            const std::string here = bag_cursor_speech(m, true);
+            if (here.empty()) return what.empty() ? "Bag." : "Bag. " + what;
+            return "Bag. " + here;
         }
         case SceneKind::Party: {
             const std::string members = party_field_speech(m);
@@ -1423,6 +1473,23 @@ void watch(const SceneState& s, const Mem& m) {
         g_naming_column = -9999;
         g_naming_button = false;
         g_naming_typed.clear();
+    }
+
+    // The bag: its rows are drawn by the bag menu, so there is no menu cursor to
+    // follow. Its pocket and cursor are in gBagPosition, and every change of
+    // either is a row the player just moved to.
+    if (s.kind == SceneKind::Bag && !s.menu.live && !s.list.live) {
+        const int pocket = bag_pocket(m);
+        const int cursor = bag_cursor(m, pocket);
+        const int row = pocket < 0 ? -1 : (pocket << 16) | (cursor & 0xFFFF);
+        if (row != g_bag_row) {
+            const bool pocket_changed = g_bag_row < 0 || (g_bag_row >> 16) != pocket;
+            g_bag_row = row;
+            const std::string text = bag_cursor_speech(m, pocket_changed);
+            if (!text.empty()) say(text, false);
+        }
+    } else {
+        g_bag_row = -1;
     }
 
     // A menu opened before its labels were captured: retry briefly.
