@@ -14,7 +14,7 @@ means a player cannot get it at all.
 | Capability | Status | Evidence |
 | --- | --- | --- |
 | Dialogue, signs, NPCs | PASS | every string the game prints is spoken from the text-printer hook, before the typewriter runs |
-| Map name, doors, exits | PASS | `New area. Mauville City Pokémon Center 1F.` on entering, `Door one step south. Press A to exit.` at exits. The name comes from a table compiled from the decomp's map metadata, because the guest keeps no map name at all |
+| Map name, doors, exits | PASS | `New area. Mauville City Pokémon Center.` on entering (no floor number), `Door one step south. Press A to exit.` at exits. The name comes from a table compiled from the decomp's map metadata, because the guest keeps no map name at all |
 | What is next to you | PASS | `Trainer west. Press A to talk.`, `Object here. Press A.` |
 | A trainer battle, start to finish, on the pad | PASS | Mauville's Battle Girl Vivian and Aroma Lady Rose: won, EXP and level-ups, back to `CB2_Overworld` |
 | Your move list (name, type, PP) | PASS | `Scratch, normal, PP 35 of 35. 1 of 4.` |

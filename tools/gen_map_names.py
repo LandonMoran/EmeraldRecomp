@@ -10,7 +10,10 @@ map group and number the game loads.
 Usage: tools/gen_map_names.py [--check]
 """
 import json
+import re
 import sys
+
+FLOOR = re.compile(r"B?\d+F")
 
 SOURCE = "third_party/pokeemerald/data/maps/map_groups.json"
 OUTPUT = "src/accessibility/emerald_map_names.inc"
@@ -27,7 +30,7 @@ SPOKEN = {
 
 
 def split_words(name: str) -> str:
-    """MauvilleCity_PokemonCenter_1F -> 'Mauville City Pokémon Center 1F'."""
+    """MauvilleCity_PokemonCenter_1F -> 'Mauville City Pokémon Center'."""
     words = []
     for part in name.split("_"):
         word = ""
@@ -42,7 +45,15 @@ def split_words(name: str) -> str:
                 word += ch
         if word:
             words.append(word)
-    return " ".join(SPOKEN.get(w, w) for w in words)
+    # A floor number is detail a player asking "where am I" does not need: the
+    # Centre's ground floor and its upstairs are the same building, so both are
+    # announced as "Mauville City Pokémon Center".
+    stripped = list(words)
+    while stripped and FLOOR.fullmatch(stripped[-1]):
+        stripped.pop()
+    if not stripped:
+        stripped = words   # a map named only by its floor keeps it
+    return " ".join(SPOKEN.get(w, w) for w in stripped)
 
 
 def main() -> int:
