@@ -1062,7 +1062,18 @@ void consume_prints(const SceneState& s, const Mem& m) {
         if (g_frame < p.frame + 2) { later.push_back(p); continue; }
         if (window_is_list(s, p.window)) continue;   // names come from ListMenu
         if (window_holds_labels(s, p.window)) {
-            for (const std::string& line : p.lines) add_label(p.window, line);
+            for (const std::string& line : p.lines) {
+                // A health box repaints its numbers through the same printer while
+                // the bar animates, so a single potion prints "23/", "/24", ...
+                // "28/" and each one was announced as a menu entry. Digits and
+                // slashes are a readout, not something to move a cursor onto:
+                // the healed total is spoken by the party line and by the game's
+                // own "HP was restored" sentence. Money is all digits with no
+                // slash and is left alone.
+                const bool hp_fragment = line.find('/') != std::string::npos &&
+                    line.find_first_not_of("0123456789/ ") == std::string::npos;
+                if (!hp_fragment) add_label(p.window, line);
+            }
             continue;
         }
         // Battle narration lives in the message window (B_WIN_MSG = 0). Other
@@ -1099,6 +1110,18 @@ void consume_prints(const SceneState& s, const Mem& m) {
     }
     g_prints.swap(later);
     if (message.empty()) return;
+    // A health box repaints its numbers through this printer while the bar
+    // animates, so healing prints "23/", "/24" ... "28/" and each fragment was
+    // spoken as its own sentence. Digits and slashes are a readout: the game
+    // says "HP was restored by N points" itself and the party line gives the
+    // total. Money is digits with no slash and is left alone.
+    if (message.find('/') != std::string::npos) {
+        bool letters = false;
+        for (char c : message) {
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { letters = true; break; }
+        }
+        if (!letters) return;
+    }
     if (message == g_message) return;
     g_message = message;
     say(message, false);

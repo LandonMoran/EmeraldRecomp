@@ -73,9 +73,23 @@ HP.`); confirming produced `AAAAAAAAA's HP was restored by 16 point(s).` and the
 party line re-read `Party. AAAAAAAAAA level 9, 28 of 28 HP.` Row, target and
 result were all spoken - the item path works in battle.
 
-One wart to fix next: during the heal the party line is re-read for every step of
-the animation (`23/`, `/24`, ... `28/`), so a single potion speaks about six
-fragments of numbers before the sentence. It is noise, not a blocker.
+One wart, now addressed in code: during the heal the health box repaints its
+numbers through the text printer (`23/`, `/24`, ... `28/`), and because that box is
+not a menu window the repaints fell through to the dialogue path, so each fragment
+was spoken as a sentence. Two narrow filters now drop them: a printed block of
+digits and slashes is not a sentence, and a line of digits and slashes is not a
+menu label either (money stays audible - it is digits with no slash).
+
+The filters build and normal dialogue and menu labels still speak with them in
+place, but the heal itself was **not** re-observed after the change: the party is
+one LV 9 Torchic with 28 HP against Vivian's LV 17 MEDITITE, and it fainted on
+every attempt before the bag could be opened again. Treat the noise as diagnosed
+and patched, not yet confirmed silenced.
+
+The dev warp's `avatar flags 0x01` refusal was checked too, and the guard is
+right: `PLAYER_AVATAR_FLAG_CONTROLLABLE` really is `1 << 5`, so the flag was
+genuinely clear at the time - the game still had a script owning the avatar.
+`force_map` exists for the cases where that happens.
 
 
 
