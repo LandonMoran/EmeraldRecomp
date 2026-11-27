@@ -19,8 +19,8 @@ means a player cannot get it at all.
 | A trainer battle, start to finish, on the pad | PASS | Mauville's Battle Girl Vivian and Aroma Lady Rose: won, EXP and level-ups, back to `CB2_Overworld` |
 | Your move list (name, type, PP) | PASS | `Scratch, normal, PP 35 of 35. 1 of 4.` |
 | **HP on both sides during a battle** | **fixed in this change** | `Battle. AAAAAAAAAA level 5, 400 of 400 HP. Foe MEDITITE level 17, 39 of 39 HP. Fight, 1 of 4.` |
-| Party members' level and HP | fixed in this change, not yet seen live | `Party. <name> level N, H of M HP.` on read-status; the party screen was not reached in a live check |
-| Start menu items | **MISSING** | opening Start and pressing read-status says `Option 3 of 6.` — a position with no label. Only two labels (`OPTION`, `EXIT`) are captured, so Pokédex, Pokémon, Bag, Save and Trainer card cannot be told apart by ear |
+| Party members' level and HP | PASS | `Party. AAAAAAAAAA level 5, 400 of 400 HP.` on the party screen, read from the party structures |
+| Start menu items | PASS | `Overworld. POKéMON, 1 of 6.`, then `BAG`, the player's name, `SAVE`, `OPTION`, `EXIT` with their positions, on the first open and on a reopen |
 | Bag item names | unknown | the list-menu path exists for bag/shop/PC lists but no live check has been made |
 | Catching a Pokémon | NOT TESTED | needs a ball in the bag, which needs the bag, which needs the Start menu |
 | Healing at a Pokémon Centre | NOT TESTED | talking to the nurse is ordinary dialogue (PASS path), the rest is walking |
@@ -32,20 +32,26 @@ means a player cannot get it at all.
 
 ## The blocker, in order
 
-1. **The Start menu has no labels.** Everything a player needs between battles
-   starts there: the party (to switch who is out), the bag (potions, Poké Balls),
-   and Save. Announcing `Option 3 of 6` makes the menu unusable, and it is the
-   reason catching and healing could not even be attempted in this audit. This is
-   the first thing to fix.
-2. **Bag item names.** If the list path works, the bag is usable; if it reports
-   positions without names the way the Start menu does, nothing can be bought or
-   used.
+1. **Bag item names.** The bag opens and announces its pocket (`ITEMS`, `CLOSE
+   BAG, 1 of 1`), but this save carries no items, so no item name has been heard
+   yet. Buying one potion answers it.
+2. **Catching and healing.** Both are behind the bag and ordinary dialogue, so
+   both become testable now that the Start menu speaks. Neither has been done.
 3. **Telling a beam from a wall.** `Blocked west.` is spoken now, but a maze
    still has to be walked blind; Mauville's fourth plate is the proof.
 4. **Route knowledge between towns.** Nothing says which exit leads to the next
    town, so travel is exploration rather than navigation.
 
 ## What was fixed here
+
+- The Start menu has labels. Its six entries are printed into one window the
+  frame the menu opens; the classifier registers that window a frame or two
+  later, which counts as a new surface, and the surface change dropped exactly
+  the labels that had just arrived. Two generations of labels are kept now and
+  matched back by window, and a window that has once held menu labels keeps
+  being read as a menu while a menu is up - that second part is what makes a
+  *reopen* of Start work, where the prints arrive as prose and used to leave the
+  labels empty.
 
 - Read-status in battle reports every battler's name, level, HP and whether it
   has fainted. Before this the battle screen said only which menu entry was

@@ -121,10 +121,22 @@ std::vector<PrintEvent> g_prints;
 std::uint64_t g_prints_seen = 0;
 std::string g_last_print;
 
-// Labels drawn into the current menu window, in draw order. The game prints its
-// own option strings (including the player's name in the Start menu), so this
-// is the label list without guessing anything.
-std::vector<std::string> g_labels;
+// Labels drawn into a menu window, in draw order. The game prints its own
+// option strings (including the player's name in the Start menu), so this is
+// the label list without guessing anything.
+//
+// A menu prints its entries on the frame it opens; the classifier only calls it
+// a menu a frame or two later, which is a surface change, and the surface change
+// used to drop exactly those labels. So two generations are kept: the one being
+// filled and the one that arrived just before, matched back by window id. That
+// is what makes the Start menu audible - every door to the party, the bag and
+// saving goes through it.
+struct LabelSet {
+    std::uint8_t window = 0xFF;
+    std::vector<std::string> labels;
+};
+LabelSet g_labels;
+LabelSet g_labels_prev;
 
 // ── Watched state ────────────────────────────────────────────────────────
 
@@ -495,6 +507,23 @@ bool window_is_battle_labels(const SceneState& s, std::uint32_t window) {
     return s.battle.active && s.battle.control != BattleControl::None && window != 0;
 }
 
+// Which windows have been seen holding menu labels. A menu prints its entries
+// the frame it opens, and the classifier needs a frame or two to call it a menu;
+// on a reopen the prints can arrive before that, and they were then read out as
+// dialogue while the labels behind them stayed empty - so the Start menu said
+// "POKéMON BAG" once and then only "Option 2 of 6". A window that has held menu
+// labels keeps being read as one for as long as a menu is up.
+std::uint32_t g_menu_windows = 0;
+
+bool window_holds_labels(const SceneState& s, std::uint32_t window) {
+    if (window_is_menu(s, window) || window_is_battle_labels(s, window)) {
+        if (window < 32) g_menu_windows |= 1u << window;
+        return true;
+    }
+    if (!(s.menu.live || s.start_menu || s.battle.active)) return false;
+    return window < 32 && (g_menu_windows & (1u << window)) != 0;
+}
+
 // ── Labels ───────────────────────────────────────────────────────────────
 
 const char* const kActionLabels[4] = {"Fight", "Bag", "Pok\xC3\xA9mon", "Run"};
@@ -525,7 +554,13 @@ std::string list_item_name(const Mem& m, const ListState& l, int index) {
 
 std::string menu_label(const MenuState& menu, int index) {
     const int slot = index - menu.min;
-    if (slot >= 0 && slot < static_cast<int>(g_labels.size())) return g_labels[slot];
+    const auto in = [&](const LabelSet& set) -> const std::string* {
+        if (set.window != menu.window) return nullptr;
+        if (slot < 0 || slot >= static_cast<int>(set.labels.size())) return nullptr;
+        return &set.labels[slot];
+    };
+    if (const std::string* live = in(g_labels)) return *live;
+    if (const std::string* before = in(g_labels_prev)) return *before;
     return {};
 }
 
@@ -884,11 +919,16 @@ void announce_scene(SceneKind kind) {
 // AddTextPrinter receives a whole string, often several lines at once: a Yes/No
 // prompt arrives as "YES\nNO", the title menu as "NEW GAME\nOPTION". The lines
 // are what the player reads as separate entries, so each one is its own label.
-void add_label(const std::string& text) {
+void add_label(std::uint32_t window, const std::string& text) {
     if (text.empty()) return;
-    if (g_labels.empty() || g_labels.back() != text) g_labels.push_back(text);
-    if (g_labels.size() > static_cast<std::size_t>(kMaxItems))
-        g_labels.erase(g_labels.begin());
+    if (g_labels.window != static_cast<std::uint8_t>(window)) {
+        g_labels_prev = std::move(g_labels);
+        g_labels = LabelSet{};
+        g_labels.window = static_cast<std::uint8_t>(window);
+    }
+    if (g_labels.labels.empty() || g_labels.labels.back() != text) g_labels.labels.push_back(text);
+    if (g_labels.labels.size() > static_cast<std::size_t>(kMaxItems))
+        g_labels.labels.erase(g_labels.labels.begin());
 }
 
 void consume_prints(const SceneState& s, const Mem& m) {
@@ -911,8 +951,8 @@ void consume_prints(const SceneState& s, const Mem& m) {
         // printed "YES\nNO" from dialogue into that menu's two labels.
         if (g_frame < p.frame + 2) { later.push_back(p); continue; }
         if (window_is_list(s, p.window)) continue;   // names come from ListMenu
-        if (window_is_menu(s, p.window) || window_is_battle_labels(s, p.window)) {
-            for (const std::string& line : p.lines) add_label(line);
+        if (window_holds_labels(s, p.window)) {
+            for (const std::string& line : p.lines) add_label(p.window, line);
             continue;
         }
         // Battle narration lives in the message window (B_WIN_MSG = 0). Other
@@ -1204,7 +1244,8 @@ void watch(const SceneState& s, const Mem& m) {
     g_surface_changed = surface != g_surface;
     if (g_surface_changed) {
         g_surface = surface;
-        g_labels.clear();
+        g_labels_prev = std::move(g_labels);
+        g_labels = LabelSet{};
         g_pending_item = false;
     }
 
@@ -1513,7 +1554,8 @@ void enable(bool on) {
     if (g_enabled == on) return;
     g_enabled = on;
     g_prints.clear();
-    g_labels.clear();
+    g_labels = LabelSet{};
+    g_labels_prev = LabelSet{};
     g_pending_item = false;
     g_state_menu = false;
     g_state_op = StateOp{};
@@ -1563,7 +1605,8 @@ void reset() {
     // feature's activation pass runs.
     register_text_probe();
     enable(false);
-    g_labels.clear();
+    g_labels = LabelSet{};
+    g_labels_prev = LabelSet{};
     g_prints.clear();
     g_nav = Nav{};
 }
@@ -1662,7 +1705,7 @@ void tcp_status(std::string* out) {
     if (s.menu.live) {
         for (int i = s.menu.min; i <= s.menu.max && i - s.menu.min < kMaxItems; ++i) {
             std::string label = menu_label(s.menu, i);
-            if (label.empty()) label = "Option " + std::to_string(i - s.menu.min + 1);
+            if (label.empty()) label = "Option " + std::to_string(i - s.menu.min + 1);  // no name captured
             if (!first) *out += ",";
             first = false;
             gbarecomp::json::append_quoted(*out, label);
