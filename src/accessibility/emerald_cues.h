@@ -33,10 +33,13 @@ enum class Cue : int {
     Target,             // a navigation target was reached
     InteractOk,         // an interaction produced game text
     InteractFail,       // an interaction produced nothing
+    // Only events the game itself is silent about get a sound. Menus, cursor
+    // moves and the start of a battle already have Emerald's own effects and
+    // music, so the layer must not add a second sound on top of them; a sign or
+    // a trainer standing in front of you makes no noise at all, which is why
+    // these two do.
     Sign,               // a sign, the wall clock, the TV: something to read
     Trainer,            // a trainer, not just a person
-    Battle,             // a battle started
-    Menu,               // a menu or list opened
     Count
 };
 

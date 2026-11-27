@@ -241,11 +241,13 @@ short sound:
 | Item ball adjacent | "Item south. Press A to pick it up." | `item` |
 | Sign, PC, machine, script object adjacent | "Object east. Press A." | `object` |
 | Sign, wall clock, TV or other background event faced | "Something to read here. Press A." | `sign` |
-| A battle starts | (the game's own "Wild … appeared!") | `battle` |
-| A menu or list opens, including the battle action menu | (the menu's own labels) | `menu` |
 | Warp, stairs or a script moved you to another map | "New area." | `map` |
 | A press made the game respond | (the game's own text follows) | `ok` |
 | A press did nothing | nothing (the cue alone) | `fail` |
+
+A cue marks something the game itself is silent about. Menus, cursor moves and
+the start of a battle already have Emerald's own sounds and music, so the layer
+adds nothing there and only speaks.
 
 The first line in that table is the important one for normal play: turning to
 face something describes *that* tile, and only that tile. Walking with your back

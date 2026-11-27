@@ -43,8 +43,6 @@ constexpr CueSpec kCueTable[] = {
     {"interact_fail",    "fail",          120,  2,  "an interaction produced nothing"},
     {"sign",             "sign",          240,  2,  "a sign, clock or TV: something to read"},
     {"trainer",          "trainer",       240,  3,  "a trainer, not just a person"},
-    {"battle",           "battle",        600,  5,  "a battle started"},
-    {"menu",             "menu",           60,  1,  "a menu or list opened"},
 };
 
 static_assert(static_cast<int>(Cue::Count) ==

@@ -29,12 +29,17 @@ navigation code.
 | `object` | An interactive object is adjacent | `object.ogg` | "Object east. Press A." |
 | `sign` | A sign, the wall clock or the TV is in front of the player | `sign.ogg` | "Something to read here. Press A." |
 | `trainer` | A trainer (not an ordinary person) is near | `trainer.ogg` | "Trainer west. Press A to talk." |
-| `battle` | A battle starts | `battle.ogg` | (the game's own "Wild … appeared!") |
-| `menu` | A menu or list opens, including the battle action menu | `menu.ogg` | (the menu's own labels) |
 | `item` | A collectible item ball is adjacent | `item.ogg` | "Item south. Press A to pick it up." |
 | `target` | A navigation target is reached | `target.ogg` | "You have arrived." |
-| `interact_ok` | A press produced a response (dialogue, menu, warp) | `ok.ogg` | (the game's own text) |
-| `interact_fail` | A press produced nothing | `fail.ogg` | — |
+| `ok` | A press produced a response (dialogue, menu, warp) | `ok.ogg` | (the game's own text) |
+| `fail` | A press produced nothing | `fail.ogg` | — |
+
+**Only events Emerald is silent about get a cue.** Menus and their cursor moves,
+list scrolling, and the start of a battle all have the game's own effects and
+music already, so nothing is layered on top of them — a second sound there would
+only fight the one the player is already hearing. A sign, the wall clock, a TV or
+a trainer standing in front of you makes no sound at all, which is exactly what
+these cues are for.
 
 Speech and cues are independent switches: with "Read game text" off you still
 get the cues; with cue play disabled you still get the announcements.
@@ -55,9 +60,9 @@ get the cues; with cue play disabled you still get the announcements.
 
 There are two kinds of file here, and neither has any restriction on use.
 
-### Generated for this project (sign, trainer, battle, menu)
+### Generated for this project (sign, trainer)
 
-Four cues were synthesized for this layer rather than licensed: no third-party
+Two cues were synthesized for this layer rather than licensed: no third-party
 sample is involved, they are original arithmetic waveforms, and they are
 dedicated to the public domain under **CC0 1.0**. The generator is committed at
 `tools/make_a11y_cues.py` (deterministic; needs `numpy` and `soundfile` only to
@@ -69,8 +74,6 @@ regenerate), so anyone can rebuild or retune them and check that the files match
 | --- | --- | --- | --- |
 | `sign.ogg` | paper rustle under a soft two-note chime (C6, G6) | `d8a56352bb9a625b4d3d0b5f58488673b07d91d4` | 5182 |
 | `trainer.ogg` | two firm descending blips (G5, C5) | `7a10a593ad802c0430e53bf30691e49729457003` | 4371 |
-| `battle.ogg` | quick rising three-note sting (C5, E5, G5) | `de7fd48492994e8a97c31f98ad2248f434a9225f` | 4444 |
-| `menu.ogg` | one tiny high click | `1b43f7a3dcc01011e818fb288f00de8c36380caa` | 4178 |
 
 ### Kenney Interface Sounds (the original ten)
 
@@ -100,7 +103,7 @@ credit "Kenney (kenney.nl)" as a courtesy.
 
 The originals are 44.1 kHz mono Ogg Vorbis, between half a second and a second
 and a half long, and are copied unmodified — only the names change. The four
-generated files are the same format, 0.09–0.32 s long. Whole directory: 144 KB.
+generated files are the same format, 0.26–0.30 s long. Whole directory: 128 KB.
 
 ## No asset? Synthesized fallback
 
@@ -118,8 +121,6 @@ degrades a cue instead of silencing it:
 | `stairs_up` / `stairs_down` | `TONE_DTMF_9` / `TONE_DTMF_6` |
 | `npc`, `object`, `sign` | `TONE_PROP_BEEP` |
 | `trainer` | `TONE_PROP_ACK` |
-| `battle` | `TONE_CDMA_ALERT_CALL_GUARD` |
-| `menu` | `TONE_DTMF_1` |
 
 Missing assets are logged once per name (`no asset for cue '…'`) and the tone
 takes over from then on.
