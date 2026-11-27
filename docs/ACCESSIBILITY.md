@@ -48,9 +48,10 @@ logs, and if the device has no US-English voice it uses the device language;
 times, two seconds apart), so an attach that raced the view cannot leave the
 whole run silent.
 
-Speech rate is the **Speech rate** setting (slow / normal / fast), changed from
-the pad with the settings screen described below. With TalkBack
-on, TalkBack's own rate applies instead.
+Speech rate is the **Speech rate** setting (slow / normal / fast), changed on
+the launcher screen (Android) or in the Mods menu — see [Options](#options)
+below; nothing on the pad changes it. With TalkBack on, TalkBack's own rate
+applies instead.
 
 ## Setup screen (ROM and BIOS import)
 
@@ -98,19 +99,15 @@ private build that bundles the files (`-PprivateRom=<path>` /
 The game is a pad game, so the spoken interface must be reachable from the pad.
 Moving the d-pad, stick or touch controls moves the game's own cursor, and every
 cursor change, menu, list, battle choice and printed line is spoken as it
-happens — no extra navigation layer to learn. Four pad commands cover the rest,
-and the settings have a pad path of their own:
+happens — no extra navigation layer to learn. Three pad commands cover the rest,
+and nothing else is bound:
 
 | Input | Spoken command |
 | --- | --- |
 | **L** | Read the current screen: scene, the highlighted choice with its position ("Potion, 2 of 5"), and the text the game last printed when there is no menu. |
 | **Select** | Repeat the last utterance. |
 | **Select, then L** | Stop speech immediately. The two presses need not be simultaneous: see below. |
-| **L, then Select, held** | Open the spoken settings — the same three options the Mods menu edits. On Android the settings are set on the launcher screen instead (see below), so this is a desktop/keyboard-build path. |
-| Settings: **L** | Next setting: "Read game text: on. 1 of 4.", "Detail: everything. 2 of 4.", "Speech rate: normal. 3 of 4.", "Reset to defaults. 4 of 4." |
-| Settings: **Select** | Change it: toggles, cycles rate slow → normal → fast, or restores every default; the new value is said ("Speech rate: fast."). |
-| Settings: **Select, then L** | Close settings ("Settings closed."). |
-| **Name entry: R instead of Select** | The naming screen reads Select itself (it swaps the keyboard page), so there the modifier moves to R, which that screen ignores: R repeats, R then L stops, L then R held opens settings, L still reads. |
+| **Name entry: R instead of Select** | The naming screen reads Select itself (it swaps the keyboard page), so there the modifier moves to R, which that screen ignores: R repeats, R then L stops, L still reads. |
 
 Every command the spoken interface has is one of these pad commands: nothing
 needs a keyboard, a touch target, the visual Mods menu or TalkBack. A second
@@ -120,17 +117,12 @@ by **order** and by a **hold**, never by simultaneity:
 * **Select first, then L** — stop. Select alone is held back for about a sixth
   of a second; L inside that window stops speech and the queued repeat is
   dropped, while letting go (or holding Select past it) repeats.
-* **L first, then Select, both held** about three-quarters of a second — the
-  settings open. L on its own has already read the screen (L performs no game
-  action); releasing either button first cancels the window, and a stop chord
-  that the player simply rests on never opens settings, so a slow stop cannot
-  fall into the settings screen.
 
-Inside settings, L and Select are edges again, so holding both while the screen
-opens does nothing; release and press. A button already held when the layer
-starts is not a press either. On the naming screen, Select also swaps the
-keyboard page — a player who opens settings there will hear that page change
-with the setting, which is why the naming modifier is R.
+That is the whole chord language. Holding **L and Select together** repeats the
+last utterance and does nothing else, however long it is held: there is no
+settings screen behind a combination of buttons, so a slow stop or a fumbled
+press while playing cannot change how the game talks. A button already held when
+the layer starts is not a press.
 
 On a phone the on-screen pad's Select and L buttons send the same keys, so the
 commands also work touch-only, and a pad whose L or Select is rebound in the
@@ -149,13 +141,12 @@ once per press (holding it does not repeat). One caveat is inherent to the
 runtime: the composed `KEYINPUT` is the host's keys AND the synthesized keys, so
 a hotkey cannot be masked out of the game. That is why the mapping binds only
 Select and L — no direction, A, B, Start or R — since those would also perform a
-game action. Every setting is a chord of those two, so a settings change cannot
-press A, walk the player or open the Start menu.
+game action.
 
 The spoken interface announces the mapping briefly when it starts: "Press L to
-read the screen, Select to repeat, and Select then L to stop speech." On the
-desktop build it adds "L then Select, held, for settings"; on Android it says
-that settings are on the launcher screen instead.
+read the screen, Select to repeat, and Select then L to stop speech." It then
+says where the settings are — on Android, quit to the launcher screen; on the
+desktop build, the Mods menu.
 
 ### Settings on the Android launcher
 
@@ -165,11 +156,13 @@ everything or menus-and-battles, and speech rate slow/normal/fast. Tap a row to
 cycle it; the value is spoken and saved as you tap, before the game starts.
 
 The values are written to the mod state the game reads at start-up
-(`mods/state.toml`), so the launcher, the Mods menu and the pad path all edit one
-setting, and nothing has to be set twice. To change a setting later, quit the
-game: the launcher is behind it, and quitting returns you there. The Android
-back gesture and the runtime menu's **System → Quit game** both do this; the
-engine already supported it, so nothing was added for it.
+(`mods/state.toml`), so the launcher and the Mods menu edit one setting, and
+nothing has to be set twice. **Nothing on the pad changes a setting**: the
+chords are read, repeat and stop only, so a combination pressed mid-game cannot
+alter how the game talks. To change a setting, quit the game: the launcher is
+behind it, and quitting returns you there. The Android back gesture and the
+runtime menu's **System → Quit game** both do this; the engine already supported
+it, so nothing was added for it.
 
 The card also refuses to write while the game is running (say, in split screen)
 and says to quit first, so a running session cannot overwrite what you just set.
@@ -214,7 +207,6 @@ Game screen
 | Battle messages | Same path; a turn's messages are spoken in order |
 | Read status (button / node) | The current screen plus whatever is selected |
 | Repeat | The last utterance |
-| Settings (pad) | Each setting's name, position and value, then the new value after a change ("Speech rate: fast."), and "Settings closed." |
 | Name entry (naming screen) | The key under the cursor, the page (upper case / lower case / symbols), row and column on opening and on page changes, the buttons (Change page, Backspace, OK), and the name typed so far as it changes |
 
 Menu labels come from the game itself: the accessibility layer captures the
@@ -306,26 +298,24 @@ provenance, the CC0 license and how to add a cue.
 
 ## Options
 
-Every option is changed from the pad, with no menu to see: **L, then Select,
-held** opens the spoken settings, **L** steps through them, **Select** changes
-one, and **Select, then L** closes. Each change is spoken with its new value
-("Detail: menus and battles only."), and every value applies to the running
-session immediately.
+The options are set **before you play**, not from the pad. On Android the setup
+screen carries them in a **Spoken interface** card: each row cycles its value
+when you tap it and saves as it does. On desktop they are in the Mods menu
+(Mods → Accessibility → Spoken Interface). No button combination changes a
+setting while the game is running, so a fumbled press mid-battle cannot alter
+how the game talks, and nothing has to be remembered as a chord.
 
 | Setting | Values | Meaning |
 | --- | --- | --- |
 | Read game text | on / off | Speak printed dialogue and battle text as it appears. Off keeps screens, menus, lists and battle choices. |
 | Detail | Everything / Menus and battles only | "Everything" reads all printed text, including banners and summaries. |
 | Speech rate | Slow / Normal / Fast | Android TTS rate; ignored while TalkBack is on. |
-| Reset to defaults | — | Puts all three back to on / everything / normal and says so. |
 
 These are the **same stored options** the Mods menu (Mods → Accessibility →
-Spoken Interface) shows: a change made on the pad is written through the
-feature's own option values and the runtime's state file, so it appears in the
-menu and survives a restart, and a change made in the menu is adopted when the
-profile starts (the settings screen then opens on the menu's values). If the
-state cannot be written — a build without the mod-state provider — the change
-still applies to the session and the confirmation ends with "Not saved."
+Spoken Interface) shows, kept in the mod's own state file
+(`mods/state.toml`). The launcher writes that file directly and the game reads
+it at start-up, so the launcher and the menu are one setting: change it in
+either place and both agree, and it survives a restart.
 
 The feature ships **enabled** for fresh profiles so a player who cannot see the
 Mods menu still gets speech. Turning it off stops all speech and leaves the

@@ -135,8 +135,8 @@ Save states: **Shift+F1–F9** save to a slot, **F1–F9** load it.
 ## Accessibility: spoken interface and TalkBack
 
 EmeraldRecomp can be played by ear. **Mods → Accessibility → Spoken
-Interface** (enabled on fresh profiles, and its options are on the pad as well)
-reads screens, menus and their items,
+Interface** (enabled on fresh profiles; on Android its three options are on the
+launcher screen, before play) reads screens, menus and their items,
 bag and shop lists, dialogue, battle messages, battle choices and the name-entry
 keyboard aloud. On
 Android the game speaks through its own **text to speech**, so it works with
@@ -147,13 +147,15 @@ TalkBack gestures can play the game.
 
 With a **controller** and TalkBack off there is nothing extra to learn: moving
 the d-pad/stick moves the game's own cursor, and every cursor change, menu,
-list, battle choice and printed line is spoken as it happens. Four pad
+list, battle choice and printed line is spoken as it happens. Three pad
 commands cover the rest — **L** reads the current screen, **Select** repeats the
-last utterance, **Select, then L** stops speech (the two presses need not be
-simultaneous), and **L, then Select, held** opens the spoken settings. The
-settings are the mod's own options — read game text, detail, speech rate, reset
-to defaults — cycled with the pad alone, each change spoken with its new value
-and stored where the Mods menu reads it, so the visual menu is never needed.
+last utterance, and **Select, then L** stops speech (the two presses need not be
+simultaneous).
+
+The spoken settings — read game text, detail, speech rate — are deliberately
+**not** on the pad, so no combination pressed while playing can change how the
+game talks. On Android they are on the launcher screen: quit the game to return
+there. On desktop they are in the Mods menu.
 
 On Android the first-launch **setup screen speaks too**: the game subclasses
 the engine's ROM/BIOS import screen, so it is narrated and its status changes

@@ -1,8 +1,8 @@
 // tests/settings_test.cpp — the spoken settings model (emerald_settings.h).
 //
-// The pad and the Mods menu must change one setting, not two: these cases pin
-// the cycling order, the spoken lines, and that the values written back are the
-// ones the shipped manifest declares as choices.
+// The launcher and the Mods menu write one setting, not two: these cases pin
+// the value names, that the launcher's editor and the game agree on them, and
+// that they are the choices the shipped manifest declares.
 #include "accessibility/emerald_settings.h"
 
 #include <cstdio>
@@ -12,18 +12,13 @@
 #include <sstream>
 #include <string>
 
-using emerald::accessibility::cycle_setting;
 using emerald::accessibility::detail_everything;
 using emerald::accessibility::kDetailOption;
 using emerald::accessibility::kGameTextOption;
 using emerald::accessibility::kRateOption;
-using emerald::accessibility::kSettingItemCount;
 using emerald::accessibility::rate_index;
 using emerald::accessibility::rate_multiplier;
 using emerald::accessibility::rate_value;
-using emerald::accessibility::setting_option_id;
-using emerald::accessibility::setting_option_value;
-using emerald::accessibility::setting_speech;
 using emerald::accessibility::SpokenSettings;
 
 namespace {
@@ -74,50 +69,6 @@ int main() {
         require(rate_multiplier(0) == 0.8f && rate_multiplier(1) == 1.0f &&
                     rate_multiplier(2) == 1.3f,
                 "rate multipliers");
-    }
-    {   // Read game text toggles on -> off -> on, with its spoken line.
-        SpokenSettings s;
-        require(same(cycle_setting(0, &s), "Read game text: off."), "game text off line");
-        require(!s.read_game_text, "game text off");
-        require(same(setting_option_value(0, s), "off"), "game text persists off");
-        require(same(cycle_setting(0, &s), "Read game text: on."), "game text on line");
-        require(s.read_game_text, "game text on again");
-        require(same(setting_option_value(0, s), "on"), "game text persists on");
-    }
-    {   // Detail toggles everything -> menus and battles only.
-        SpokenSettings s;
-        require(same(cycle_setting(1, &s), "Detail: menus and battles only."),
-                "detail menus line");
-        require(!s.detail_everything, "detail menus");
-        require(same(setting_option_value(1, s), "menus"), "detail persists menus");
-        require(same(cycle_setting(1, &s), "Detail: everything."), "detail everything line");
-        require(same(setting_option_value(1, s), "everything"), "detail persists everything");
-    }
-    {   // Speech rate cycles slow -> normal -> fast -> slow.
-        SpokenSettings s;
-        require(same(cycle_setting(2, &s), "Speech rate: fast."), "rate normal -> fast");
-        require(same(cycle_setting(2, &s), "Speech rate: slow."), "rate fast -> slow");
-        require(same(cycle_setting(2, &s), "Speech rate: normal."), "rate slow -> normal");
-        require(s.rate == 1, "rate wraps back to normal");
-    }
-    {   // Reset restores every default and says so.
-        SpokenSettings s;
-        s.read_game_text = false;
-        s.detail_everything = false;
-        s.rate = 2;
-        require(same(cycle_setting(3, &s),
-                     "Settings reset to defaults. Read game text on, detail "
-                     "everything, speech rate normal."),
-                "reset line");
-        require(s.read_game_text && s.detail_everything && s.rate == 1,
-                "reset restores defaults");
-    }
-    {   // Every row reports its own value; the reset row has no option.
-        SpokenSettings s;
-        for (int item = 0; item < kSettingItemCount; ++item)
-            require(!setting_speech(item, s).empty(), "every row speaks");
-        require(setting_option_id(3) == nullptr, "reset writes no single option");
-        require(setting_option_value(3, s) == nullptr, "reset has no single value");
     }
     {   // Values the menu wrote parse back into live settings.
         require(!emerald::accessibility::game_text_on("off"), "parses off");

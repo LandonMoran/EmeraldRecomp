@@ -9,19 +9,20 @@
 //   L                              read the current screen
 //   Select (R while naming)        repeat the last utterance
 //   Select first, then L           stop speech
-//   L first, then Select, held     open the spoken settings
-//     in settings: L next item, Select changes it, the chord closes
 //
-// A physical pad never lands two presses on the same frame, so the chords are
+// Settings are deliberately *not* a pad command. Changing a setting needs a save
+// and a deliberate trip back to the launcher (Android) or the game's own Mods
+// menu, so no combination of buttons pressed while playing can change how the
+// game talks. That keeps the pad surface to three commands a player can learn
+// once, and makes an accidental chord harmless.
+//
+// A physical pad never lands two presses on the same frame, so the stop chord is
 // told apart by order and by a hold, never by simultaneity:
 //
 //   * Select alone is remembered for a short window instead of firing at once:
 //     L inside the window turns the press into "stop speech" and drops the
 //     pending repeat, while letting go (or holding past the window) repeats.
-//   * L alone reads immediately. Select arriving while L is still down starts
-//     the settings window; both held through it opens settings. Releasing first
-//     cancels it, and holding the stop chord never opens settings, so a slow
-//     stop cannot fall into the settings screen.
+//   * L alone reads immediately.
 //
 // The decoder is pure (no engine state, no allocation) so the staggered-press
 // rules are tested without a pad: tests/hotkeys_test.cpp.
@@ -35,13 +36,9 @@ namespace emerald::accessibility {
 
 enum class Hotkey : int {
     None = 0,
-    Read,            // L: read the current screen
-    Repeat,          // Select (R while naming): repeat the last utterance
-    Stop,            // Select, then L: silence immediately
-    SettingsOpen,    // L, then Select, held: open the spoken settings
-    SettingsNext,    // L in settings: next setting
-    SettingsChange,  // Select in settings: cycle this setting
-    SettingsClose,   // Select + L in settings: leave
+    Read,       // L: read the current screen
+    Repeat,     // Select (R while naming): repeat the last utterance
+    Stop,       // Select, then L: silence immediately
 };
 
 class HotkeyTracker {
@@ -50,9 +47,6 @@ public:
     // ~170 ms at 60 frames/s: long enough for a second thumb to reach L, short
     // enough that a repeat does not feel like a dropped press.
     static constexpr int kChordFrames = 10;
-    // ~750 ms: long enough that a stop chord the player simply rests on does
-    // not open settings, short enough to feel like a hold rather than a wait.
-    static constexpr int kSettingsFrames = 45;
 
     // Seed with the host's current key state so a button already held when the
     // layer starts (or restarts) is not read as a fresh press.
@@ -60,12 +54,7 @@ public:
         host_ = static_cast<std::uint16_t>(host & kMask);
         waiting_ = false;
         waited_ = 0;
-        opening_ = false;
-        opening_frames_ = 0;
-        settings_open_ = false;
     }
-
-    bool settings_open() const { return settings_open_; }
 
     // Once per guest frame. `host` is the pad's own key state, active-low and
     // before synthesis. `naming` selects the naming screen's modifier.
@@ -80,47 +69,17 @@ public:
             naming ? gbarecomp::kGbaKeyR : gbarecomp::kGbaKeySelect;
         const std::uint16_t l = gbarecomp::kGbaKeyL;
 
-        if (settings_open_) {
-            if ((edge & l) && (pressed & modifier)) {   // chord: close
-                settings_open_ = false;
-                return Hotkey::SettingsClose;
-            }
-            if (edge & l) return Hotkey::SettingsNext;
-            if (edge & modifier) return Hotkey::SettingsChange;
-            return Hotkey::None;
-        }
-
         if ((edge & l) && (pressed & modifier)) {       // Select first, then L
             waiting_ = false;
-            opening_ = false;
             return Hotkey::Stop;
         }
         if (edge & l) {
             waiting_ = false;
-            opening_ = false;
             return Hotkey::Read;
         }
-        if (edge & modifier) {
-            waiting_ = false;
-            if (pressed & l) {                          // L first: settings?
-                opening_ = true;
-                opening_frames_ = 0;
-            } else {                                    // Select alone: repeat?
-                waiting_ = true;
-                waited_ = 0;
-            }
-            return Hotkey::None;
-        }
-        if (opening_) {
-            if ((pressed & (l | modifier)) != (l | modifier)) {
-                opening_ = false;                       // released early
-                return Hotkey::None;
-            }
-            if (++opening_frames_ >= kSettingsFrames) {
-                opening_ = false;
-                settings_open_ = true;
-                return Hotkey::SettingsOpen;
-            }
+        if (edge & modifier) {                          // Select alone: repeat?
+            waiting_ = true;
+            waited_ = 0;
             return Hotkey::None;
         }
         if (!waiting_) return Hotkey::None;
@@ -139,9 +98,6 @@ private:
     std::uint16_t host_ = kMask;
     bool waiting_ = false;
     int waited_ = 0;
-    bool opening_ = false;
-    int opening_frames_ = 0;
-    bool settings_open_ = false;
 };
 
 }  // namespace emerald::accessibility

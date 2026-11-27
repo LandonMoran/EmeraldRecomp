@@ -94,18 +94,15 @@ void speak_now(const char* text, bool interrupt);
 //   L                       read the current screen (scene, selection, position)
 //   Select                  repeat the last utterance
 //   Select, then L          stop speech
-//   L, then Select, held    open the spoken settings; in them, L is next,
-//                           Select changes the item, the chord closes
 //
 // A real pad never presses both chord buttons on the same frame, so the chords
 // are separated by order and by a hold (emerald_hotkeys.h): Select alone waits
-// a short window, L inside it stops speech and drops the pending repeat, and
-// Select arriving while L is down opens the settings only after a longer hold.
+// a short window, and L inside it stops speech and drops the pending repeat.
 //
-// The settings are the same three options the Mods menu edits (read game text,
-// detail, speech rate). A pad change applies to the running session and is
-// written back to the same mod state, so the menu shows it and it survives a
-// restart; a menu change is read back by activate_from_options() at start-up.
+// Settings are not on the pad. The three options (read game text, detail,
+// speech rate) are set on the launcher before play, or in the game's own Mods
+// menu, and activate_from_options() reads the persisted values at start-up — so
+// no combination pressed while playing can change how the game talks.
 //
 // Select and L are the two buttons Emerald itself never reads, with one
 // exception: the naming screen reads Select (it swaps the keyboard page), so
@@ -120,8 +117,8 @@ void push_action(Action action, int arg = 0);
 
 // Mod plugin surface (src/mods/emerald_accessibility_plugin.cpp).
 void activate_from_options();
-// Adopt the persisted option values (as the Mods menu wrote them) and apply
-// them. Called at activation; the pad's own changes use the same model.
+// Adopt the persisted option values (as the launcher or the Mods menu wrote
+// them) and apply them. Called at activation.
 void adopt_options(const char* game_text, const char* detail, const char* rate);
 void reset();
 void register_text_probe();   // observes AddTextPrinter; safe to call repeatedly

@@ -2,8 +2,8 @@
 //
 // The mod catalog ships "Spoken Interface" preloaded and enabled, so a player
 // who relies on speech does not have to find it in an inaccessible Mods menu.
-// Its options are pad-editable (L, then Select, held) and the menu edits the
-// same three values:
+// Its three options are set on the launcher screen before play (Android) or in
+// the Mods menu, never from the pad; both edit the same values:
 //
 //   game-text  on/off     speak the game's printed dialogue and battle text
 //   verbosity  everything/menus   everything = all printed text, menus = only

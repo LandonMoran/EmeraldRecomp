@@ -128,18 +128,26 @@ ball pocket. None of this touches the accessibility translation units.
   fallback, native bridge retry) is untested on a device. The Java sources do
   compile here (`javac 17` + the Robolectric platform jar), so they are type-
   and API-checked; what cannot be checked is the engine's actual voice.
-* Controller mapping and the pad commands (`L`, `Select`, `Select then L`,
-  `L then Select` held for settings) on real hardware. The decoder's
-  staggered-press, hold and same-frame rules and the settings cycling are
-  unit-tested (`tests/hotkeys_test.cpp`, `tests/settings_test.cpp`), including
-  that the values written are the manifest's own choices; nothing here can send
-  host key edges — TCP input is re-latched from the pad every frame — so a pad
-  press itself is unverified.
-* Writing the changed setting back through the mod state
-  (`feature_set_option` + the runtime's non-interactive commit) is untested in
-  this VM: it needs the engine linked, and this checkout has no build tree. The
-  pure model it writes is tested; the persisted file and the menu round-trip
-  are not.
+* Controller mapping and the pad commands (`L`, `Select`, `Select then L`) on
+  real hardware. The decoder's staggered-press, hold and same-frame rules are
+  unit-tested (`tests/hotkeys_test.cpp`), including that holding L and Select
+  together only repeats and never changes a setting. Nothing here can send host
+  key edges — TCP input is re-latched from the pad every frame — so a pad press
+  itself is unverified.
+* The spoken settings and where they are stored. `tests/settings_test.cpp` pins
+  the option ids, defaults and value parsers against the shipped manifest, and
+  the launcher's editor is unit-tested on a JVM (`SpokenUiSettings`: defaults,
+  in-place replacement, appending a missing feature block, another package's
+  identically named value left alone, idempotence, comments and the trailing
+  newline preserved). A game run started from a launcher-written state file
+  adopts those values. What is untested is the launcher screen itself: this
+  machine has no Android SDK, Gradle or emulator, so the card was compiled but
+  never rendered or tapped.
+* Writing a setting from inside the game (the Mods menu writing the mod state
+  through the engine) is untested in this VM: it needs the engine's menu driven
+  by a real player. The value names, the parsers and the launcher's own writer
+  are tested, and a game run proves the file is adopted; the menu round-trip is
+  not.
 
 # Headless run, 2026-11-26: the game itself speaks
 

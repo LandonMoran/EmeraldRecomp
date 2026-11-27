@@ -1,6 +1,6 @@
 
 === BEAT boot ===
-[boot f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. L then Select, held, for settings.
+[boot f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
 [boot f24] Starting Pokémon Emerald.
 [state] scene=boot frame=59
 

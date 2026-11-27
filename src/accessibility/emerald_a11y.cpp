@@ -1157,77 +1157,22 @@ void watch(const SceneState& s, const Mem& m) {
     publish_ui(s, m);
 }
 
-// ── Spoken settings (pad-editable) ───────────────────────
+// ── Spoken settings (read from the mod's own options) ────────────────────
 
-// The three options the Mods menu edits. The layer keeps its own copy so a pad
-// change is audible in the running session, and writes the value back through
-// the engine's own mod state (the feature's staged option, then the runtime's
-// non-interactive commit) so the menu shows it and it survives a restart.
-// activate_from_options() reads the menu's value back at start-up, so the two
-// paths stay one setting, not two.
+// The three options the launcher and the Mods menu edit. The layer keeps its
+// own copy so a change is audible in the running session, and
+// activate_from_options() reads the persisted values at start-up, so every
+// place that edits them edits one setting rather than several.
+//
+// There is no pad path on purpose: settings are changed on the launcher (before
+// play) or in the game's own Mods menu, never by a button combination pressed
+// during play, so the pad cannot change how the game talks by accident.
 SpokenSettings g_settings;
-int g_setting_item = 0;
-
-bool stage_option(const char* option_id, const char* value) {
-#if EMERALD_HAS_MOD_PROVIDER
-    const RecompLauncherCModProvider* provider = gba_mod_runtime_launcher_provider_c();
-    if (!provider || !provider->feature_set_option) return false;
-    return provider->feature_set_option(provider->ctx, kSpokenUiPackage,
-                                        kSpokenUiFeature, option_id,
-                                        value) != 0;
-#else
-    (void)option_id;
-    (void)value;
-    return false;
-#endif
-}
-
-// The runtime's own commit: no ROM, no picker. It rewrites state.toml with the
-// staged values and refreshes the committed option snapshot. It does not re-run
-// plugin activation, so the running session keeps its hooks.
-bool save_options() { return gba_mod_runtime_commit_c(nullptr) != 0; }
-
-bool persist_option(const char* option_id, const char* value) {
-    return stage_option(option_id, value) && save_options();
-}
-
-bool persist_all_settings() {
-    bool ok = stage_option(kGameTextOption, game_text_value(g_settings.read_game_text));
-    ok = stage_option(kDetailOption, detail_value(g_settings.detail_everything)) && ok;
-    ok = stage_option(kRateOption, rate_value(g_settings.rate)) && ok;
-    return ok && save_options();
-}
 
 void apply_settings() {
     set_speak_game_text(g_settings.read_game_text);
     set_verbosity(g_settings.detail_everything ? 1 : 0);
     set_rate(rate_multiplier(g_settings.rate));
-}
-
-void settings_open() {
-    g_setting_item = 0;
-    say(std::string("Settings. ") + setting_speech(0, g_settings) +
-            " L next, Select changes, Select then L closes.",
-        true);
-}
-
-void settings_next() {
-    g_setting_item = (g_setting_item + 1) % kSettingItemCount;
-    say(setting_speech(g_setting_item, g_settings) + " " +
-            std::to_string(g_setting_item + 1) + " of " +
-            std::to_string(kSettingItemCount) + ".",
-        false);
-}
-
-void settings_change() {
-    const char* option = setting_option_id(g_setting_item);
-    std::string spoken = cycle_setting(g_setting_item, &g_settings);
-    apply_settings();   // the new value takes effect now, not at the next launch
-    const bool saved =
-        option ? persist_option(option, setting_option_value(g_setting_item, g_settings))
-               : persist_all_settings();
-    if (!saved) spoken += " Not saved.";
-    say(std::move(spoken), true);
 }
 
 // ── Controller hotkeys ───────────────────────────────────────────────────
@@ -1236,8 +1181,8 @@ void settings_change() {
 // holding a shoulder button does not repeat speech. The state is the pad's own
 // keyinput, before synthesis, so touch gestures and the touch policy never
 // trigger it. emerald_hotkeys.h owns the decoding, including the staggered
-// presses of a real pad (Select then L stops, L then Select held opens
-// settings, Select alone repeats).
+// presses of a real pad (Select then L stops, Select alone repeats). Settings
+// are not on the pad: nothing pressed during play changes how the game talks.
 HotkeyTracker g_hotkeys;
 
 // Android attaches the Java bridge before the SDL view exists, and a failed
@@ -1263,10 +1208,6 @@ void poll_hotkeys(std::uint16_t host, bool naming) {
         case Hotkey::Read: push_action(Action::ReadStatus); break;
         case Hotkey::Repeat: push_action(Action::Repeat); break;
         case Hotkey::Stop: push_action(Action::StopSpeech); break;
-        case Hotkey::SettingsOpen: settings_open(); break;
-        case Hotkey::SettingsNext: settings_next(); break;
-        case Hotkey::SettingsChange: settings_change(); break;
-        case Hotkey::SettingsClose: say("Settings closed.", true); break;
         case Hotkey::None: break;
     }
 }
@@ -1333,16 +1274,16 @@ void speak_now(const char* text, bool interrupt) {
 }
 
 const char* controller_hotkeys_help() {
-    // On Android the spoken settings live on the launcher screen, so the
-    // greeting points there instead of naming a chord the player would have to
-    // remember: the game returns to that screen when it is quit.
+    // Three commands, no chord to remember for settings: those are changed on
+    // the launcher (Android) or in the Mods menu, never by the pad.
 #if defined(__ANDROID__)
     return "Press L to read the screen, Select to repeat, "
-           "and Select then L to stop speech. Settings are on the launcher "
-           "screen, before you play.";
+           "and Select then L to stop speech. To change the spoken settings, "
+           "quit the game and set them on the launcher screen.";
 #else
     return "Press L to read the screen, Select to repeat, "
-           "and Select then L to stop speech. L then Select, held, for settings.";
+           "and Select then L to stop speech. The spoken settings are in the "
+           "Mods menu.";
 #endif
 }
 

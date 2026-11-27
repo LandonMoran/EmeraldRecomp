@@ -70,14 +70,13 @@ int main() {
         require(frame(t, kSelect) == Hotkey::None, "nothing is left pending");
         require(frame(t, 0) == Hotkey::None, "no repeat after a stop");
     }
-    {   // Both arriving on one frame is the stop chord, never settings.
+    {   // Both arriving on one frame is the stop chord.
         HotkeyTracker t;
         require(frame(t, kSelect | kL) == Hotkey::Stop, "simultaneous chord stops");
-        // Resting on the stop chord must not fall through into settings.
-        for (int i = 0; i < HotkeyTracker::kSettingsFrames + 5; ++i)
+        // Resting on the stop chord must not repeat or do anything else.
+        for (int i = 0; i < 60; ++i)
             require(frame(t, kSelect | kL) == Hotkey::None,
                     "a held stop chord stays silent");
-        require(!t.settings_open(), "a held stop chord does not open settings");
     }
     {   // Holding Select past the window repeats without waiting for release.
         HotkeyTracker t;
@@ -87,46 +86,6 @@ int main() {
                 "held Select repeats once, after the chord window");
         require(frame(t, kSelect) == Hotkey::None, "held Select does not repeat again");
         require(frame(t, 0) == Hotkey::None, "releasing after a held repeat is silent");
-    }
-    {   // Settings: L reads, then Select held with it opens the settings.
-        HotkeyTracker t;
-        require(frame(t, kL) == Hotkey::Read, "L first reads the screen");
-        require(frame(t, kL | kSelect) == Hotkey::None,
-                "L then Select starts the settings window");
-        require(wait_for(t, kL | kSelect, Hotkey::SettingsOpen,
-                         HotkeyTracker::kSettingsFrames + 4) ==
-                    HotkeyTracker::kSettingsFrames,
-                "settings opens after the hold");
-        require(t.settings_open(), "the decoder reports settings open");
-        require(frame(t, 0) == Hotkey::None, "releasing after opening is silent");
-        require(frame(t, kL) == Hotkey::SettingsNext, "L advances the setting");
-        require(frame(t, kSelect) == Hotkey::SettingsChange, "Select changes it");
-        require(frame(t, kL | kSelect) == Hotkey::SettingsClose, "the chord closes");
-        require(!t.settings_open(), "the decoder reports settings closed");
-        require(frame(t, 0) == Hotkey::None, "closing is silent");
-        require(frame(t, kL) == Hotkey::Read, "L reads again once settings is closed");
-    }
-    {   // Released before the hold ends: no settings, no stray repeat.
-        HotkeyTracker t;
-        require(frame(t, kL) == Hotkey::Read, "L first reads");
-        require(frame(t, kL | kSelect) == Hotkey::None, "L then Select waits");
-        for (int i = 0; i + 1 < HotkeyTracker::kSettingsFrames; ++i)
-            require(frame(t, kL | kSelect) == Hotkey::None, "still waiting");
-        require(frame(t, 0) == Hotkey::None, "releasing early cancels");
-        require(!t.settings_open(), "an early release never opens settings");
-        require(frame(t, 0) == Hotkey::None, "no repeat is left pending");
-        require(frame(t, kSelect) == Hotkey::None, "Select waits as usual");
-        require(frame(t, 0) == Hotkey::Repeat, "Select alone still repeats");
-    }
-    {   // L then Select released L first, then Select: still no settings.
-        HotkeyTracker t;
-        require(frame(t, kL) == Hotkey::Read, "L first reads");
-        require(frame(t, kL | kSelect) == Hotkey::None, "L then Select waits");
-        require(frame(t, kSelect) == Hotkey::None, "letting L go cancels the window");
-        for (int i = 0; i < HotkeyTracker::kSettingsFrames + 4; ++i)
-            require(frame(t, kSelect) == Hotkey::None,
-                    "Select alone cannot open settings");
-        require(!t.settings_open(), "settings stays closed");
     }
     {   // Naming: Select belongs to the game, so R is the modifier there.
         HotkeyTracker t;
@@ -138,18 +97,6 @@ int main() {
         require(frame(u, 0, true) == Hotkey::Repeat, "naming: R alone repeats");
         require(frame(u, kL, true) == Hotkey::Read, "naming: L still reads");
     }
-    {   // Naming: L then R held opens the settings, and the chord closes them.
-        HotkeyTracker t;
-        require(frame(t, kL, true) == Hotkey::Read, "naming: L reads");
-        require(frame(t, kL | kR, true) == Hotkey::None, "naming: L then R waits");
-        require(wait_for(t, kL | kR, Hotkey::SettingsOpen,
-                         HotkeyTracker::kSettingsFrames + 4, true) ==
-                    HotkeyTracker::kSettingsFrames,
-                "naming: settings opens after the hold");
-        require(frame(t, 0, true) == Hotkey::None, "naming: release is silent");
-        require(frame(t, kL | kR, true) == Hotkey::SettingsClose,
-                "naming: the chord closes settings");
-    }
     {   // A pad held from before the layer starts is not a fresh press.
         HotkeyTracker t;
         t.reset(static_cast<std::uint16_t>(~kL & HotkeyTracker::kMask));
@@ -157,13 +104,25 @@ int main() {
         require(frame(t, 0) == Hotkey::None, "releasing it is silent");
         require(frame(t, kL) == Hotkey::Read, "L pressed after the start reads");
     }
-    {   // The whole settings chord already down at start must stay silent.
+    {   // Nothing pressed during play can change a setting: L and Select
+        // held together repeat the last utterance and nothing else.
+        HotkeyTracker t;
+        require(frame(t, kL) == Hotkey::Read, "L first reads the screen");
+        require(frame(t, kL | kSelect) == Hotkey::None, "L then Select waits");
+        require(wait_for(t, kL | kSelect, Hotkey::Repeat,
+                         HotkeyTracker::kChordFrames + 4) ==
+                    HotkeyTracker::kChordFrames,
+                "holding both repeats the last utterance");
+        for (int i = 0; i < 60; ++i)
+            require(frame(t, kL | kSelect) == Hotkey::None,
+                    "however long it is held, it does nothing else");
+    }
+    {   // A chord already down at start is not a press.
         HotkeyTracker t;
         t.reset(static_cast<std::uint16_t>(~(kL | kSelect) & HotkeyTracker::kMask));
-        for (int i = 0; i < HotkeyTracker::kSettingsFrames + 5; ++i)
+        for (int i = 0; i < 60; ++i)
             require(frame(t, kL | kSelect) == Hotkey::None,
-                    "held-at-start chord cannot open settings");
-        require(!t.settings_open(), "held-at-start chord leaves settings closed");
+                    "a held-at-start chord does nothing");
         require(frame(t, 0) == Hotkey::None, "releasing the held chord is silent");
     }
     {   // Gameplay keys never produce a command on their own.
