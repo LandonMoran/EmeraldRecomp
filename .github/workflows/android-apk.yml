@@ -89,16 +89,22 @@ jobs:
             variants/emerald/generated
           key: emerald-corpus-${{ env.ROM_SHA1 }}-${{ hashFiles('variants/emerald/game.toml', 'variants/emerald/symbols/*') }}
 
-      - name: Fetch the ROM (private source, token-authenticated)
+      - name: Fetch the ROM
         if: steps.corpus.outputs.cache-hit != 'true'
         env:
-          EMERALD_ROM_SOURCE: ${{ vars.EMERALD_ROM_SOURCE }}
+          # Either the variable (a plain location) or the secret (a link you
+          # would rather not publish). The secret wins when both are set.
+          EMERALD_ROM_SOURCE: ${{ secrets.EMERALD_ROM_SOURCE != '' && secrets.EMERALD_ROM_SOURCE || vars.EMERALD_ROM_SOURCE }}
           EMERALD_ROM_TOKEN: ${{ secrets.EMERALD_ROM_TOKEN }}
         run: |
           if [ -z "${EMERALD_ROM_SOURCE:-}" ]; then
-            echo "::error::EMERALD_ROM_SOURCE is not set. Add the repository variable described in docs/ANDROID_APK_CI.md."
+            echo "::error::EMERALD_ROM_SOURCE is not set. Add the repository secret or variable described in docs/ANDROID_APK_CI.md."
             exit 1
           fi
+          # Belt and braces: keep the source out of the log even when it is not
+          # a secret (GitHub masks secret values on its own).
+          echo "::add-mask::$EMERALD_ROM_SOURCE"
+          echo "fetching the ROM from '$(printf '%s' "$EMERALD_ROM_SOURCE" | cut -d: -f1):...'"
           bash tools/android/fetch_rom.sh "$ROM_PATH" "$ROM_SHA1"
 
       - name: Recompile the corpus from the ROM

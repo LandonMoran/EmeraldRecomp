@@ -100,7 +100,8 @@ case "$source_spec" in
         cp "${source_spec#file:}" "$raw"
         ;;
     *)
-        echo "fetch_rom.sh: unknown EMERALD_ROM_SOURCE '$source_spec' (repo:, asset:, drive:, url:, file:)" >&2
+        # Never echo the spec: it may come from a secret and hold a private URL.
+        echo "fetch_rom.sh: unknown EMERALD_ROM_SOURCE form '$(printf '%s' "$source_spec" | cut -d: -f1):...' (repo:, asset:, drive:, url:, file:)" >&2
         exit 2
         ;;
 esac

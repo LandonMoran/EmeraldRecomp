@@ -56,8 +56,25 @@ download the ROM**, Drive occasionally serves "can't scan this file" or
 will — so it is convenient, not permanent. The script detects an HTML answer and
 fails with that explanation (exit 5) instead of hashing a web page. A private
 repo or release asset with `EMERALD_ROM_TOKEN` is the more reliable choice, and
-any other permanent host works too via `url:` (an R2/S3 object with a long random path,
-for instance).
+any other permanent host works too via `url:` (an R2/S3 object with a long random
+path, for instance).
+
+#### Keeping the link itself secret
+
+Storing the whole spec as the **secret** `EMERALD_ROM_SOURCE` (e.g.
+`drive:1Kev3…`) does work: the workflow reads it into an environment variable,
+masks it (`::add-mask::`), and the fetch script never prints the spec — only its
+form (`drive:...`) — so the id does not appear in the log.
+
+Be clear about what that buys. The Drive file is still served to **anonymous**
+requests once it is link-shared; the secret hides *where* it is, not *what it is*.
+Anyone who ever sees the value — a collaborator editing a workflow, a pasted log,
+a shared screen, a fork with a modified file that prints it — can download the ROM
+for good, and there is no way to revoke that other than unsharing and rotating
+the link. A token, by contrast, is scoped to one repo and revocable in seconds,
+and the file is never downloadable without it. If the goal is "not publicly
+downloadable", use `repo:`/`asset:` with `EMERALD_ROM_TOKEN`; if the goal is
+"not casually discoverable", the secret-held Drive link is fine.
 
 ### 2. Create a read-only token
 
@@ -74,8 +91,12 @@ Repository → **Settings → Secrets and variables → Actions**:
 | Kind | Name | Value |
 | --- | --- | --- |
 | Secret | `EMERALD_ROM_TOKEN` | the fine-grained token from step 2 |
-| Variable | `EMERALD_ROM_SOURCE` | one of the forms below |
+| Variable **or** Secret | `EMERALD_ROM_SOURCE` | one of the forms below |
 | Secret (Drive/public URL only) | *none needed* | leave `EMERALD_ROM_TOKEN` unset |
+
+`EMERALD_ROM_SOURCE` may be stored either way; if both exist the secret wins.
+Use the secret if you want the location itself (a Drive id, a private URL) kept
+out of the settings page people can read.
 
 `EMERALD_ROM_SOURCE` forms (the variable is not secret — it is just a location):
 
