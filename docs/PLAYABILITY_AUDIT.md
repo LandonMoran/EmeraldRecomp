@@ -22,7 +22,7 @@ means a player cannot get it at all.
 | Party members' level and HP | PASS | `Party. AAAAAAAAAA level 5, 400 of 400 HP.` on the party screen, read from the party structures |
 | Start menu items | PASS | `Overworld. POKéMON, 1 of 6.`, then `BAG`, the player's name, `SAVE`, `OPTION`, `EXIT` with their positions, on the first open and on a reopen |
 | Shop item names, prices and buying | PASS | `Shop. POKé BALL, 1 of 13.`, `SUPER POTION, 3 of 13.`, `ANTIDOTE, 4 of 13. Heals a poisoned POKéMON.`, `POKé BALL? And you wanted 1? That will be 200.`, `Here you go! Thank you very much.`, then money `2800` |
-| Bag item names | **FAIL** | with a Poké Ball just bought, the bag reads `Bag. CLOSE BAG, 1 of 1.` in every pocket and on every cursor position. The bag's list menu holds only `CLOSE BAG`; its item rows are drawn outside that list and never reach the voice |
+| Bag item names | PASS (fixed in this change) | with a Poké Ball just bought, read-status says `Bag. Items: none. Key items: none. Poké balls: POKé BALL, 1.` The pockets are read from the save block and named from the game's item table, because the bag screen's list menu carries only `CLOSE BAG` |
 | Catching a Pokémon | NOT TESTED | needs a ball in the bag, which needs the bag, which needs the Start menu |
 | Healing at a Pokémon Centre | PASS | walked in through the Centre's door from Mauville City; the whole conversation was spoken, ending `Thank you for waiting. We've restored your POKéMON to full health.`, and the player then walked away normally. The party was already at full HP, so the recovery itself was not observable |
 | Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
@@ -52,12 +52,15 @@ means a player cannot get it at all.
   game's - the nav layer was right all along. Read `pos`.
 - **The nurse "loop" was ordinary play.** Pressing A again at the counter talks
   to the nurse again; the way to leave is to walk, not to press A. Nothing to fix.
-- **The bag has no item names.** The real gap: `CLOSE BAG` is the only entry in
-  the bag's list menu, and the item rows are drawn by the bag menu itself, so no
-  name is printed and none is spoken. The items are readable from the save block
+- **The bag had no item names, and now has them.** `CLOSE BAG` is the only entry
+  in the bag's list menu and the item rows are drawn by the bag menu itself, so
+  no name was ever printed. Contents are read from the save block
   (`bagPocket_Items` 0x560, `bagPocket_KeyItems` 0x5D8, `bagPocket_PokeBalls`
-  0x650, four bytes per slot), but item names need a name table: `gItems` is not
-  in the imported symbol list, so that is the next thing to find.
+  0x650, four bytes per slot) and named from the item table at ROM 0x085839A0
+  (0x2C bytes each: `name[14]`, `itemId`, `price`), which was found by its own
+  strings and checked against the shop's prices. Quantities are stored XORed with
+  `SaveBlock2.encryptionKey` (item.c's `GetBagItemQuantity`); without that the
+  single Poké Ball read back as 4762.
 
 ## What was fixed here
 

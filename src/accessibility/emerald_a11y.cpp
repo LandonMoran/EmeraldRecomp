@@ -635,6 +635,52 @@ std::string party_field_speech(const Mem& m) {
     return out;
 }
 
+// The bag. Its screen is not a ListMenu whose entries are the items: the only
+// entry the list carries is "CLOSE BAG", and the item rows are drawn by the bag
+// menu itself without passing through the text printer, so a player with a Poké
+// Ball in the pocket heard "Bag. CLOSE BAG, 1 of 1." and nothing else. The
+// contents are read from the save block instead, and named from the game's own
+// item table.
+std::string item_name(const Mem& m, int id) {
+    if (id <= 0) return {};
+    std::string name = decode(m, addr::gItems + static_cast<std::uint32_t>(id) * addr::kItemSize, 14);
+    return name;
+}
+
+// A bag quantity is stored XORed with the save's encryption key (item.c's
+// GetBagItemQuantity), so the raw word is not the number of items: a single
+// Poké Ball reads back as 4762 until the key is applied.
+std::string pocket_speech(const Mem& m, std::uint32_t sb1, std::uint32_t offset, int slots,
+                          int key) {
+    std::string out;
+    for (int i = 0; i < slots; ++i) {
+        const std::uint32_t slot = sb1 + offset + static_cast<std::uint32_t>(i) * 4;
+        const int id = m.u16(slot);
+        const int count = m.u16(slot + 2) ^ key;
+        if (id <= 0 || count <= 0) continue;
+        std::string name = item_name(m, id);
+        if (name.empty()) name = "Item " + std::to_string(id);
+        char part[96];
+        std::snprintf(part, sizeof(part), "%s%s, %d", out.empty() ? "" : "; ", name.c_str(), count);
+        out += part;
+    }
+    return out;
+}
+
+std::string bag_speech(const Mem& m) {
+    const std::uint32_t sb1 = m.u32(addr::gSaveBlock1Ptr);
+    if (sb1 < 0x02000000u || sb1 > 0x02040000u) return {};
+    const std::uint32_t sb2 = m.u32(addr::gSaveBlock2Ptr);
+    const int key = m.u16(sb2 + 0xAC);   // SaveBlock2.encryptionKey, low half
+    const std::string items = pocket_speech(m, sb1, addr::kBagItems, 30, key);
+    const std::string keyItems = pocket_speech(m, sb1, addr::kBagKeyItems, 30, key);
+    const std::string balls = pocket_speech(m, sb1, addr::kBagPokeBalls, 16, key);
+    std::string out = "Items: " + (items.empty() ? "none" : items) + ". ";
+    out += "Key items: " + (keyItems.empty() ? "none" : keyItems) + ". ";
+    out += "Pok\xC3\xA9 balls: " + (balls.empty() ? "none" : balls) + ".";
+    return out;
+}
+
 std::string target_speech(const Mem& m, int battler) {
     const std::uint32_t mon = addr::gBattleMons + static_cast<std::uint32_t>(battler) * 0x58;
     std::string name = decode(m, mon + 0x30, 11);
@@ -837,8 +883,11 @@ std::string status_text(const SceneState& s, const Mem& m) {
             if (field.empty()) return what.empty() ? "Battle." : "Battle. " + what;
             return "Battle. " + field + (what.empty() ? "" : " " + what);
         }
-        case SceneKind::Bag:
-            return what.empty() ? "Bag." : "Bag. " + what;
+        case SceneKind::Bag: {
+            const std::string contents = bag_speech(m);
+            if (contents.empty()) return what.empty() ? "Bag." : "Bag. " + what;
+            return "Bag. " + contents + (what.empty() ? "" : " " + what);
+        }
         case SceneKind::Party: {
             const std::string members = party_field_speech(m);
             if (members.empty()) return what.empty() ? "Party." : "Party. " + what;
