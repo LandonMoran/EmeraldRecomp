@@ -1,5 +1,12 @@
 # Building the Android APK on GitHub Actions
 
+> **Current state:** this repository builds the APK from the owner's own dump,
+> fetched from a link-shared Google Drive file whose location lives in the
+> `EMERALD_ROM_SOURCE` secret (no token, no variable). The link is shareable by
+> anyone who obtains it — it is hidden, not protected. Runs 6 and 7 both produced
+> `emeraldrecomp-debug-apk` (~137 MiB). The sections below document every
+> supported source, including the token path if that trade-off ever changes.
+
 The APK can be built on a runner, but not from the repository alone: EmeraldRecomp
 is **statically recompiled**, so the game's code is translated from a cartridge
 dump at build time and compiled into `libmain.so`.
