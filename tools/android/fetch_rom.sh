@@ -16,8 +16,9 @@
 #       file:<path>                       a local file (tests, self-hosted runner)
 #
 #   EMERALD_ROM_TOKEN (optional): a token with read access to that source.
-#       Used for repo:/asset: always, and for url:/drive: when set (Drive API
-#       download). Never echoed, never written anywhere.
+#       Sent to api.github.com for repo:/asset:, and to url: only when
+#       EMERALD_ROM_ALLOW_TOKEN=1. Never sent to Drive, never echoed, never
+#       written anywhere.
 #
 # The download may be the raw .gba or a zip of it (the Drive copy is a 7 MB
 # zip); a zip is unpacked and its single .gba hashed. The SHA-1 gate is the
@@ -42,11 +43,15 @@ raw="${out}.download"
 tmp="${out}.partial"
 trap 'rm -f "$raw" "$tmp" "$out.rom.zip"' EXIT
 
+# Third argument gates the token: it is only ever sent where the token is
+# meant to go (github.com, or an explicit url: opt-in), never to Drive.
 fetch() {
-    local url="$1" accept="${2:-}"
+    local url="$1" accept="${2:-}" send_token="${3:-0}"
     local -a args=(-fsSL --retry 3 --retry-delay 2 -o "$raw" "$url")
     if [ -n "$accept" ]; then args+=(-H "Accept: $accept"); fi
-    if [ -n "$token" ]; then args+=(-H "Authorization: Bearer $token"); fi
+    if [ -n "$token" ] && [ "$send_token" = "1" ]; then
+        args+=(-H "Authorization: Bearer $token")
+    fi
     curl "${args[@]}"
 }
 
@@ -60,7 +65,7 @@ case "$source_spec" in
             exit 2
         fi
         fetch "https://api.github.com/repos/${repo}/contents/${path}" \
-              "application/vnd.github.raw"
+              "application/vnd.github.raw" 1
         ;;
     asset:*)
         rest="${source_spec#asset:}"
@@ -73,7 +78,7 @@ case "$source_spec" in
                 ;;
         esac
         fetch "https://api.github.com/repos/${repo}/releases/assets/${id}" \
-              "application/octet-stream"
+              "application/octet-stream" 1
         ;;
     drive:*)
         # The plain "uc?export=download" endpoint. Works for a file shared as
@@ -87,7 +92,9 @@ case "$source_spec" in
         fetch "https://drive.google.com/uc?export=download&id=${id}"
         ;;
     url:*)
-        fetch "${source_spec#url:}"
+        # A self-hosted URL may want the token; opt in explicitly so a GitHub
+        # token is never quietly sent to a third-party host.
+        fetch "${source_spec#url:}" "" "${EMERALD_ROM_ALLOW_TOKEN:-0}"
         ;;
     file:*)
         cp "${source_spec#file:}" "$raw"
