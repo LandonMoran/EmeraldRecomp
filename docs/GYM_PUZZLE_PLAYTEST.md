@@ -64,7 +64,7 @@ missing party). A mechanic PASS does not make the gym PASS.
 | --- | --- | --- | --- | --- |
 | Rustboro | 11 / 3 | none: no map scripts, no coord events, trainers only | n/a | NOT TESTED |
 | Dewford | 3 / 3 | darkness level set by `setflashlevel`, lowered per trainer defeated | n/a | NOT TESTED |
-| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | NOT TESTED (route stops at the beam maze; party no longer the blocker) |
+| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | NOT TESTED (trainer battle is won, then the build never leaves the battle) |
 | Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | NOT TESTED | NOT TESTED |
 | Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
 | Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
@@ -134,20 +134,30 @@ the fixes below. Still missing for a *full* run:
 **Regression result.** The same checkpoint replayed twice produced the same
 tile and the same line (`The room changed south-east.`), `REPRODUCIBLE: True`.
 
-**Full run: NOT TESTED (the blocker is now the route, not the team).**
+**Full run: NOT TESTED — blocked by the build, at the end of the trainer battle.**
 
-The missing-party problem is solved: `party-starter` holds the Torchic the game
-gives on Route 101 and `party-ready` / `party-lab` hold the same Pokémon with a
-test stat block, and a battle against that Pokémon is on record — the rescue
-Zigzagoon fainted and the game awarded EXP (`TORCHIC gained 17 EXP. Points!`).
-Battles can therefore be won from a checkpoint.
+Party and routing are both solved. `party-lab` carries the Torchic the game
+gives on Route 101 with a level-50 test stat block, and `gym_walk.py` plans the
+walk from the layout's own blockdata, so it reaches the trainers behind the
+beams: entrance (4,19) → (4,17) → (2,17) → (2,16), then A facing Battle Girl
+Vivian at (1,16).
 
-What still stops the walk is the gym's own corridor. From the entrance at
-(4,19) the runner reaches (4,15) or (4,18) and then `left` is refused, so it
-never crosses a trainer's sight line and never reaches a plate; the trainers
-stand at (1,16), (1,13), (5,10), (7,8) and (7,10) behind those beams. Routing
-through the barrier puzzle is the missing piece, not party strength — the same
-wall would stop a sighted player who did not solve the beams.
+That battle is played and **won** with the pad alone — `BATTLE GIRL VIVIAN
+would like to battle!` … `Foe MEDITITE fainted!` … `gained 331 EXP. Points!`.
+After that last line the build never leaves the battle: `gMain.callback2` stays
+`BattleMainCB2` (0x08038420), `gBattleOutcome` is never set, `gBattleMainFunc`
+stays parked in `RunBattleScriptCommands_PopCallbacksStack`, and
+`sLockFieldControls` keeps the field locked with the avatar's `CONTROLLABLE`
+flag never restored. A presses are delivered (`heldKeys` shows the tap) but
+`gBattleScripting` never changes again. Waiting, B, Start and clearing the lock
+by hand all leave the same state.
+
+That is an engine fault, not an accessibility one: the same party and mod won
+the wild rescue battle and returned to the field normally, and the mod's text
+hook is observe-only. Full evidence, including every memory value, is in
+[artifacts/playtest/reports/mauville-trainer-battle-hang.md](../artifacts/playtest/reports/mauville-trainer-battle-hang.md).
+Until that is fixed, no gym with a trainer in the way can be finished, so no
+gym can be called PASS.
 
 ## Rustboro City Gym — 11 / 3
 

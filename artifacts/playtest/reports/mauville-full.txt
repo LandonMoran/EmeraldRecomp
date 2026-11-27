@@ -1,0 +1,7 @@
+[(4, 19)-up f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[(4, 19)-up f31894] Object here. Press A.
+[(4, 19)-up f31918] Overworld.
+[(4, 19)-up f31933] New area.
+[(4, 19)-up f31958] Door one step south. Press A to exit.
+[(2, 17)-up f32167] Trainer west. Press A to talk.
+[(2, 16)-up f32270] With my charm and my POKéMON’s moves, you’ll be shocked!
