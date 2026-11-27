@@ -130,7 +130,12 @@ larger lobbies and Single-Pak multiboot are future work.
 | Start      | Enter         |
 | Select     | Backspace     |
 
-Save states: **Shift+F1–F9** save to a slot, **F1–F9** load it.
+Save states: **Shift+F1–F9** save to a slot, **F1–F9** load it. On Android (a
+phone has no function keys) the game's settings menu carries them: open it with
+a **Back gesture on the overworld**, a pad's **L3/R3** click or the
+**Start+Select** chord, and use **Assist Tools → State slot / Save state / Load
+state**. The app also keeps one automatic suspend point: backgrounding the game
+and being killed by Android resumes where you left off.
 
 ## Accessibility: spoken interface and TalkBack
 

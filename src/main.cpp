@@ -151,6 +151,15 @@ int emerald_main(int argc, char** argv) {
         opts.orientation = gbarecomp::RunOptions::Orientation::Any;
         opts.resize_view_sizing = gbarecomp::RunOptions::ViewSizing::Density;
         opts.resume_suspend_state_on_launch = true;
+        // Save states on a phone. Without a keyboard there are no Shift+F1-F9
+        // slots, so the runtime menu is the way in: expose the engine's Assist
+        // Tools page, where State slot, Save state and Load state sit together
+        // (and fast-forward alongside them). The page's master switch seeds
+        // from `assist_tools` in config.ini, true by default; with it off the
+        // runtime drops save/load requests instead of writing them, which is
+        // the engine's own contract, not something added here. Only a manual
+        // save and a manual load are ever written, never on a timer.
+        opts.expose_assist_tools = true;
         opts.ui_touch_friendly = true;
         opts.touch_pad_default = 0;
         opts.launcher_native_save_managed_externally = true;
