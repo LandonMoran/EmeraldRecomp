@@ -1,0 +1,101 @@
+// emerald_puzzle.h — reusable puzzle awareness for the Emerald accessibility
+// layer.
+//
+// Emerald's gyms and dungeons are not menus: their affordances are terrain
+// (ice, cracked floors, warp panels) and geometry that changes while you stand
+// in the room (Mauville's barriers, Fortree's turnstiles, Petalburgh's doors,
+// Mossdeep's statues). A sighted player reads all of that off the screen. This
+// module gives the voice the same three facts, from the game's own data:
+//
+//   1. What the tile you face or stand on is, from the metatile behavior byte
+//      the engine itself uses for movement (MapGridGetMetatileBehaviorAt).
+//      Behaviors are the game's constants, not per-gym guesses, so every map
+//      gets the same reading for free.
+//   2. When the room's walkable geometry changes, by diffing the packed map
+//      grid the engine renders from (gBackupMapLayout, which the map scripts
+//      rewrite with `setmetatile`). That is what makes a switch press audible
+//      without knowing which switch it was.
+//   3. When the game moves the player without input — an ice slide, a warp
+//      panel, a fall — so a forced move cannot silently relocate the player.
+//
+// Everything here READS guest memory. Nothing is written and no guest function
+// is called. Announcements are deliberately sparse: ordinary ground, ordinary
+// objects and ordinary walking stay silent.
+
+#pragma once
+
+#include <cstdint>
+#include <string>
+
+#include "touch/emerald_guest.h"
+
+namespace emerald::touch { struct SceneState; }
+
+namespace emerald::accessibility {
+
+// Terrain classes that change how the player can move. Each value maps from the
+// engine's metatile behavior byte (include/constants/metatile_behaviors.h),
+// never from a map id.
+enum class Terrain : int {
+    Plain = 0,
+    Ice,              // MB_ICE
+    ThinIce,          // MB_THIN_ICE: breaks under you
+    CrackedIce,       // MB_CRACKED_ICE
+    SlideEast,        // MB_SLIDE_*: stepping on it slides you that way
+    SlideWest,
+    SlideNorth,
+    SlideSouth,
+    CrackedFloor,     // MB_CRACKED_FLOOR (Sky Pillar)
+    CrackedFloorHole, // MB_CRACKED_FLOOR_HOLE: already open
+    WarpPanel,        // Mossdeep / Lavaridge gym warp panels
+    ArrowWarp,        // directional warp arrows
+    GymDoor,          // MB_PETALBURG_GYM_DOOR
+    SealedDoor,       // closed Sootopolis / Sky Pillar / Trick House puzzle door
+    MuddySlope,       // Mach Bike
+    BumpySlope,
+    Rail,
+    DeepWater,
+    Waterfall,
+    Current,
+    TrashCan,
+    Sand,
+    Ash,
+    HotSprings,
+    Count
+};
+
+const char* terrain_name(Terrain t);
+
+// One sentence, spoken when the tile becomes the one you face or stand on.
+const char* terrain_speech(Terrain t);
+
+struct PuzzleState {
+    bool ok = false;
+    int mapGroup = -1, mapNum = -1;
+    int x = 0, y = 0;               // player map tile (SaveBlock1.pos)
+    Terrain underfoot = Terrain::Plain;
+    Terrain facing = Terrain::Plain;
+    int coordEventCount = 0;        // trigger tiles on this map
+    int triggerDist = -1;           // nearest one, Manhattan (-1 = none)
+    int triggerDx = 0, triggerDy = 0;
+    int changedBlocks = 0;          // geometry diff on the latest settled frame
+    int openedBlocks = 0, closedBlocks = 0;
+    int totalChanges = 0;           // how many times this map's room has changed
+    int lastMoveTiles = 0;          // last forced (input-free) move
+    bool puzzleMap = false;         // this map's geometry has changed once
+};
+
+// Read terrain, triggers and the local geometry snapshot. Side-effect free.
+bool read_puzzle(const emerald::guest::Mem& m, PuzzleState* out);
+
+// Full state as one JSON object (dev diagnostics; not spoken).
+std::string puzzle_json(const PuzzleState& p);
+
+// Per-frame announcements. `host_keys` is the pad's own active-low key mask for
+// this frame, used only to tell a player-driven walk from a forced move.
+void puzzle_frame(const emerald::touch::SceneState& scene, const emerald::guest::Mem& m,
+                  std::uint16_t host_keys);
+
+void puzzle_reset();
+
+}  // namespace emerald::accessibility

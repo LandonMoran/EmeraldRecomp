@@ -28,6 +28,7 @@
 #include "emerald_extended_view.h"
 #include "touch/emerald_touch.h"
 #include "accessibility/emerald_a11y.h"
+#include "dev/emerald_devtools.h"
 #if defined(GBAGAME_NETPLAY)
 #include "multiplayer_launch.h"
 #include "gba_netplay_build_identity.h"
@@ -143,7 +144,19 @@ int emerald_main(int argc, char** argv) {
     opts.input_frame = emerald::accessibility::input_frame;
     opts.touch_gesture_claims = emerald::touch::kGestureClaims;
     opts.host_overlay = emerald::touch::host_overlay;
+#if defined(EMERALD_DEVTOOLS)
+    // Developer builds answer the emerald_dev_* commands first (teleport to a
+    // map tile, read a var/flag, dump a field snapshot) and pass everything
+    // else to the spoken interface unchanged.
+    opts.tcp_command = +[](const char* request,
+                           void (*write)(void*, const char*, std::size_t),
+                           void* ctx) {
+        if (emerald::dev::tcp_command(request, write, ctx)) return 1;
+        return emerald::accessibility::tcp_command(request, write, ctx);
+    };
+#else
     opts.tcp_command = emerald::accessibility::tcp_command;
+#endif
     opts.diagnostics_snapshot = emerald::touch::diagnostics_snapshot;
     opts.presentation_request = emerald::touch::presentation_request;
     emerald::touch::set_mobile(on_mobile);

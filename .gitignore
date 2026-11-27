@@ -115,3 +115,9 @@ android/app/generated/
 signing.local.properties
 *.jks
 *.keystore
+
+# Developer playtest artifacts: machine snapshots are build-specific and large.
+artifacts/playtest/checkpoints/*.state
+# The user's own ROM/BIOS copies, provided out of band.
+artifacts/rom/
+.toolvenv/

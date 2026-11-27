@@ -74,6 +74,11 @@ constexpr std::uint32_t kEventElevation = 0x0B;
 constexpr int kEventCount = 16;
 
 constexpr int kItemBallGraphics = 59;   // OBJ_EVENT_GFX_ITEM_BALL
+// Strength boulders and Rock Smash rocks are object events, so without naming
+// them the field says only "Object here" — which is the difference between a
+// puzzle and a wall for a blind player.
+constexpr int kBreakableRockGraphics = 86;   // OBJ_EVENT_GFX_BREAKABLE_ROCK
+constexpr int kPushableBoulderGraphics = 87; // OBJ_EVENT_GFX_PUSHABLE_BOULDER
 // The moving box in the opening truck is scenery, not a person: the game's own
 // description when you press A on it is "The box is printed with a POKéMON
 // logo...", so calling it a person sent the player looking for a face.
@@ -449,7 +454,13 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
                 play_cue(Cue::Item, "Item here. Press A to pick it up.");
                 break;
             case LookObject:
-                play_cue(Cue::Object, "Object here. Press A.");
+                if (n.lookGraphics == kPushableBoulderGraphics) {
+                    play_cue(Cue::Object, "Boulder here. Face it and use Strength to push it.");
+                } else if (n.lookGraphics == kBreakableRockGraphics) {
+                    play_cue(Cue::Object, "Cracked rock here. Use Rock Smash on it.");
+                } else {
+                    play_cue(Cue::Object, "Object here. Press A.");
+                }
                 break;
             case LookReadable:
                 // A sign, the wall clock, the TV: the game has text for it but
@@ -520,6 +531,12 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
             play_cue(Cue::Trainer, say.c_str());
         } else if (n.npcGraphics == kMovingBoxGraphics) {
             const std::string say = join("Box ", where + ". Press A.", "");
+            play_cue(Cue::Object, say.c_str());
+        } else if (n.npcGraphics == kPushableBoulderGraphics) {
+            const std::string say = join("Boulder ", where + ". Face it and use Strength to push it.", "");
+            play_cue(Cue::Object, say.c_str());
+        } else if (n.npcGraphics == kBreakableRockGraphics) {
+            const std::string say = join("Cracked rock ", where + ". Use Rock Smash on it.", "");
             play_cue(Cue::Object, say.c_str());
         } else {
             const std::string say = join("Person ", where + ". Press A to talk.", "");

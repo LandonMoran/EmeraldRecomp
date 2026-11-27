@@ -1,0 +1,45 @@
+{
+ "puzzle": "rustboro",
+ "map": "RustboroCity_Gym",
+ "map_group": 11,
+ "map_num": 3,
+ "layout": "LAYOUT_RUSTBORO_CITY_GYM",
+ "size": [
+  11,
+  20
+ ],
+ "start": {
+  "from_map": "RustboroCity",
+  "from_xy": [
+   27,
+   19
+  ],
+  "map": "RustboroCity_Gym",
+  "map_group": 11,
+  "map_num": 3,
+  "x": 5,
+  "y": 19,
+  "elevation": 0
+ },
+ "triggers": [],
+ "warps": [
+  {
+   "x": 5,
+   "y": 19,
+   "elevation": 0,
+   "dest_map": "MAP_RUSTBORO_CITY",
+   "dest_warp_id": "0"
+  },
+  {
+   "x": 6,
+   "y": 19,
+   "elevation": 0,
+   "dest_map": "MAP_RUSTBORO_CITY",
+   "dest_warp_id": "0"
+  }
+ ],
+ "script_hooks": [],
+ "facing": null,
+ "steps": [],
+ "status": "NOT TESTED"
+}

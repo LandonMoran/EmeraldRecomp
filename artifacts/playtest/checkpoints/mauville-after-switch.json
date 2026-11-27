@@ -1,0 +1,66 @@
+{
+ "name": "mauville-after-switch",
+ "note": "Mauville Gym after stepping on the plate at (4,12)",
+ "saved_at": "2026-11-27T08:28:55Z",
+ "map": [
+  10,
+  0
+ ],
+ "pos": [
+  4,
+  12
+ ],
+ "location": {
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 13,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 11,
+  "y": 19,
+  "map": [
+   10,
+   0
+  ],
+  "facing": "north",
+  "elevation": 3
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 12,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 4,
+  "trigger_dist": 0,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 1,
+  "last_move": 0,
+  "puzzle_map": true
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 2,
+  "var:VAR_PETALBURG_GYM_STATE": 0,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "name": "mauville-start",
+ "note": "Mauville Gym, one tile above the entrance door (4,19), fresh puzzle state",
+ "saved_at": "2026-11-27T08:20:47Z",
+ "map": [
+  10,
+  0
+ ],
+ "pos": [
+  4,
+  19
+ ],
+ "location": {
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 19,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 11,
+  "y": 26,
+  "map": [
+   10,
+   0
+  ],
+  "facing": "south",
+  "elevation": 0
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 19,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 4,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "last_move": 0,
+  "puzzle_map": false
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 0,
+  "var:VAR_PETALBURG_GYM_STATE": 0,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": false,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

@@ -25,6 +25,9 @@ else()
     set(_netplay_default ON)
 endif()
 option(GBARECOMP_NETPLAY "Build desktop link-cable netplay" ${_netplay_default})
+option(EMERALD_DEVTOOLS
+    "Build the developer-only teleport/diagnostics commands (never ship this)"
+    OFF)
 set(RECOMP_UI_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/recomp-ui"
     CACHE PATH "Path to the shared recomp-ui checkout")
 set(GBARECOMP_RUNTIME_UI_ROOT "${RECOMP_UI_ROOT}"
@@ -95,12 +98,19 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
             src/accessibility/emerald_a11y.cpp
             src/accessibility/emerald_cues.cpp
             src/accessibility/emerald_nav.cpp
+            src/accessibility/emerald_puzzle.cpp
             src/mods/emerald_accessibility_plugin.cpp
             src/touch/emerald_scene.cpp
             src/touch/emerald_touch.cpp
             src/touch/emerald_touch_menus.cpp
             src/touch/emerald_touch_battle.cpp
             src/touch/emerald_touch_field.cpp)
+        if(EMERALD_DEVTOOLS)
+            # Developer-only: warps the running game to a map tile through the
+            # game's own map load, and exposes field diagnostics over TCP.
+            # Not part of any player-facing build.
+            list(APPEND VARIANT_GAME_SOURCES src/dev/emerald_devtools.cpp)
+        endif()
     endif()
     if(ANDROID)
         # SDLActivity loads libmain.so; the shared gbarecomp Android shell
@@ -163,6 +173,10 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
         GBARECOMP_BUILTIN_SHA1="${ROM_SHA1}"
         GBARECOMP_BUILTIN_CRC32=${ROM_CRC32}
         GBARECOMP_BUILTIN_REGION="USA")
+    if(EMERALD_DEVTOOLS)
+        target_compile_definitions(${TARGET} PRIVATE EMERALD_DEVTOOLS=1)
+    endif()
+
     if(GBARECOMP_NETPLAY)
         target_link_libraries(${TARGET} PRIVATE gbarecomp_netplay)
         gbarecomp_target_netplay_identity(${TARGET} "${CMAKE_CURRENT_SOURCE_DIR}" "${VARIANT_GENERATED_DIR}")

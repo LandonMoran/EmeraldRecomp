@@ -20,6 +20,8 @@
 #include "emerald_cues.h"    // audio cues + interaction outcomes
 #include "emerald_hotkeys.h"  // pad commands, chord decoding
 #include "emerald_nav.h"     // exits, stairs, adjacent people/items
+#include "emerald_puzzle.h"  // terrain, room changes, forced moves
+#include "dev/emerald_devtools.h"  // dev-only warp service (compiled out normally)
 #include "emerald_settings.h"  // pad-editable spoken settings
 
 #include <algorithm>
@@ -1408,7 +1410,9 @@ std::uint16_t input_frame(const gbarecomp::TouchFrameInfo* frame) {
     // Audio cues age their interaction expectations, then the navigation layer
     // reports exits, floor changes and whatever the player just walked up to.
     cues_frame();
+    puzzle_frame(s, m, frame->host_keyinput);
     nav_frame(s, m);
+    emerald::dev::frame();
     return swallow_keys ? 0 : keys;
 }
 
@@ -1462,6 +1466,8 @@ void enable(bool on) {
     g_nav.active = false;
     cues_reset();
     nav_reset();
+    puzzle_reset();
+    emerald::dev::reset();
     g_had_scene = false;
     g_kind = SceneKind::Unknown;
     g_menu_live = false;
@@ -1620,14 +1626,35 @@ void tcp_status(std::string* out) {
     *out += "}";
 }
 
-void tcp_action(const std::string& name, int arg) {
+// Returns false for a name that is not an action. The caller reports that: an
+// unknown action used to be accepted silently, so a harness sending "north"
+// instead of "up" saw ok:true and an unmoving player, which reads as a broken
+// game rather than a typo.
+bool tcp_action(const std::string& name, int arg) {
+    // Compass aliases: navigation and the playtest harness think in compass
+    // directions, the pad in up/down/left/right. Both are accepted.
+    static const struct {
+        const char* name;
+        Action action;
+    } kAliases[] = {
+        {"north", Action::Up},   {"south", Action::Down},
+        {"west", Action::Left},  {"east", Action::Right},
+        {"a", Action::Confirm},  {"b", Action::Cancel},
+    };
+    for (const auto& alias : kAliases) {
+        if (name == alias.name) {
+            push_action(alias.action, arg);
+            return true;
+        }
+    }
     for (int i = 1; i <= static_cast<int>(Action::StateMenu); ++i) {
         const Action action = static_cast<Action>(i);
         if (name == action_name(action)) {
             push_action(action, arg);
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 }  // namespace
@@ -1665,7 +1692,12 @@ int tcp_command(const char* request, void (*write)(void*, const char*, std::size
         return 1;
     }
     if (cmd == "emerald_a11y_action") {
-        tcp_action(req.str("action"), static_cast<int>(req.integer("index", 0)));
+        const std::string name = req.str("action");
+        if (!tcp_action(name, static_cast<int>(req.integer("index", 0)))) {
+            out = gbarecomp::json::error_reply("unknown action: " + name);
+            emit();
+            return 1;
+        }
         out = "{\"ok\":true}";
         emit();
         return 1;

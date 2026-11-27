@@ -311,3 +311,41 @@ gba_recompile --rom roms/emerald_usa.gba \
 The log reports `mod function hooks: 9 declared, 9 matched`; a matched hook is
 what puts `if (gba_mod_function_entry(0x0800467Cu, 1u, &g_cpu)) return;` at the
 top of the generated body. Rebuild after regenerating (all 64 shards recompile).
+
+## Developer puzzle playtests
+
+Reaching a gym by playing the game is not a test loop. A developer build can
+jump to any puzzle, keep a state before touching it, and replay that state after
+a fix:
+
+```sh
+cmake -S . -B build -DEMERALD_DEVTOOLS=ON ...     # options are OFF by default
+python3 artifacts/playtest/boot_field.py --spawn   # once: to a normal field
+python3 artifacts/playtest/puzzle_runner.py --puzzle mauville --start
+python3 artifacts/playtest/puzzle_runner.py --puzzle mauville \
+    --checkpoint mauville-start --steps "up*4, left*4" --report "Mauville plate"
+```
+
+`EMERALD_DEVTOOLS` adds `src/dev/emerald_devtools.cpp` and nothing else: the
+TCP commands `emerald_dev_warp`, `emerald_dev_state`, `emerald_dev_var` and
+`emerald_dev_flag` exist only in that build, and a normal build links the inert
+stubs. The player-facing experience is unchanged.
+
+`emerald_dev_warp` writes the SaveBlock warp record the game's own
+`SetWarpDestination`/`ApplyCurrentWarp` produce and then hands control to
+`CB2_LoadMap`, so the map loads through `CB2_DoChangeMap` →
+`LoadMapFromWarp`, runs `MAP_SCRIPT_ON_TRANSITION` / `ON_LOAD`, spawns object
+events and returns to `CB1_Overworld`. It refuses to run while a message box is
+open or a scripted walk owns the player: loading a map out of a cutscene carries
+the cutscene's player state onto the new map and the field then ignores the
+D-pad. That refusal is what keeps a teleport from producing an invalid state.
+
+A checkpoint is the engine's own `savestate_save` blob plus a JSON sidecar
+(map, tile, facing, terrain, nearest trigger, gym `VAR_*`/`FLAG_*` values) in
+`artifacts/playtest/checkpoints/`. The player's `.sav` and the nine state slots
+are never touched. State blobs are build-specific and are not committed; the
+sidecars are.
+
+The puzzle results, what the mod says during each one, and the status rule live
+in [GYM_PUZZLE_PLAYTEST.md](GYM_PUZZLE_PLAYTEST.md) and
+[ENVIRONMENT_PUZZLE_PLAYTEST.md](ENVIRONMENT_PUZZLE_PLAYTEST.md).

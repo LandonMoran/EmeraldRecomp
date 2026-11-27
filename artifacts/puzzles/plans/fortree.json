@@ -1,0 +1,54 @@
+{
+ "puzzle": "fortree",
+ "map": "FortreeCity_Gym",
+ "map_group": 12,
+ "map_num": 1,
+ "layout": "LAYOUT_FORTREE_CITY_GYM",
+ "size": [
+  20,
+  25
+ ],
+ "start": {
+  "from_map": "FortreeCity",
+  "from_xy": [
+   22,
+   11
+  ],
+  "map": "FortreeCity_Gym",
+  "map_group": 12,
+  "map_num": 1,
+  "x": 15,
+  "y": 24,
+  "elevation": 0
+ },
+ "triggers": [],
+ "warps": [
+  {
+   "x": 15,
+   "y": 24,
+   "elevation": 0,
+   "dest_map": "MAP_FORTREE_CITY",
+   "dest_warp_id": "2"
+  },
+  {
+   "x": 16,
+   "y": 24,
+   "elevation": 0,
+   "dest_map": "MAP_FORTREE_CITY",
+   "dest_warp_id": "2"
+  }
+ ],
+ "script_hooks": [
+  [
+   "MAP_SCRIPT_ON_TRANSITION",
+   "FortreeCity_Gym_OnTransition"
+  ],
+  [
+   "MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE",
+   "FortreeCity_Gym_OnWarp"
+  ]
+ ],
+ "facing": null,
+ "steps": [],
+ "status": "NOT TESTED"
+}
