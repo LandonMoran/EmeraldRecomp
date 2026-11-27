@@ -23,6 +23,7 @@ means a player cannot get it at all.
 | Start menu items | PASS | `Overworld. POKéMON, 1 of 6.`, then `BAG`, the player's name, `SAVE`, `OPTION`, `EXIT` with their positions, on the first open and on a reopen |
 | Shop item names, prices and buying | PASS | `Shop. POKé BALL, 1 of 13.`, `SUPER POTION, 3 of 13.`, `ANTIDOTE, 4 of 13. Heals a poisoned POKéMON.`, `POKé BALL? And you wanted 1? That will be 200.`, `Here you go! Thank you very much.`, then money `2800` |
 | Bag item names and navigation | PASS | the bag reads like any other menu: switching pocket says `Poké balls. POKé BALL, 1 of 1, 1 in the bag.`, moving between rows says the row under the cursor (`POKé BALL, 1 of 1, 1 in the bag.`), the last row says `Close bag.`, an empty pocket says `Empty.` Pockets come from the save block, names from the game's item table |
+| Using an item in battle | PASS | Battle Girl Vivian's MEDITITE, party at `12 of 28 HP`. Right from the action menu opened the bag and the row spoke: `Bag. Items. SUPER POTION, 1 of 1, 1 in the bag.`; choosing it asked for a target: `Party. AAAAAAAAAA level 9, 12 of 28 HP. CANCEL Use on which POKéMON?`; confirming healed: `AAAAAAAAA's HP was restored by 16 point(s).` and the party line then read `Party. AAAAAAAAAA level 9, 28 of 28 HP.` |
 | Catching a Pokémon | NOT TESTED | needs a ball in the bag, which needs the bag, which needs the Start menu |
 | Healing at a Pokémon Centre | PASS | walked in through the Centre's door from Mauville City; the whole conversation was spoken, ending `Thank you for waiting. We've restored your POKéMON to full health.`, and the player then walked away normally. The party was already at full HP, so the recovery itself was not observable |
 | Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
@@ -62,7 +63,21 @@ means a player cannot get it at all.
   `SaveBlock2.encryptionKey` (item.c's `GetBagItemQuantity`); without that the
   single Poké Ball read back as 4762.
 
-## Findings from the potion-in-battle run
+## Using a potion in battle, end to end
+
+Party at 12 of 28 HP, foe at 27 of 39, cursor on FIGHT. One press right and the
+menu answered `Bag, top right.`; confirming opened the bag and its row spoke
+`Bag. Items. SUPER POTION, 1 of 1, 1 in the bag.`; selecting the row asked which
+Pokémon and named the target with its HP (`Party. AAAAAAAAAA level 9, 12 of 28
+HP.`); confirming produced `AAAAAAAAA's HP was restored by 16 point(s).` and the
+party line re-read `Party. AAAAAAAAAA level 9, 28 of 28 HP.` Row, target and
+result were all spoken - the item path works in battle.
+
+One wart to fix next: during the heal the party line is re-read for every step of
+the animation (`23/`, `/24`, ... `28/`), so a single potion speaks about six
+fragments of numbers before the sentence. It is noise, not a blocker.
+
+
 
 - **FIXED: the battle action menu is announced by where it sits.** It is a 2x2
   grid, so it now says `Fight, top left.`, `Bag, top right.`, `Pokémon, bottom
