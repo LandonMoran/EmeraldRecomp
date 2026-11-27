@@ -359,7 +359,7 @@ writing a Pokémon structure:
 ```sh
 python3 artifacts/playtest/get_party.py --save party-starter
 python3 artifacts/playtest/party.py --dump
-python3 artifacts/playtest/party.py --boost --level 50
+python3 artifacts/playtest/party.py --boost
 ```
 
 `get_party.py` warps to Route 101 at (10,18), arms the rescue the way Littleroot's
@@ -371,16 +371,32 @@ exactly the message a party-less script gets stuck on.
 
 `party.py` is harness scaffolding, like the bag writes in the battle transcripts.
 It reads `gPlayerParty` (6 × 0x64 at 0x020244EC, count at 0x020244E9) and can set
-a level-50 test stat block so a checkpoint can survive a gym's trainers while the
-puzzle is what gets measured. The party layout is the pinned decompilation's
+a test stat block so a checkpoint can survive a gym's trainers while the puzzle
+is what gets measured. The party layout is the pinned decompilation's
 `struct Pokemon`; PP lives inside the encrypted Moves substruct, so a boosted
 checkpoint keeps the moves and PP the game gave it. A boosted checkpoint is
 labelled as such wherever it is reported.
+
+**The level byte is never written.** Writing a level without also writing the
+matching experience value (which lives encrypted inside the data substructs)
+leaves the two disagreeing, and the post-battle EXP bar computes
+`exp - gExperienceTables[level]` in u32: it underflows, the bar never finishes,
+and the game never leaves the battle. See
+`artifacts/playtest/reports/mauville-trainer-battle-hang.md` for the full trace.
+A level-up recalculates stats from IVs anyway, so a fight that levels the test
+Pokémon up throws the block away; `gym_walk.fight_if_needed` re-applies it before
+each press while a battle runs.
 
 `gym_run.py` is the runner for a whole gym rather than one mechanic: it loads a
 checkpoint, finishes any dialogue the checkpoint was saved inside, warps to the
 entrance, walks a direction route, and presses A through any battle the route
 starts, recording what the mod said the whole way.
 
-Checkpoints that exist: `party-starter` (level 5, untouched), `party-ready` and
-`party-lab` (level 50 test block, idle field in Birch's lab).
+Checkpoints that exist: `party-starter` (level 5, untouched, saved inside the
+rescue battle), `party-fight` (level 5 with the test stat block, idle field in
+Birch's lab) — use this one.
+
+`party-ready` and `party-lab` were made before the level rule and still carry a
+forged level 50 over level-5 experience. **Do not use them for anything that
+fights**: a won trainer battle in those states hangs in `Cmd_getexp` by design of
+the mismatch, which is what the hang report describes.

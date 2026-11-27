@@ -1,82 +1,84 @@
-# Mauville Gym: the trainer battle is won, the build does not leave it
+# Why a won trainer battle never returned to the field
 
-Checkpoint `party-lab` (Torchic, level-50 test stat block), dev warp into
-MauvilleCity_Gym `[10,0]` at (4,19), route planned from the layout's own
-blockdata by `gym_walk.py`.
+**Status: explained and fixed — the cause was the test party, not the engine.**
+An earlier version of this report called this an engine fault. That was wrong,
+and this file says why.
 
-## What happened
+## Symptom
 
-1. Walked (4,19) → (4,17) → (2,17) → (2,16), BFS around the live NPCs.
-2. Turned west at (2,16) and pressed A facing Battle Girl Vivian (1,16).
-3. **The battle was played and won with the pad alone:**
+Winning a trainer battle in the Mauville gym left the build sitting in
+`BattleMainCB2` forever:
 
-```
-[talk-0]  With my charm and my POKéMON's moves, you'll be shocked!
-[talk-10] Battle.
-[talk-14] BATTLE GIRL VIVIAN would like to battle!
-[talk-18] BATTLE GIRL VIVIAN sent out MEDITITE!
-[talk-24] Go! AAAAAAAAAA!
-[talk-30] Fight, 1 of 4.
-[talk-31] SCRATCH, NORMAL, PP 35 of 35. 1 of 2
-[talk-32] AAAAAAAAAA used SCRATCH!
-[talk-39] Foe MEDITITE fainted!
-[talk-42] AAAAAAAAAA gained 331 EXP. Points!
-```
-
-4. After the EXP line, nothing further is ever printed, no matter what is
-   pressed. The game never returns to the field.
-
-The raw run transcript, including every line the mod spoke on the way in and
-through the battle, is `artifacts/playtest/reports/mauville-full.txt`.
-
-## Reproduced from a clean session too
-
-The same battle was replayed after restarting the emulator and booting a fresh
-save that had never had any battle: the party record was injected into
-`gPlayerParty`, the walk and the battle went identically, the win printed
-`gained a boosted 496 EXP. Points!`, and the build hung in exactly the same
-place. The hang is not a contaminated checkpoint.
-
-## What the machine says while it hangs
-
-| Probe | Value |
+| Probe | Value while stuck |
 | --- | --- |
-| `gMain.callback2` | `0x08038420` (`BattleMainCB2`), unchanged for minutes |
-| `gBattleOutcome` | `0x00` (no outcome was ever set) |
-| `gBattleCommunication` | `05 05 00 00 00 00 00 01`, unchanged |
-| `gBattleMainFunc` | `0x0803E019` → `RunBattleScriptCommands_PopCallbacksStack` |
-| `gBattleScripting` | byte-for-byte identical after 40 further A presses |
-| `gBattlersCount` | `0x02` (a normal single battle) |
-| `sLockFieldControls` | `1` (the trainer script locked the field and never released it) |
-| `gPlayerAvatar.flags` | `0x01` (on foot; `CONTROLLABLE` never restored) |
-| `heldKeys` on a press | `0x01` for two frames — **input is being delivered** |
+| `gMain.callback2` | `0x08038420` (`BattleMainCB2`) |
+| `gBattleOutcome` | `0x00`, never set |
+| `gBattleMainFunc` | `0x0803E019`, `RunBattleScriptCommands_PopCallbacksStack` |
+| `gBattlescriptCurrInstr` | `0x082DA7CA`, command byte 35 = `Cmd_getexp` |
+| `gBattleControllerExecFlags` | `0x1` — waiting on battler 0 |
+| `gBattlerControllerFuncs[0]` | `BattleControllerDummy` |
+| `sLockFieldControls` | `1` |
 
-Frames advance (35391 → 35421) and the A tap reaches the keypad, so this is not
-missing input and not a paused emulator: the battle script callback stack is
-exhausted and the engine keeps re-entering the pop function, so the end of the
-battle (`ReturnFromBattleToOverworld`) is never reached.
+`RunBattleScriptCommands_PopCallbacksStack` only runs the current battle-script
+command while `gBattleControllerExecFlags` is clear, so the battle was waiting
+for the player's controller to acknowledge the EXP update. The controller was
+`BattleControllerDummy`, which never does.
 
-Nothing recovers it: 220 A presses, waiting 10 s, B, Start, clearing
-`sLockFieldControls` by hand, and setting the avatar's `CONTROLLABLE` bit all
-leave the same state.
+## Cause
 
-## Why this is not the mod
+`PlayerHandleExpUpdate` is expected to hand off to `Task_GiveExpToMon`, which
+becomes `Task_GiveExpWithExpBar` and drives the EXP bar; when the bar ends it
+calls `PlayerBufferExecCompleted`, which clears the exec flag and restores the
+controller. That is why a dummy controller during the EXP update is normal.
 
-The same party, the same mod and the same session won the Route 101 rescue
-battle (a wild Zigzagoon) and returned to the field normally, printed Professor
-Birch's dialogue and let the player walk to the lab. The difference is the
-trainer script that owns the field across the battle.
+`Task_PrepareToGiveExpWithExpBar` does:
 
-The mod's text hook is observe-only (`text_printer_probe` always returns 0, so
-the guest body always runs), and its input path demonstrably delivers keys.
+```c
+exp -= currLvlExp;                       // exp is u32
+expToNextLvl = table[level + 1] - currLvlExp;
+SetBattleBarStruct(battler, healthbox, expToNextLvl, exp, -gainedExp);
+```
 
-## Consequence for the gym
+The checkpoint's party had been given a forged **level 50 byte** while its
+experience value was still the level-5 value the game had written when the
+starter was received. `exp - currLvlExp` therefore underflowed to roughly 2^32,
+the bar was initialised with that value, and `MoveBattleBar` never reported the
+end of the animation. Task 0 sat in `Task_GiveExpWithExpBar` with
+`tExpTask_frames == 13` for 2400+ frames, so `PlayerBufferExecCompleted` was
+never reached.
 
-The trainer gate can be beaten — the battle above is a win — but the build does
-not hand control back afterwards, so no full gym run can be finished in this
-build. Mauville stays **NOT TESTED** for the full run, and the blocker is an
-engine bug, not party strength or routing.
+Changing the level byte back afterwards cannot help: by then the bar struct
+already holds the underflowed numbers.
 
-Next step for this repo: compare `RunBattleScriptCommands_PopCallbacksStack`
-and `ReturnFromBattleToOverworld` against mGBA with the same save and the same
-trainer, which is the point where the recompiled stack handling diverges.
+## Proof
+
+Same checkpoint, same trainer, same route, only the party differs:
+
+| Party | Result |
+| --- | --- |
+| level 50 forged over level-5 exp | EXP line prints, then the battle never ends (2 minutes, 220 A presses, waiting, B, Start, clearing `sLockFieldControls` by hand) |
+| level 5, real exp, boosted stats only | `Foe MEDITITE fainted!` → `gained 331 EXP. Points!` → grows to LV. 6, 7, 8, 9 (learning FOCUS ENERGY on the way) → `BATTLE GIRL VIVIAN sent out MEDITITE!` → the battle ends and `CB2_Overworld` returns with `controls_locked == 0` |
+
+The second row is also a live demonstration that the accessibility layer is not
+involved: the mod's text hook is observe-only (`text_printer_probe` returns 0),
+and a wild battle on the same build always returned normally.
+
+## Harness rule that came out of this
+
+`artifacts/playtest/party.py` no longer writes the level byte at all. A boosted
+checkpoint keeps the level and experience the game gave the Pokémon and receives
+only a stat block (`BOOST_DEFAULT`), because levelling up recalculates stats from
+IVs anyway, so the block has to be re-applied during a fight.
+
+`gym_walk.fight_if_needed` re-applies that block before every press while a
+battle is running, which keeps a two-Pokémon trainer fight winnable even though
+the EXP from the first KO levels the test Pokémon up.
+
+## Related findings from the same run
+
+- A scripted message during a locked sequence does not always raise the engine's
+  message-box flag, so "press A while `scene == battle` or a message box is up"
+  is not enough: a trainer's pre-battle line sat on screen with `message_box 0`
+  and the field never advanced until A was pressed. The walker treats a locked
+  field as waiting, capped at six presses per distinct line.
+- Raw transcript of the run: `artifacts/playtest/reports/mauville-full.txt`.

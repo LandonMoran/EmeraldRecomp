@@ -9,7 +9,9 @@ game's own script), but a level 5 starter loses to a gym trainer.
 
 This module is harness scaffolding, exactly like the bag writes the battle
 transcripts use: it reads ``gPlayerParty`` and can set a *test* stat block so
-battles can be won while the puzzle is what gets measured. It never touches the
+battles can be won while the puzzle is what gets measured. It never changes a
+Pokémon's level, because the level byte and the experience value have to agree
+for the post-battle EXP bar to end (see BOOST_DEFAULT). It never touches the
 player's save file, and a checkpoint boosted this way is labelled as such in the
 playtest report.
 
@@ -25,7 +27,7 @@ boosted checkpoint keeps the moves and PP the game gave it.
 (variants/emerald/symbols/imported_data_symbols.tsv).
 
     python3 artifacts/playtest/party.py --dump
-    python3 artifacts/playtest/party.py --boost --level 50
+    python3 artifacts/playtest/party.py --boost
 """
 
 import argparse
@@ -50,9 +52,16 @@ OFF_SPEED = 0x5E
 OFF_SP_ATTACK = 0x60
 OFF_SP_DEFENSE = 0x62
 
-# A stat block a level-50 Pokémon could plausibly have: enough to win a gym
+# A stat block a stronger Pokémon could plausibly have: enough to win a gym
 # trainer battle, not enough to be mistaken for a legitimate team.
-BOOST_DEFAULT = {"level": 50, "hp": 400, "attack": 300, "defense": 300,
+#
+# The level byte is deliberately not part of this block. Setting it without
+# also writing the matching experience value (which lives encrypted inside the
+# data substructs) desynchronises the two, and the battle controller's EXP bar
+# computes ``exp - gExperienceTables[level]`` in u32: at level 50 with level-5
+# exp that underflows, the bar never reaches its end, and the battle never
+# leaves ``Cmd_getexp``. Stats alone are enough to win.
+BOOST_DEFAULT = {"hp": 400, "attack": 300, "defense": 300,
                  "speed": 300, "sp_attack": 300, "sp_defense": 300}
 
 
@@ -112,20 +121,19 @@ def dump(conn):
 
 
 def boost(conn, **overrides):
-    """Set level and battle stats on every party member, full HP included.
+    """Set the battle stats on every party member, full HP included.
 
-    The level byte is what the game reports and what damage uses; exp is left
-    at the value the game gave the Pokémon, so nothing levels up on its own.
+    The level byte and the experience value are left exactly as the game gave
+    them, so the two agree and the EXP bar that plays after a won battle can
+    finish. See BOOST_DEFAULT for why that matters.
     """
     stats = dict(BOOST_DEFAULT)
     stats.update({k: v for k, v in overrides.items() if v is not None})
     n = count(conn)
     for i in range(min(n, PARTY_SIZE)):
         base = G_PARTY + i * MON_SIZE
-        level = min(int(stats["level"]), 100)
         hp = min(int(stats["hp"]), 0xFFFF)
         max_hp = max(hp, 1)
-        _write(conn, base + OFF_LEVEL, bytes([level]))
         blob = struct.pack("<HHHHHHH", hp, max_hp,
                            min(int(stats["attack"]), 0xFFFF),
                            min(int(stats["defense"]), 0xFFFF),
@@ -141,13 +149,12 @@ def main():
     ap.add_argument("--port", type=int, default=19892)
     ap.add_argument("--dump", action="store_true")
     ap.add_argument("--boost", action="store_true")
-    ap.add_argument("--level", type=int, default=None)
     ap.add_argument("--hp", type=int, default=None)
     args = ap.parse_args()
 
     conn = Conn(port=args.port)
     if args.boost:
-        mons = boost(conn, level=args.level, hp=args.hp)
+        mons = boost(conn, hp=args.hp)
         print(f"boosted {len(mons)} party member(s)")
     if args.dump or not args.boost:
         mons = dump(conn)

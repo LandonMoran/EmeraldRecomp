@@ -1,0 +1,52 @@
+# Mauville gym exploration
+
+- start (2, 15) barriers 1
+- (2, 12) up blocked
+- (3, 12) up blocked
+- stepped on Switch 2 at (4, 12)
+- could not step back from (4, 12)
+- (4, 12) up blocked
+- (5, 12) up blocked
+- (6, 12) up blocked
+- (7, 12) up blocked
+- (8, 12) up blocked
+- (9, 12) up blocked
+- (9, 12) right blocked
+- (9, 12) down blocked
+- (8, 12) down blocked
+- (7, 12) down blocked
+- (4, 12) left blocked
+- (6, 13) right blocked
+- (6, 13) down blocked
+- (4, 13) left blocked
+- (5, 14) right blocked
+- (4, 14) left blocked
+- (6, 15) up blocked
+- (7, 15) up blocked
+- (8, 15) up blocked
+- (9, 15) up blocked
+- (9, 15) right blocked
+- (3, 15) up blocked
+- (2, 9) up blocked
+- stepped on Switch 3 at (3, 9)
+- (2, 9) up blocked
+- (3, 9) up blocked
+- (4, 8) up blocked
+- (5, 8) up blocked
+- (5, 8) right blocked
+- (5, 9) right blocked
+- (5, 9) down blocked
+- (4, 10) up blocked
+- (4, 10) right blocked
+- (4, 10) down blocked
+- (4, 10) left blocked
+- back (4, 10) -> (4, 9) blocked, exploring from here
+- explored everything reachable, 122 steps
+- (0, 15) Switch 1: NOT reached
+- (4, 12) Switch 2: NOT reached
+- (3, 9) Switch 3: NOT reached
+- (8, 9) Switch 4: NOT reached
+- 122 steps, ended at (4, 10)
+
+## What the mod said
+

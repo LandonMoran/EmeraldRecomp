@@ -25,6 +25,7 @@ from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import party  # noqa: E402
 from checkpoints import Checkpoints  # noqa: E402
 from pad import Pad  # noqa: E402
 
@@ -33,7 +34,7 @@ REPORTS = os.path.join(HERE, "reports")
 DECOMP = os.path.join(HERE, "..", "..", "third_party", "pokeemerald")
 
 DIRS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
-BATTLE_PRESS_LIMIT = 80
+BATTLE_PRESS_LIMIT = 160
 
 
 class ProgressLog(list):
@@ -106,17 +107,40 @@ def fight_if_needed(p, tag, log):
     script owns the game, and stops when the field is free again.
     """
     presses = 0
-    while presses < BATTLE_PRESS_LIMIT:
-        scene = p.status().get("scene")
+    idle = 0
+    last_text = p.status().get("last_print")
+    for_text = 0
+    while presses < BATTLE_PRESS_LIMIT and idle < 80:
+        status = p.status()
+        scene = status.get("scene")
         state = p.ask(cmd="emerald_dev_state")
-        # Only these two mean "text is waiting". A locked field on its own is
-        # often the battle-to-field transition, where hammering A does nothing;
-        # pressing stops and the frames below let the transition finish.
-        if not (scene == "battle" or state.get("message_box")):
-            break
-        p.confirm(40)
-        p.flush_speech(f"{tag}-{presses}")
-        presses += 1
+        text = status.get("last_print")
+        # A scripted message during a locked sequence does not always raise the
+        # engine's message-box flag, but the game is still waiting for A: the
+        # field stays locked, so a locked field counts as waiting too. The
+        # per-line cap stops that from turning into blind button mashing.
+        waiting = (scene == "battle" or state.get("message_box")
+                   or state.get("controls_locked"))
+        if waiting:
+            if text != last_text:
+                last_text, for_text = text, 0
+            if for_text >= 6:
+                p.frames(30)
+                idle += 1
+                continue
+            # A level-up recalculates the mon's stats from its IVs, which would
+            # throw away the test stat block mid-battle, so re-apply it before
+            # each press. Cheap, and only while a battle or its text owns the
+            # game; nothing about the puzzle is touched.
+            if scene == "battle":
+                party.boost(p)
+            p.confirm(40)
+            p.flush_speech(f"{tag}-{presses}")
+            presses += 1
+            for_text += 1
+            idle = 0
+            continue
+        break
     if presses:
         p.frames(45)
         state = p.ask(cmd="emerald_dev_state")
@@ -142,7 +166,8 @@ def main():
     args = ap.parse_args()
 
     group, num = (int(v) for v in args.map.split(","))
-    report_path = os.path.join(REPORTS, f"{args.report}.md") if args.report else ""
+    stem = os.path.splitext(os.path.basename(args.report))[0] if args.report else ""
+    report_path = os.path.join(REPORTS, f"{stem}.md") if stem else ""
     if report_path:
         os.makedirs(REPORTS, exist_ok=True)
     p = Pad(report_path.replace(".md", ".txt") if report_path else None)

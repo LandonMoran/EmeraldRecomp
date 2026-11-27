@@ -64,7 +64,7 @@ missing party). A mechanic PASS does not make the gym PASS.
 | --- | --- | --- | --- | --- |
 | Rustboro | 11 / 3 | none: no map scripts, no coord events, trainers only | n/a | NOT TESTED |
 | Dewford | 3 / 3 | darkness level set by `setflashlevel`, lowered per trainer defeated | n/a | NOT TESTED |
-| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | NOT TESTED (trainer battle is won, then the build never leaves the battle) |
+| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | **PARTIAL**: trainer battle won and left correctly; plates 1, 2 and 3 stepped on; plate 4 not reached |
 | Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | NOT TESTED | NOT TESTED |
 | Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
 | Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
@@ -105,8 +105,33 @@ facing south, `VAR_MAUVILLE_GYM_STATE = 0`,
 read the log. No map data was consulted to decide the move; the plate was
 announced before it was stepped on.
 
-**Missing information found and fixed.** None remaining for this mechanic after
-the fixes below. Still missing for a *full* run:
+**Full-run result (2026-11-27).** With checkpoint `party-fight` (the real level-5
+starter, stats boosted, level untouched) and `gym_walk.py`:
+
+1. Entrance → (4,17) → (2,17) → (2,16), turn west, A → Battle Girl Vivian.
+   The **battle now ends**: `Foe MEDITITE fainted!`, `gained 331 EXP. Points!`,
+   grows to LV. 6/7/8/9, `BATTLE GIRL VIVIAN sent out MEDITITE!`, the second
+   Meditite, then `CB2_Overworld` with the field unlocked. Two trainer battles
+   were won this way (Vivian, and Aroma Lady Rose after a wrong turn), so the
+   trainer gate is real, not assumed.
+2. (2,15) → plate 1 at (0,15) (earlier run), (3,12) → plate 2 at (4,12),
+   (2,9) → plate 3 at (3,9). Each press is confirmed by the mod's `changes`
+   counter moving and by the walk continuing through ground that was closed.
+3. Plate 4 at (8,9) was **not** reached. `explore_gym.py` presses the plates it
+   can reach and then explores everything still open; after plate 3 the beams
+   seal the pocket at (4,10) — all four neighbours refuse a step — and the run
+   ends there (122 steps). The earlier attempt without a retreat-after-press got
+   sealed at the same tile. Either the press order matters or the beams need to
+   be described; see the missing information below.
+
+What the mod said on the way to the trainer and through the battle, verbatim, is
+in `artifacts/playtest/reports/mauville-walk-trainers.txt`. The exploration run
+that pressed plates 2 and 3 logged the moves but not the speech
+(`mauville-explore.txt` is empty); `explore_gym.py` now records the transcript,
+so the next run will have it.
+
+**Missing information found and fixed.** None remaining for the beam mechanic
+after the fixes below. Still missing for a *full* run:
 
 - The mod does not describe the beam layout (which corridors are currently
   open), so a player must probe walls to route between plates. Probing works
@@ -115,6 +140,12 @@ the fixes below. Still missing for a *full* run:
 - Nothing announces that a plate has already been used (`VAR_MAUVILLE_GYM_STATE`
   makes repeat presses do nothing). A player can step on a dead plate and hear
   nothing, which reads as a broken switch.
+- A step that is refused by a beam says nothing at all. The mod announces
+  objects next to the player (`Trainer west. Press A to talk.`) but not that the
+  tile ahead is impassable, so probing a maze is silent and a player cannot
+  tell a beam from a wall or a dead step.
+- After a press, nothing says where the room changed, so a player can seal
+  themselves into a pocket without noticing (the (4,10) trap above).
 
 **Fixes implemented while testing this gym.**
 
