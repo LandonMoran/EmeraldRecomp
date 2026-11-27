@@ -1333,8 +1333,17 @@ void speak_now(const char* text, bool interrupt) {
 }
 
 const char* controller_hotkeys_help() {
+    // On Android the spoken settings live on the launcher screen, so the
+    // greeting points there instead of naming a chord the player would have to
+    // remember: the game returns to that screen when it is quit.
+#if defined(__ANDROID__)
+    return "Press L to read the screen, Select to repeat, "
+           "and Select then L to stop speech. Settings are on the launcher "
+           "screen, before you play.";
+#else
     return "Press L to read the screen, Select to repeat, "
            "and Select then L to stop speech. L then Select, held, for settings.";
+#endif
 }
 
 void adopt_options(const char* game_text, const char* detail, const char* rate) {

@@ -106,7 +106,7 @@ and the settings have a pad path of their own:
 | **L** | Read the current screen: scene, the highlighted choice with its position ("Potion, 2 of 5"), and the text the game last printed when there is no menu. |
 | **Select** | Repeat the last utterance. |
 | **Select, then L** | Stop speech immediately. The two presses need not be simultaneous: see below. |
-| **L, then Select, held** | Open the spoken settings — the same three options the Mods menu edits. |
+| **L, then Select, held** | Open the spoken settings — the same three options the Mods menu edits. On Android the settings are set on the launcher screen instead (see below), so this is a desktop/keyboard-build path. |
 | Settings: **L** | Next setting: "Read game text: on. 1 of 4.", "Detail: everything. 2 of 4.", "Speech rate: normal. 3 of 4.", "Reset to defaults. 4 of 4." |
 | Settings: **Select** | Change it: toggles, cycles rate slow → normal → fast, or restores every default; the new value is said ("Speech rate: fast."). |
 | Settings: **Select, then L** | Close settings ("Settings closed."). |
@@ -152,9 +152,27 @@ Select and L — no direction, A, B, Start or R — since those would also perfo
 game action. Every setting is a chord of those two, so a settings change cannot
 press A, walk the player or open the Start menu.
 
-The spoken interface announces the mapping briefly when it starts ("Press L to
-read the screen, Select to repeat, and Select then L to stop speech. L then
-Select, held, for settings.").
+The spoken interface announces the mapping briefly when it starts: "Press L to
+read the screen, Select to repeat, and Select then L to stop speech." On the
+desktop build it adds "L then Select, held, for settings"; on Android it says
+that settings are on the launcher screen instead.
+
+### Settings on the Android launcher
+
+The launcher (the screen that asks for your ROM and BIOS) carries a **Spoken
+interface** card with the same three options: read game text on/off, detail
+everything or menus-and-battles, and speech rate slow/normal/fast. Tap a row to
+cycle it; the value is spoken and saved as you tap, before the game starts.
+
+The values are written to the mod state the game reads at start-up
+(`mods/state.toml`), so the launcher, the Mods menu and the pad path all edit one
+setting, and nothing has to be set twice. To change a setting later, quit the
+game: the launcher is behind it, and quitting returns you there. The Android
+back gesture and the runtime menu's **System → Quit game** both do this; the
+engine already supported it, so nothing was added for it.
+
+The card also refuses to write while the game is running (say, in split screen)
+and says to quit first, so a running session cannot overwrite what you just set.
 
 ## The TalkBack layer
 
