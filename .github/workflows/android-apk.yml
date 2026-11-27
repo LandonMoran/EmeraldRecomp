@@ -1,24 +1,51 @@
 name: Android APK
 
-# Builds the installable debug APK on a GitHub runner (no local Android
-# toolchain needed) and leaves it as a downloadable artifact on the run.
+# Builds an installable APK on a GitHub runner from the owner's own cartridge
+# dump, without committing it.
 #
-# The APK still asks for the player's own ROM dump and BIOS on first launch;
-# nothing copyrighted is bundled.
+# Why the ROM is needed at build time: EmeraldRecomp is statically recompiled —
+# `gba_recompile` turns the ROM's ARM/THUMB code into C and that C is compiled
+# into libmain.so. The repository ships none of that C (variants/*/generated is
+# gitignored), so a runner without a ROM has nothing to link. The ROM is fetched
+# from a private repository or a private release asset with a read-only token,
+# SHA-1 checked, and used only inside the job; the cache holds the derived
+# corpus, not the APK's contents. Players still import their own ROM + BIOS at
+# first launch, exactly as a locally built APK does.
+#
+# Setup (secret and variable) is documented in docs/ANDROID_APK_CI.md.
+#
+# Deliberately manual: without EMERALD_ROM_SOURCE / EMERALD_ROM_TOKEN a push
+# build would only fail, so this workflow runs on demand.
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+    inputs:
+      use_cache:
+        description: Reuse the cached ROM + recompiled corpus when the key matches
+        type: boolean
+        default: true
+      keep_build_log:
+        description: Upload the Gradle log as an artifact
+        type: boolean
+        default: true
 
 permissions:
   contents: read
+
+concurrency:
+  group: android-apk
+  cancel-in-progress: false
+
+env:
+  # Emerald (USA) — the only dump this repository's recompiled code is built for.
+  ROM_SHA1: f3ae088181bf583e55daf962a92bb46f4f1d07b7
+  ROM_PATH: variants/emerald/roms/emerald_usa.gba
 
 jobs:
   apk:
     name: assembleDebug
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 180
     steps:
       - name: Check out the game and its engine submodules
         uses: actions/checkout@v4
@@ -31,9 +58,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # Installed by hand rather than with an action: the runner image ships an
-      # sdkmanager the actions refuse, and the versions here are the ones the
-      # Gradle files pin (compileSdk 35, NDK 27.1, CMake 3.22).
+      # The versions the Gradle files pin: compileSdk 35, NDK 27.1, CMake 3.22.
       - name: Install Android SDK, NDK and CMake
         run: |
           set -euo pipefail
@@ -52,6 +77,61 @@ jobs:
             "cmake;3.22.1"
           printf 'ANDROID_HOME=%s\nANDROID_SDK_ROOT=%s\n' "$SDK" "$SDK" >> "$GITHUB_ENV"
 
+      # The corpus depends on the ROM and on the recompile inputs, so the key
+      # carries both: a game.toml hook change correctly misses and recompiles.
+      - name: Restore ROM and recompiled corpus
+        id: corpus
+        if: inputs.use_cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            variants/emerald/roms/emerald_usa.gba
+            variants/emerald/generated
+          key: emerald-corpus-${{ env.ROM_SHA1 }}-${{ hashFiles('variants/emerald/game.toml', 'variants/emerald/symbols/*') }}
+
+      - name: Fetch the ROM (private source, token-authenticated)
+        if: steps.corpus.outputs.cache-hit != 'true'
+        env:
+          EMERALD_ROM_SOURCE: ${{ vars.EMERALD_ROM_SOURCE }}
+          EMERALD_ROM_TOKEN: ${{ secrets.EMERALD_ROM_TOKEN }}
+        run: |
+          if [ -z "${EMERALD_ROM_SOURCE:-}" ]; then
+            echo "::error::EMERALD_ROM_SOURCE is not set. Add the repository variable described in docs/ANDROID_APK_CI.md."
+            exit 1
+          fi
+          bash tools/android/fetch_rom.sh "$ROM_PATH" "$ROM_SHA1"
+
+      - name: Recompile the corpus from the ROM
+        if: steps.corpus.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          cmake -S . -B build-tools -G Ninja \
+            -DGBAGAME_RECOMP_UI=OFF \
+            -DGBARECOMP_NETPLAY=OFF
+          cmake --build build-tools --target gba_recompile -j "$(nproc)"
+          cd variants/emerald
+          "$GITHUB_WORKSPACE/build-tools/gbarecomp_build/gba_recompile" \
+            --rom roms/emerald_usa.gba \
+            --config game.toml \
+            --config symbols/BPEE_symbols.toml \
+            --config symbols/BPEE_reviewed_seeds.toml \
+            --symbols symbols/imported_symbols.tsv \
+            --data-symbols symbols/imported_data_symbols.tsv \
+            --out generated --max-functions 65536
+
+      # A corpus that silently failed to generate would build an APK with no
+      # game in it, so refuse before the long Gradle build.
+      - name: Check the corpus
+        run: |
+          set -euo pipefail
+          shards=$(find variants/emerald/generated -maxdepth 1 -name 'recompiled_*.cpp' | wc -l)
+          echo "recompiled shards: $shards"
+          if [ "$shards" -lt 2 ]; then
+            echo "::error::The recompiled corpus is missing; the ROM or the recompile step failed."
+            exit 1
+          fi
+          test -s "$ROM_PATH" || { echo "::error::$ROM_PATH is missing"; exit 1; }
+
       - name: Build the debug APK
         working-directory: android
         run: |
@@ -59,20 +139,24 @@ jobs:
           bash gradlew :app:assembleDebug --no-daemon --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            # The log needs a GitHub sign-in to read; surface the tail as
-            # annotations, which the run page shows to anyone.
+            # CI logs need a sign-in to read; surface the tail as annotations,
+            # which the run page shows to anyone.
             tail -n 40 "$RUNNER_TEMP/gradle.log" | sed 's/^/::error::/'
             exit "$status"
           fi
 
-      - name: Keep the build log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-log
-          path: ${{ runner.temp }}/gradle.log
-          if-no-files-found: ignore
-          retention-days: 7
+      # Guard against ever shipping the cartridge with the app.
+      - name: Confirm the APK carries no ROM
+        run: |
+          set -euo pipefail
+          apk=$(find android/app/build/outputs/apk/debug -name '*.apk' | head -1)
+          test -n "$apk" || { echo "::error::no APK was produced"; exit 1; }
+          if unzip -l "$apk" | grep -qiE '\.(gba|sav|gbs)$'; then
+            echo "::error::the APK contains ROM or save data"
+            exit 1
+          fi
+          ls -l "$apk"
+          echo "APK=$apk" >> "$GITHUB_ENV"
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4
@@ -81,3 +165,12 @@ jobs:
           path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Keep the build log
+        if: always() && inputs.keep_build_log
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-log
+          path: ${{ runner.temp }}/gradle.log
+          if-no-files-found: ignore
+          retention-days: 7
