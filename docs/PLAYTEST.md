@@ -123,8 +123,9 @@ ball pocket. None of this touches the accessibility translation units.
 ## Still only testable on a device
 
 * `SoundPool` cue playback and the synthesized fallbacks (`A11yCues.java`).
-* `TextToSpeech` with TalkBack off, and announcements with it on. The
-  start-up hardening (engine created at attach, queued start-up lines, language
+* The game's own `TextToSpeech`, and that hiding the game screen from
+  accessibility services keeps TalkBack off the controller. The start-up
+  hardening (engine created at attach, queued start-up lines, language
   fallback, native bridge retry) is untested on a device. The Java sources do
   compile here (`javac 17` + the Robolectric platform jar), so they are type-
   and API-checked; what cannot be checked is the engine's actual voice.
