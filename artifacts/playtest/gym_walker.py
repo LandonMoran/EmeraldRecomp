@@ -148,6 +148,8 @@ def main():
                     help="doors teleport, so re-plan after every step")
     ap.add_argument("--clear-rooms", action="store_true",
                     help="when the goal is unreachable, beat the nearest trainer")
+    ap.add_argument("--no-doors", action="store_true",
+                    help="ignore warp shortcuts; walk the live collision only")
     ap.add_argument("--report", required=True)
     args = ap.parse_args()
 
@@ -159,7 +161,7 @@ def main():
     log.append("start %s on map %s" % (here(p), tuple(p.map())))
 
     walkable = live_grid(p, args.width, args.height)
-    doors = door_pairs(args.group, args.num)
+    doors = {} if args.no_doors else door_pairs(args.group, args.num)
     log.append("same-map doors: %d" % len(doors))
     blocked = people(p)
     log.append("walkable %d tiles, %d occupied" % (len(walkable), len(blocked)))

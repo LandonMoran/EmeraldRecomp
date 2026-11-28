@@ -31,25 +31,42 @@ means a player cannot get it at all.
 | Rustboro gym | PASS | no puzzle, so this is a walk-and-fight run: the room's rock formations are spoken as walls, the three trainers each announced themselves, and the leader's lines came through whole. `Player defeated LEADER ROXANNE!`, `A received the STONE BADGE from ROXANNE.`, `Obtained the TM39!`, `A put away the TM39 in the TMs HMs POCKET.` (`reports/rustboro-walk.txt`) |
 | Dewford gym | PASS | darkness is visual only, and it really is: the room reads normally while the screen is black. Six trainers, then `Player defeated LEADER BRAWLY!`, `A received the KNUCKLE BADGE from BRAWLY.`, `Obtained the TM08!`, `A put away the TM08 in the TMs HMs POCKET.` (`reports/dewford-walk.txt`) |
 | Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
-| Petalburg gym | IN PROGRESS | Norman's gym: a 9x112 map of rooms joined by 36 same-map door warps, and a room's door only opens once the trainer behind it is beaten. The mod announces the doors and the stairs (`Door two steps north-east. Press A to exit.`, `A warp arrow. Step on it.`, `New area. Petalburg City Gym.`), but a run from the entrance currently ends against the first closed door, so the door-open order is the thing to model next |
+| Petalburg gym | PASS | Norman's gym is nine rooms on one map joined by door *signs*, not walkable tiles: stand under one, press A, answer the yes/no prompt, and the game warps you to a fixed destination. Which doors open is the puzzle - the entrance doors need four badges, and each room's doors need that room's trainer beaten - and it was walked by ear in that order. `Player defeated LEADER NORMAN!`, `A received the BALANCE BADGE from DAD!`, `Obtained the TM42!`, `A put away the TM42 in the TMs HMs POCKET.`, `DAD: TM42 contains FACADE…` (`reports/petalburg-walk.txt`) |
 | Fortree gym | NOT TESTED | Winona's gym: four rotating turnstiles decide which way the bridges face. The turnstile behaviour is mapped, nothing has been walked |
 | Mossdeep gym | NOT TESTED | Tate and Liza's gym: statue switches move the floor, 14 warps on a 26x36 map. No run |
 | Sootopolis gym | NOT TESTED | Wallace's gym: two 17x26 floors of cracked ice that breaks into holes, with a slide on every step. Ice and cracked-ice speech exists; no run, and this is the hardest one left |
 | Lavaridge gym | PASS | the pit/vent maze is spoken (`Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.`) and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). Its one-way ledges are spoken too, which is what makes the door to the basement box audible: `Ledge one step south. Jump south to cross it.`, `A ledge. Jump south to cross it.`, and in the read key `Blocked west. Ledge south.` - the first re-walk, before that cue existed, heard nothing at the jump. The route to Flannery is 65 cues - three falls, three geysers and a jump-south ledge at B1F (10,10) that is the only way into the box holding the geyser for her room - walked from the entrance on the cues alone. An ambush from Kindler Danielle left her standing on the pit at (5,2), so the walk took a 24-step detour around her. Flannery beaten: `Player defeated LEADER FLANNERY!`, `A received the HEAT BADGE from FLANNERY.`, `Obtained the TM50!`, `A put away the TM50 in the TMs HMs POCKET.`, `Registered GYM LEADER FLANNERY in the POKéNAV.` |
 
-**Gym coverage at this point: 4 of 8 verified end to end** (Rustboro, Dewford,
-Mauville, Lavaridge), each walked by ear and each cleared with the leader's badge
-and TM heard. Petalburg is in progress; Fortree, Mossdeep and Sootopolis are
-untouched. Rustboro and Dewford have no puzzle at all - they were on the list
+**Gym coverage at this point: 5 of 8 verified end to end** (Rustboro, Dewford,
+Mauville, Lavaridge, Petalburg), each walked by ear and each cleared with the
+leader's badge and TM heard. Fortree, Mossdeep and Sootopolis are untouched, and
+all three are mechanics rather than walks: turning bridges, a moving floor and an
+ice slide. Rustboro and Dewford have no puzzle at all - they were on the list
 because nobody had walked them, not because anything blocked the player.
 
-Petalburg is the interesting one left in the easy half. Its 36 doors are same-map
-warps whose destinations are given by `dest_warp_id`, so the room graph can be
-built straight from the map data (`artifacts/playtest/gym_walker.py` does that),
-and a door tile carries collision yet admits you when it is open. The open/closed
-state is what the walker does not model yet: from the entrance every door reads
-shut, so the run has to beat the trainer of a room before that room's door
-matters, which is a search over door states rather than a shortest path.
+### Petalburg's doors, as the game actually has them
+
+The doors are not tiles you walk through. Each one is a background sign event on
+its own tile, and standing on the tile below it and pressing A runs a script that
+either refuses or asks "Do you want to go through?" and then warps you to a fixed
+destination. The open/closed state is two different conditions:
+
+* the two entrance doors (1,105) and (7,105) need `VAR_PETALBURG_GYM_STATE >= 6`,
+  which is the four-badge value of that story variable (3 before Norman, 6 once
+  the player has four badges, 7 after beating him, 8 for the rematch);
+* every room door needs one specific trainer beaten - Randall opens the way to
+  Parker, Parker to Jody, and Jody (or Berke by the right-hand branch) to Norman.
+
+So the gym is a dependency chain, not a maze, and `artifacts/playtest/petalburg_doors.py`
+walks it as one: press a door, enter the room, beat who is standing in it, press
+the door its defeat opened. The room and door table is in that file, read off the
+map's own door scripts.
+
+One disclosure: the run set `VAR_PETALBURG_GYM_STATE` from 3 to 6 with the dev var
+command first. The save has four badges but the flag never advanced, because this
+save has not played the story in order - every gym so far was reached by a dev
+warp. State 6 is exactly what the game puts there for a four-badge player, so the
+doors behaved as they do for a real arrival, but it was not earned by walking.
 
 ## The blocker, in order
 
