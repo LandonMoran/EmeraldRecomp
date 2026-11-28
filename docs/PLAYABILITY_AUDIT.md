@@ -31,7 +31,7 @@ means a player cannot get it at all.
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
 | Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
-| Lavaridge gym | NOT TESTED | 24 pit warps |
+| Lavaridge gym | PARTIAL | the pit maze is understood and now spoken - `Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.` - and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). The fall (`1F (12,12)` -> `New area. Lavaridge Town Gym B.`) and the vent back up (`B1F (12,12)` -> `New area. Lavaridge Town Gym.` at `1F (13,12)`) were driven and heard. Flannery was **not** reached: the layout file disagrees with the live readout about the chamber walls, so the route model is not trustworthy yet |
 
 ## The blocker, in order
 
@@ -457,6 +457,75 @@ the trainers beaten on the way, the leader beaten, the badge and the TM spoken.
 The earlier finding stands: leaving the gym resets
 `VAR_MAUVILLE_GYM_STATE` and `FLAG_MAUVILLE_GYM_BARRIERS_STATE` (the city's
 `OnTransition` clears both), so all presses must happen in one visit.
+
+## Lavaridge gym: pits, vents, and how far the walk got
+
+**Status: PARTIAL.** The puzzle is understood and the mod now names its two
+tiles, but Flannery was not reached, so this is not a finished gym.
+
+### What the gym actually is
+
+`data/layouts/LavaridgeTown_Gym_1F/map.bin` and `..._B1F` are two 17x19 floors,
+and the puzzle is made of two metatile behaviours, read from the tilesets'
+own `metatile_attributes.bin`:
+
+| Behaviour | Where | Count | What it does |
+|---|---|---|---|
+| `MB_LAVARIDGE_GYM_1F_WARP` (0x68) | 1F | 20 tiles | the floor gives way: you drop to the basement at the same tile |
+| `MB_LAVARIDGE_GYM_B1F_WARP` (0x29) | B1F | 15 tiles | a steam vent: it throws you back up |
+
+Driven in game, both are real and both were heard:
+
+> stepping onto 1F (12,12): `Pit underfoot.` · `New area. Lavaridge Town Gym B.`
+> · now standing at B1F (12,12) with `Vent underfoot.`
+>
+> stepping onto B1F (12,12): `Pit underfoot.` · `New area. Lavaridge Town Gym.`
+> · now standing at 1F (13,12)
+
+So the pair is a two-way lift with a one-tile offset, and the gym is a maze of
+them: 24 warp events on 1F, 20 of them pits, the rest plain doors.
+
+### What the mod says now
+
+Before this run the two behaviours were folded into one catch-all
+(`Terrain::WarpPanel`, "A warp panel. Step on it."), which is also what Mossdeep
+Gym and the Trick House floors say - useless in a gym where one tile drops you
+and the other launches you. They are now separate terrains with their own
+sentence, and pits and vents are announced by distance like the Mauville plates:
+
+| Where | What is said |
+|---|---|
+| beside a pit | `Pit one step west.` |
+| beside one two tiles off | `Pit two steps north.` |
+| standing on one | `Pit underfoot.` / `Vent underfoot.` |
+| facing one | `A pit. Step on it and the floor drops you to the basement.` / `A steam vent. Step on it and it throws you back up.` |
+| read key on both floors | `Overworld. Puzzle. Open north, east and west. Blocked south.` |
+
+Both floors are now treated as puzzle maps (they have no coord events and never
+diff the room, so before this the read key said only `Overworld.`). The live
+quotes above are from the run; `reports/lavaridge-probe.txt` and
+`reports/lavaridge-ear.*` hold the transcripts.
+
+### Where the walk stopped
+
+A by-ear exploration from the entrance fell through the pit at (10,18) into the
+basement (`New area. Lavaridge Town Gym B.`) and mapped both floors step by
+step from the mod's own `open`/`Blocked` answers, but it did not reach Flannery,
+for a concrete reason rather than a cue gap:
+
+- The layout file says Flannery's chamber (x11..16, y9..12) is walled off except
+  for the pit at (12,12), whose basement partner (B1F (12,12)) sits in a sealed
+  3x4 chamber - a closed pair with no entrance from either side.
+- The live readout disagrees with that file: the mod reports (13,8) open only to
+  the south, and (13,8) is a wall in the layout, which suggests the 17x19
+  row-major decode of `map.bin` and the loaded grid are not indexed the same
+  way.
+
+So the next step is not another cue: it is to read the collision for Lavaridge
+straight out of the loaded map grid (`gBackupMapLayout`) instead of the layout
+file, rebuild the route from that, and then walk it. Everything the mod said
+this time is recorded, and the two tiles that make the puzzle are no longer
+anonymous.
 
 ## Using a potion in battle, end to end
 

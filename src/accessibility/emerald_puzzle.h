@@ -47,7 +47,9 @@ enum class Terrain : int {
     SlideSouth,
     CrackedFloor,     // MB_CRACKED_FLOOR (Sky Pillar)
     CrackedFloorHole, // MB_CRACKED_FLOOR_HOLE: already open
-    WarpPanel,        // Mossdeep / Lavaridge gym warp panels
+    WarpPanel,        // Mossdeep gym warp panels, Trick House floors
+    Pit,              // MB_LAVARIDGE_GYM_1F_WARP: the floor gives way
+    Vent,             // MB_LAVARIDGE_GYM_B1F_WARP: steam throws you back up
     ArrowWarp,        // directional warp arrows
     GymDoor,          // MB_PETALBURG_GYM_DOOR
     SealedDoor,       // closed Sootopolis / Sky Pillar / Trick House puzzle door

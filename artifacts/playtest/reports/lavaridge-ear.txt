@@ -1,0 +1,63 @@
+[settle0 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[settle0 f95382] A warp arrow. Step on it.
+[settle0 f95382] Door here. Press A to exit.
+[settle0 f95406] Overworld.
+[back4 f95590] Door one step south. Press A to exit.
+[probe5 f95634] Person north. Press A to talk.
+[probe10 f95902] Door two steps south. Press A to exit.
+[back11 f95954] Object here. Press A.
+[probe18 f96310] Person south. Press A to talk.
+[probe21 f96481] Blocked north.
+[probe24 f96642] Pit two steps north.
+[probe27 f96801] Blocked north.
+[probe33 f97113] Blocked north.
+[probe34 f97165] Blocked east.
+[probe38 f97373] Blocked east.
+[probe46 f97774] Door two steps south-west. Press A to exit.
+[probe51 f98026] Something to read here. Press A.
+[probe51 f98049] Blocked north.
+[probe57 f98346] Door two steps west. Press A to exit.
+[probe64 f98710] A warp arrow. Step on it.
+[probe64 f98710] Door here. Press A to exit.
+[back75 f99282] Door here. Press A to exit.
+[back83 f99698] Object here. Press A.
+[probe88 f99965] Blocked north.
+[probe92 f100181] Blocked north.
+[probe95 f100337] Blocked west.
+[probe97 f100418] Person east. Press A to talk.
+[probe99 f100545] Blocked west.
+[probe101 f100626] Object here. Press A.
+[probe102 f100686] Door two steps south-west. Press A to exit.
+[probe102 f100706] Pit two steps south-west.
+[probe107 f100946] Door two steps south-east. Press A to exit.
+[walk113 f101250] Door two steps south-east. Press A to exit.
+[probe114 f101302] Object here. Press A.
+[probe119 f101570] A pit. Step on it and the floor drops you to the basement.
+[probe119 f101570] Door here. Press A to exit.
+[back120 f101622] A warp arrow. Step on it.
+[walk121 f101674] A pit. Step on it and the floor drops you to the basement.
+[probe123 f101770] Door here. Press A to exit.
+[probe123 f101778] A pit. Step on it and the floor drops you to the basement.
+[probe123 f101798] Pit underfoot.
+[battle0 f101874] A steam vent. Step on it and it throws you back up.
+[battle0 f101874] Vent underfoot.
+[battle0 f101874] New area. Lavaridge Town Gym B.
+[back127 f102010] A steam vent. Step on it and it throws you back up.
+[back127 f102010] Door here. Press A to exit.
+[probe128 f102100] A pit. Step on it and the floor drops you to the basement.
+[probe128 f102100] Pit underfoot.
+[probe128 f102100] New area. Lavaridge Town Gym.
+[walk130 f102166] A pit. Step on it and the floor drops you to the basement.
+[back132 f102271] A steam vent. Step on it and it throws you back up.
+[back132 f102271] Vent underfoot.
+[back132 f102271] New area. Lavaridge Town Gym B.
+[probe134 f102402] Vent two steps east.
+[back135 f102454] Vent one step west.
+[probe136 f102506] Vent two steps north-east.
+[back137 f102538] A steam vent. Step on it and it throws you back up.
+[back137 f102538] Door here. Press A to exit.
+[back137 f102558] Vent one step west.
+[walk139 f102662] Vent two steps east.
+[probe142 f102798] A steam vent. Step on it and it throws you back up.
+[probe142 f102798] Trainer here. Press A to talk.
+[probe144 f102917] See how the flames blaze wildly? They flare in anticipation of my win!

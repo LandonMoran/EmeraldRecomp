@@ -213,9 +213,12 @@ Terrain terrain_of_behavior(int behavior) {
         case kMbSlideSouth: return Terrain::SlideSouth;
         case kMbCrackedFloor: return Terrain::CrackedFloor;
         case kMbCrackedFloorHole: return Terrain::CrackedFloorHole;
+        // Lavaridge's two are not panels you choose to use: one drops you to
+        // the basement and one throws you back up, and the gym is a maze of
+        // them. They keep their own names so the cue can say which is which.
+        case kMbLavaridge1FWarp: return Terrain::Pit;
+        case kMbLavaridgeB1FWarp: return Terrain::Vent;
         case kMbMossdeepGymWarp:
-        case kMbLavaridge1FWarp:
-        case kMbLavaridgeB1FWarp:
         case kMbAquaHideoutWarp:
         case kMbBattlePyramidWarp:
         case kMbTrickHousePuzzle8Floor:
@@ -338,6 +341,7 @@ struct Tracker {
     int trigger_dist = -1, trigger_dx = 0, trigger_dy = 0;
     bool trigger_on = false, trigger_raised = false;
     int underfoot_notice_x = -999, underfoot_notice_y = -999;
+    int hazard_x = -999, hazard_y = -999;   // last pit/vent announced
 
     int last_opened = 0, last_closed = 0, last_changed = 0;
     int total_changes = 0;   // room changes seen on this map (diagnostics)
@@ -405,6 +409,8 @@ const char* terrain_name(Terrain t) {
         case Terrain::CrackedFloor: return "cracked_floor";
         case Terrain::CrackedFloorHole: return "cracked_floor_hole";
         case Terrain::WarpPanel: return "warp_panel";
+        case Terrain::Pit: return "pit";
+        case Terrain::Vent: return "vent";
         case Terrain::ArrowWarp: return "arrow_warp";
         case Terrain::GymDoor: return "gym_door";
         case Terrain::SealedDoor: return "sealed_door";
@@ -437,6 +443,10 @@ const char* terrain_speech(Terrain t) {
             return "Cracked floor. It will break if you step on it.";
         case Terrain::CrackedFloorHole: return "A hole in the floor.";
         case Terrain::WarpPanel: return "A warp panel. Step on it.";
+        case Terrain::Pit:
+            return "A pit. Step on it and the floor drops you to the basement.";
+        case Terrain::Vent:
+            return "A steam vent. Step on it and it throws you back up.";
         case Terrain::ArrowWarp: return "A warp arrow. Step on it.";
         case Terrain::GymDoor: return "A gym door.";
         case Terrain::SealedDoor: return "A door that is shut.";
@@ -837,6 +847,44 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
         if (best >= 0 && best < (1 << 30)) {
             const Grid g = grid_of(m);
             g_t.trigger_raised = !passable_block(block_at(m, g, p.x + bx, p.y + by));
+        }
+    }
+
+    // ── Pits and vents ───────────────────────────────────────────────────
+    // Lavaridge Gym is two floors built out of nothing but these tiles: one
+    // drops you into the basement, one throws you back up. Learning that by
+    // landing in it is not playable, so they are named the way the plates are
+    // - by distance and compass point - before the step is taken.
+    if (g_t.still >= kSettleFrames) {
+        int best = 1 << 30, bx = 0, by = 0, kind = 0;   // 1 = pit, 2 = vent
+        for (int dy = -2; dy <= 2; ++dy) {
+            for (int dx = -2; dx <= 2; ++dx) {
+                const int d = std::abs(dx) + std::abs(dy);
+                if (d > 2) continue;
+                const Terrain t =
+                    terrain_of_behavior(behavior_at(m, p.x + dx, p.y + dy));
+                const int k = t == Terrain::Pit ? 1 : (t == Terrain::Vent ? 2 : 0);
+                if (k == 0) continue;
+                if (d < best) { best = d; bx = dx; by = dy; kind = k; }
+            }
+        }
+        if (kind > 0) {
+            // These maps are puzzles with no coord events and no room diff, so
+            // the read key needs telling; finding one is proof enough.
+            g_t.puzzle_map = true;
+            if (best == 0) {
+                if (g_t.underfoot_notice_x != p.x || g_t.underfoot_notice_y != p.y) {
+                    g_t.underfoot_notice_x = p.x;
+                    g_t.underfoot_notice_y = p.y;
+                    speak_now(kind == 1 ? "Pit underfoot." : "Vent underfoot.", false);
+                }
+            } else if (g_t.hazard_x != p.x + bx || g_t.hazard_y != p.y + by) {
+                g_t.hazard_x = p.x + bx;
+                g_t.hazard_y = p.y + by;
+                speak_now((std::string(kind == 1 ? "Pit " : "Vent ") +
+                           (best == 1 ? "one step " : "two steps ") +
+                           compass(bx, by) + ".").c_str(), false);
+            }
         }
     }
 }
