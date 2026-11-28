@@ -50,8 +50,12 @@ to reach a gym (the story was never walked in order).
 **Gym coverage at this point: 8 of 8 cleared in the running build** (Rustboro,
 Dewford, Mauville, Lavaridge, Petalburg, Fortree, Mossdeep, Sootopolis), each with
 the leader's badge and TM heard and the badge flag read back out of the save
-block. Rustboro and Dewford have no puzzle at all - they were on the list because
-nobody had walked them, not because anything blocked the player.
+block at the time of that run. The flags are read per run, not accumulated: the
+checkpoint chain that ends at `mossdeep-cleared` reads STONE, KNUCKLE, DYNAMO,
+BALANCE, FEATHER, MIND and RAIN true and HEAT false, because the Lavaridge run
+belongs to a different save line and its flag lives there. Rustboro and Dewford
+have no puzzle at all - they were on the list because nobody had walked them, not
+because anything blocked the player.
 
 ### Petalburg's doors, as the game actually has them
 
