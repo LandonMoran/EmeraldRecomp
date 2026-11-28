@@ -164,18 +164,24 @@ the checkpoint's party has no moves), the press itself was an ordinary step:
 | Where | What was said |
 |---|---|
 | (8,10) before the step | `Overworld. Puzzle. Plate one step north. Open north, east and west. Blocked south.` |
-| stepping north onto (8,9) | **`The room changed south-west.`** and `Plate underfoot.` |
+| stepping north onto (8,9) | **`The room changed south-west.`** (build at or before `52e14a5`) and `Plate underfoot.` |
 | standing on it | `Overworld. Puzzle. Plate underfoot.` |
 
 The gym state went 2 → 4, so the plate that fired was switch 4. With this, all
 four switches have been pressed and each press has been spoken:
 
-| Switch | Tile | Announced |
-|---|---|---|
-| 1 | (0,15) | `The room changed north-east.` |
-| 2 | (4,12) | `The room changed north-east.` |
-| 3 | (3,9) | `The room changed south-east.` |
-| 4 | (8,9) | `The room changed south-west.` |
+Every quote below was heard in game, and each names the build that said it: the
+first four are from builds before the swap cue existed, so they read
+`The room changed …` - that was the whole announcement then, not a second-hand
+rendering of today's wording.
+
+| Switch | Tile | Announced | Heard on build |
+|---|---|---|---|
+| 1 | (0,15) | `The room changed north-east.` | build at or before `52e14a5` (no swap cue yet) |
+| 2 | (4,12) | `The room changed north-east.` | build at or before `52e14a5` (no swap cue yet) |
+| 3 | (3,9) | `The room changed south-east.` | build at or before `52e14a5` (no swap cue yet) |
+| 4 | (8,9) | `The room changed south-west.` | build at or before `52e14a5` (no swap cue yet) |
+| 2 again | (4,12) | **`Paths swapped north-east.`** | `768c413` and re-heard on the build with the underfoot guard, gym state 0 → 2 |
 
 That is the puzzle working by ear: a plate is named on approach, its press is
 announced with the direction of the change, and standing on it is confirmed.
@@ -197,6 +203,26 @@ inaudible. A change that both opens and closes a path now says
 `Paths swapped north-east.` with the gym state going 0 → 2. The three cases are
 now distinct: `A path opened …`, `A path closed …`, `Paths swapped …`, and
 `The room changed …` is left for a rewrite that moves no path at all.
+
+#### The plate's own tile cannot fake a swap
+
+A press rewrites the metatile it is standing on, so that tile is excluded from
+the opened/closed tally (it still counts as a change, so the press is still
+announced). Two checks say the exclusion changes nothing in this gym and that
+the swap is real:
+
+- The raised switch is passable: standing at (3,12) the read said
+  `Open east, south and west.` with (4,12) to the east, and the pressed tile is
+  walked off after firing - so this plate never changed passability anyway.
+- With the underfoot tile excluded, a real switch 2 press from gym state 0 still
+  said `Paths swapped north-east.`, so both the openings and the closings come
+  from beams elsewhere in the room, not from the plate.
+
+Without the exclusion a plate that is solid until pressed would supply the one
+`opening` that turns every press into a swap; now that cannot happen on any map.
+The cost is that geometry opening directly underfoot reads as
+`The room changed …`, which is the honest description of a plate vanishing
+beneath you.
 
 ### Why the trainers could not be fought from this checkpoint
 

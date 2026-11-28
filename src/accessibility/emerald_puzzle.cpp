@@ -738,8 +738,15 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
                 if (was_open == is_open && (now & 0x03FF) == (g_t.snapshot[i] & 0x03FF))
                     continue;   // elevation-only change: not a path
                 ++changed;
-                if (!was_open && is_open) ++opened;
-                if (was_open && !is_open) ++closed;
+                // The tile underfoot is where the press happened: a plate
+                // rewrites its own metatile when it fires. Count that as the
+                // press, never as a path, or a plate that is solid until
+                // pressed would supply the one "opening" that turns every
+                // ordinary press into a swap.
+                if (wx != p.x || wy != p.y) {
+                    if (!was_open && is_open) ++opened;
+                    if (was_open && !is_open) ++closed;
+                }
                 sum_dx += wx - p.x;
                 sum_dy += wy - p.y;
                 g_t.snapshot[i] = now;
