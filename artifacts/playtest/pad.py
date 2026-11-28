@@ -40,6 +40,7 @@ class Pad:
         self.s = bot.conn()
         self.s.settimeout(20)
         self.log_index = 0
+        self.log_seq = 0
         self.transcript = transcript
         self.lines = []
         if transcript:
@@ -106,8 +107,14 @@ class Pad:
     def words(self):
         r = self.ask(cmd="emerald_a11y_log")
         u = r.get("utterances") or []
-        new = u[self.log_index:]
-        self.log_index = len(u)
+        # Index into the list, not into its positions: emerald_a11y_log is a
+        # ring buffer of about 250 lines, so once a long walk wraps it, a
+        # positional cursor points past the end and every later utterance is
+        # silently dropped. A walk with battles in it wraps easily. Seq numbers
+        # survive the wrap.
+        new = [x for x in u if x.get("seq", 0) > self.log_seq]
+        if new:
+            self.log_seq = max(x["seq"] for x in new)
         return [(x["frame"], x["text"]) for x in new]
 
     def say(self, tag, text=""):

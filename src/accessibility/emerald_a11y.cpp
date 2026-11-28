@@ -1745,6 +1745,15 @@ void speak_now(const char* text, bool interrupt) {
     if (text) say(text, interrupt);
 }
 
+void speak_again(const char* text) {
+    if (!text || !*text) return;
+    // say() drops an identical sentence inside 90 frames. Forgetting the last
+    // one for this utterance is enough: it is the only state that check reads,
+    // and the next line restores it.
+    g_last_spoken.clear();
+    say(text, false);
+}
+
 const char* controller_hotkeys_help() {
     // Three commands, no chord to remember for settings: those are changed on
     // the launcher (Android) or in the Mods menu, never by the pad.

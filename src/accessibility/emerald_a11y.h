@@ -82,6 +82,12 @@ void install_sink(SpeakFn speak, void (*stop)(), void (*rate)(float));
 // Speak through the active sink (also used by the platform greeting and tests).
 void speak_now(const char* text, bool interrupt);
 
+// Speak even if the same words were the last thing said. The ordinary path
+// drops an identical sentence repeated inside 90 frames so that a message
+// refreshed every frame does not stutter; a fact that has just become true
+// again - a ledge you have walked back up to - must not be swallowed by it.
+void speak_again(const char* text);
+
 // Controller hotkeys. The game is played with a pad, so the spoken screen has
 // to be reachable from the pad itself — not only from the touch sheet or the
 // TCP port. Every frame reads the host's own key state (TouchFrameInfo's

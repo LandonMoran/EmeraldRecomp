@@ -588,18 +588,44 @@ you jump, and it needed three deliveries before a walk could hear it:
 | read key beside one | `Overworld. Puzzle. Open north and east. Blocked west. Ledge south.` |
 | standing on the landing side | `Ledge two steps east. It only jumps south. You are on the far side.` |
 
-The first re-walk is what proved the first attempt was not enough. With only the
-terrain sentence (spoken when you *face* the ledge), the 65-cue walk produced
-**no ledge line at all** at the jump into the box: a press into a ledge turns and
-jumps in one motion, so there is no frame where the player is standing still
-facing it. Grepping the transcript for `ledge` returned nothing.
+The first attempt only had the terrain sentence, spoken when you *face* the
+ledge, and that is not enough on its own: a press into a ledge turns and jumps in
+one motion, so there is no frame where the player is standing still facing it.
+The approach cue exists for that, and it must not wait for the player to settle.
 
-The approach cue was added for that, and it must not wait for the player to
-settle - the second re-walk confirmed the sentence arrives on the way in:
+Getting it to actually speak took three separate fixes, and the third one was in
+the test harness, not the mod:
 
-> `Ledge two steps south. Jump south to cross it.` · `A ledge. Jump south to cross it.`
-> · landed at B1F (10,11) · `Ledge one step north. It only jumps south. You are on
-> the far side.`
+1. The cue was gated on standing still, so a continuous walk never reached it.
+   The gate now applies only to the far-side wording; the approach is not gated.
+2. The "already said this ledge" key never re-armed, so a ledge was announced
+   once per session. It resets when nothing is in range.
+3. The transcript was lying. `emerald_a11y_log` is a ring buffer of about 250
+   lines, and the harness read it with a positional cursor, so once a walk with
+   battles in it wrapped the buffer the cursor pointed past the end and **every
+   later utterance was dropped silently**. That is why an earlier full walk
+   appeared to have no ledge line anywhere: the capture had stopped recording.
+   It now tracks the log's sequence numbers, which survive the wrap.
+
+One uninterrupted walk from the gym entrance on the current build - checkpoint
+loaded once, three trainer ambushes fought inline, no splicing - ends in
+Flannery's room and records the whole approach:
+
+> `New area. Lavaridge Town Gym B.` (fell into the basement)
+> · `Ledge two steps south. Jump south to cross it.`
+> · `A ledge. Jump south to cross it.`
+> · `A ledge. Jump south to cross it.` (the jump, landing at B1F (10,11))
+> · `A steam vent. Step on it and it throws you back up.`
+> · `Ledge two steps north. It only jumps south. You are on the far side.`
+
+That run is `reports/lavaridge-full-walk.txt`, 207 lines, and the route legs are
+48 of 66 steps then 24 of 24 - the first leg stops where it always stops, at the
+pit Kindler Danielle is left standing on.
+
+The earlier version of this section claimed the re-walk proved the mod said
+nothing at the jump. Only half of that was true: the facing-only delivery was
+insufficient, but the missing lines were also the capture bug above. A sentence
+that is dropped by the harness looks exactly like a sentence the mod never said.
 
 A press into a ledge also stopped saying `Blocked ...`: naming it twice, once as
 a door and once as a wall, buried the useful word.

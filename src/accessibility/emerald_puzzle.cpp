@@ -956,6 +956,12 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
                 }
             }
         }
+        if (best >= (1 << 30)) {
+            // Out of range: forget the last one, so walking away and coming back
+            // to the same ledge speaks again. Without this the cue was said once
+            // per ledge for the whole session.
+            g_t.ledge_x = g_t.ledge_y = -999;
+        }
         if (best < (1 << 30)) {
             // The jump vector is the way the player travels, so it points from
             // the standing side to the landing side: same direction as the
@@ -967,6 +973,11 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
             // momentarily over the ledge tile - announce a cut-off route that
             // is not there.
             const bool ready = crossable || g_t.still >= kSettleFrames;
+            // "Fresh" is the ledge tile, not the sentence: the same words for a
+            // different ledge are a different fact, and the speaker drops an
+            // identical line repeated inside 90 frames. The line therefore
+            // carries the ledge's own distance and bearing, and this key is what
+            // keeps two different doors from collapsing into one announcement.
             const bool fresh = g_t.ledge_x != p.x + bx || g_t.ledge_y != p.y + by;
             if (ready && fresh) {
                 // A map whose only affordance is ledges (Flannery's room) also
@@ -981,7 +992,9 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
                                      " to cross it."
                                : std::string("It only jumps ") + compass(jump_x, jump_y) +
                                      ". You are on the far side.");
-                speak_now(line.c_str(), false);
+                // Every approach, not every first approach: the same words for
+                // the same ledge after walking away and back are news again.
+                speak_again(line.c_str());
             }
         }
     }
