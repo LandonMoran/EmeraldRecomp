@@ -1,0 +1,83 @@
+{
+ "name": "lavaridge-at-flannery",
+ "note": "1F (13,10), one tile south of Flannery",
+ "saved_at": "2026-11-28T05:54:03Z",
+ "map": [
+  4,
+  1
+ ],
+ "pos": [
+  13,
+  10
+ ],
+ "location": {
+  "map": [
+   4,
+   1
+  ],
+  "x": -1,
+  "y": -1,
+  "warp_id": 25
+ },
+ "object": {
+  "x": 20,
+  "y": 17,
+  "map": [
+   4,
+   1
+  ],
+  "facing": "north",
+  "elevation": 0
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   4,
+   1
+  ],
+  "x": 13,
+  "y": 10,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 0,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": true,
+  "open": {
+   "n": true,
+   "e": true,
+   "s": true,
+   "w": true
+  },
+  "grid": [
+   32,
+   33,
+   33760024
+  ],
+  "blocks": [
+   538,
+   547,
+   12808,
+   545
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 3,
+  "var:VAR_PETALBURG_GYM_STATE": 1,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

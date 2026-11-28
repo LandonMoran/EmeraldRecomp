@@ -1,0 +1,64 @@
+[p00 f113912] Player defeated BATTLE GIRL DANIELLE!
+[p00 f114130] Oh, but you’re too strong.
+[p00 f114249] A got 552 for winning!
+[p00 f114511] Overworld.
+[p00 f114798] A pit. Step on it and the floor drops you to the basement.
+[p00 f114818] Pit one step west.
+[p00 f114842] A pit. Step on it and the floor drops you to the basement.
+[p00 f114862] Pit underfoot.
+[p00 f114938] A steam vent. Step on it and it throws you back up.
+[p00 f114938] Vent underfoot.
+[p00 f114938] New area. Lavaridge Town Gym B.
+[p00 f115174] Vent two steps east.
+[p00 f115206] A steam vent. Step on it and it throws you back up.
+[p00 f115270] Vent underfoot.
+[p00 f115332] A pit. Step on it and the floor drops you to the basement.
+[p00 f115332] Pit underfoot.
+[p00 f115332] New area. Lavaridge Town Gym.
+[p00 f115470] Pit two steps south.
+[p00 f115502] A pit. Step on it and the floor drops you to the basement.
+[p00 f115658] A pit. Step on it and the floor drops you to the basement.
+[p00 f115686] Pit underfoot.
+[p00 f115763] New area. Lavaridge Town Gym B.
+[p00 f115942] Door two steps west. Press A to exit.
+[p00 f115962] Vent two steps west.
+[p00 f116066] Vent two steps east.
+[p00 f116106] A steam vent. Step on it and it throws you back up.
+[p00 f116170] Vent underfoot.
+[p00 f116231] A pit. Step on it and the floor drops you to the basement.
+[p00 f116231] Pit underfoot.
+[p00 f116231] New area. Lavaridge Town Gym.
+[p00 f116350] Object here. Press A.
+[p00 f116433] Welcome… No, wait. Puny TRAINER, how good to see you’ve made it here! I have been entrusted with the… No, wait. I am FLANNERY, and I’m the GYM LEADER here! Uh… Dare not underestimate me, though I have been LEADER only a short time! With skills inherited from my grand- father, I shall, uh…demonstrate the hot moves we have honed on this land!
+[p00 f125234] Battle.
+[p00 f125424] LEADER FLANNERY would like to battle!
+[p00 f125567] LEADER FLANNERY sent out NUMEL!
+[p00 f125835] Go! TORCHIC!
+[p00 f126034] Fight, top left.
+[p00 f126071] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[p00 f126120] TORCHIC used SCRATCH!
+[p00 f126444] Foe NUMEL fainted!
+[p00 f126561] TORCHIC gained 451 EXP. Points!
+[p00 f126870] LEADER FLANNERY sent out SLUGMA!
+[p00 f127122] Fight, top left.
+[p00 f127157] SCRATCH, NORMAL, PP 16 of 35. 1 of 4
+[p00 f127206] TORCHIC used SCRATCH!
+[p00 f127520] Foe SLUGMA fainted!
+[p00 f127647] TORCHIC gained 400 EXP. Points!
+[p00 f127954] LEADER FLANNERY sent out CAMERUPT!
+[p00 f128268] Fight, top left.
+[p00 f128285] SCRATCH, NORMAL, PP 15 of 35. 1 of 4
+[p00 f128334] TORCHIC used SCRATCH!
+[p00 f128670] Foe CAMERUPT fainted!
+[p00 f128775] TORCHIC gained 975 EXP. Points!
+[p00 f129084] LEADER FLANNERY sent out TORKOAL!
+[p00 f129364] Fight, top left.
+[p00 f129371] SCRATCH, NORMAL, PP 14 of 35. 1 of 4
+[p00 f129420] TORCHIC used SCRATCH!
+[p00 f129766] Foe TORKOAL fainted!
+[p00 f129891] TORCHIC gained 1000 EXP. Points!
+[p00 f130094] Player defeated LEADER FLANNERY!
+[p00 f130310] Oh… I guess I was trying too hard…. I… I’ve only recently become a GYM LEADER. I tried too hard to be someone I’m not. I have to do things my natural way. If I don’t, my POKéMON will be confused. Thanks for teaching me that. For that, you deserve this.
+[p00 f135991] A got 2900 for winning!
+[p00 f136249] A received the HEAT BADGE from FLANNERY.
+[p00 f136251] Overworld.

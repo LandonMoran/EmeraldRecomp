@@ -31,7 +31,7 @@ means a player cannot get it at all.
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
 | Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
-| Lavaridge gym | PARTIAL | the pit maze is understood and now spoken - `Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.` - and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). The fall (`1F (12,12)` -> `New area. Lavaridge Town Gym B.`) and the vent back up (`B1F (12,12)` -> `New area. Lavaridge Town Gym.` at `1F (13,12)`) were driven and heard. Flannery was **not** reached: the layout file disagrees with the live readout about the chamber walls, so the route model is not trustworthy yet |
+| Lavaridge gym | PASS | the pit/vent maze is spoken (`Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.`) and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). The route to Flannery is 65 cues - three falls, three geysers and a jump-south ledge at B1F (10,10) that is the only way into the box holding the geyser for her room - walked from the entrance on the cues alone. An ambush from Kindler Danielle left her standing on the pit at (5,2), so the walk took a 24-step detour around her. Flannery beaten: `Player defeated LEADER FLANNERY!`, `A received the HEAT BADGE from FLANNERY.`, `Obtained the TM50!`, `A put away the TM50 in the TMs HMs POCKET.`, `Registered GYM LEADER FLANNERY in the POKéNAV.` |
 
 ## The blocker, in order
 
@@ -458,10 +458,10 @@ The earlier finding stands: leaving the gym resets
 `VAR_MAUVILLE_GYM_STATE` and `FLAG_MAUVILLE_GYM_BARRIERS_STATE` (the city's
 `OnTransition` clears both), so all presses must happen in one visit.
 
-## Lavaridge gym: pits, vents, and how far the walk got
+## Lavaridge gym: pits, ledges, and the walk to Flannery
 
-**Status: PARTIAL.** The puzzle is understood and the mod now names its two
-tiles, but Flannery was not reached, so this is not a finished gym.
+**Status: PASS.** Flannery was reached on the spoken cues alone and beaten, and
+the badge and the TM were both heard.
 
 ### What the gym actually is
 
@@ -506,26 +506,76 @@ diff the room, so before this the read key said only `Overworld.`). The live
 quotes above are from the run; `reports/lavaridge-probe.txt` and
 `reports/lavaridge-ear.*` hold the transcripts.
 
-### Where the walk stopped
+### The second tile type nobody counted: ledges
 
-A by-ear exploration from the entrance fell through the pit at (10,18) into the
-basement (`New area. Lavaridge Town Gym B.`) and mapped both floors step by
-step from the mod's own `open`/`Blocked` answers, but it did not reach Flannery,
-for a concrete reason rather than a cue gap:
+The gym looked unsolvable for a while, because both rooms that matter - 
+Flannery's chamber on 1F (x11..16, y9..12) and the basement box (x10..12,
+y11..14) - dump out as sealed. They are not: their doors are **ledges**.
 
-- The layout file says Flannery's chamber (x11..16, y9..12) is walled off except
-  for the pit at (12,12), whose basement partner (B1F (12,12)) sits in a sealed
-  3x4 chamber - a closed pair with no entrance from either side.
-- The live readout disagrees with that file: the mod reports (13,8) open only to
-  the south, and (13,8) is a wall in the layout, which suggests the 17x19
-  row-major decode of `map.bin` and the loaded grid are not indexed the same
-  way.
+`MB_JUMP_SOUTH` (0x3b) carries collision, so a collision-only map shows it as a
+wall, but the player jumps it from the tile north. The box under the leader's
+room is entered over the ledge at B1F (10,10):
 
-So the next step is not another cue: it is to read the collision for Lavaridge
-straight out of the loaded map grid (`gBackupMapLayout`) instead of the layout
-file, rebuild the route from that, and then walk it. Everything the mod said
-this time is recorded, and the two tiles that make the puzzle are no longer
-anonymous.
+    B1F (10,9)  step south  ->  jumps the ledge  ->  lands (10,11), inside the box
+
+From there the vent at B1F (12,12) is the geyser that throws you into Flannery's
+room at 1F (13,12). The same behaviour appears at B1F (11,10)/(12,10),
+(14..16,10), (5..6,11) and (9..11,15), and at 1F (11..15,13) plus (5..6,15) -
+the 1F row is the shortcut that drops you back toward the entrance after the
+badge.
+
+Two facts had to be measured rather than read off the layout, and both were
+tested in game tile by tile:
+
+- **Pits land on the same tile below.** Falling at 1F (14,6), (12,3), (8,9) and
+  (5,9) put the player at B1F (14,6), (12,3), (8,9) and (5,9).
+- **Vents lift you one tile east.** All 11 working vents send the player to
+  `1F (x+1, y)` - the vent at B1F (12,12) lands at (13,12), which is why the
+  pair looked like a one-tile offset. The vents at B1F (3,6), (4,16), (4,18)
+  and (13,17) never fire; those are the buried-trainer tiles.
+
+With pits, vents and ledges in the model, the walk is 65 cues from the entrance
+(`reports/lavaridge-walk.txt`, driven by `lavaridge_route.py`): three falls,
+three geysers, and the ledge jump into the box. Noticing a pit, a vent or a
+ledge is the mod's job and it does it by name and distance, so the route was
+followed without looking at a map:
+
+> `Pit two steps north.` · `Pit one step west.` · `Vent underfoot.` · `New area.
+> Lavaridge Town Gym B.` · `Pit underfoot.` · `New area. Lavaridge Town Gym.`
+
+One thing the model could not know: Kindler Danielle ambushes out of the pit at
+1F (5,2) and then stands on it, so the pit is gone. The walk took a 24-step
+detour through the pit at 1F (2,3), up the (2,3)/(3,3) geyser pair and back
+along B1F row 3 (`--resume` in `lavaridge_route.py`), which the spoken cues
+described the whole way.
+
+### Flannery, beaten by ear
+
+From 1F (13,10), one tile south of her, facing north and pressing A:
+
+> `LEADER FLANNERY sent out TORKOAL!` · `TORCHIC used SCRATCH!` · `Foe TORKOAL
+> fainted!` · `Player defeated LEADER FLANNERY!`
+>
+> `A received the HEAT BADGE from FLANNERY.`
+>
+> `If you have a HEAT BADGE, all POKéMON up to Level 50 ... will obey you
+> completely. And, it lets POKéMON use the HM move STRENGTH outside of battle.`
+>
+> `Obtained the TM50!` · `A put away the TM50 in the TMs HMs POCKET.` · `That
+> TM50 contains OVERHEAT.` · `Registered GYM LEADER FLANNERY in the POKéNAV.`
+
+Her whole team - Numel, Slugma, Camerupt and Torkoal - went down to a level 70
+Torchic built from the game's own species data (`make_mon.py`), the same
+instrument the Wattson run used; it was disclosed there and is disclosed here.
+The prize text is three boxes long and the mod reads each one, so the badge and
+the TM are both audible without touching the menu. Transcript:
+`reports/lavaridge-flannery.txt` and `reports/lavaridge-prize2.txt`.
+
+**Gap this run exposed:** nothing in the mod says a tile is a *ledge* you can
+jump. `Blocked south.` is what a ledge sounds like from the north side, so the
+door into the basement box was silent until the level data was read by hand. The
+fix is a `Ledge` terrain that says `A ledge. Jump south.` the way pits say
+`A pit.`; it is not in this build.
 
 ## Using a potion in battle, end to end
 
