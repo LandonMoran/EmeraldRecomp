@@ -28,7 +28,7 @@ BALL_OFFSET = 0x650        # SaveBlock1 bagPocket_PokeBalls
 BALL_SLOTS = 16
 
 
-SESSION_FRAME = [0]
+SESSION_SEQ = [0]
 
 
 def last(p, tag=""):
@@ -41,7 +41,7 @@ def last(p, tag=""):
     """
     p.flush_speech(tag)
     u = p.ask(cmd="emerald_a11y_log").get("utterances") or []
-    fresh = [x for x in u if int(x.get("frame", 0)) >= SESSION_FRAME[0]]
+    fresh = [x for x in u if int(x.get("seq", 0)) > SESSION_SEQ[0]]
     return (fresh[-1]["text"] if fresh else "")
 
 
@@ -289,6 +289,48 @@ def leave_shop(p, tag="leave"):
     p.say(tag, f"scene {p.status().get('scene')} after leaving the shop")
 
 
+def buy_until(p, want=3, tag="buy", tries=5):
+    """Buy until the pocket itself shows `want` balls.
+
+    The shop's `IN BAG:` line is a raw list/price/quantity field, not a count,
+    so the only accepted evidence is the pocket bytes. A single purchase of one
+    ball is already proven; repeating it is deterministic and needs no work on
+    the quantity selector, and a break-out throw then has balls left to retry.
+    """
+    for i in range(tries):
+        slots, key, raw = ball_pocket(p)
+        total = sum(q for _, _, q in slots)
+        p.say(tag, f"pocket before purchase {i + 1}: {slots if slots else 'empty'} "
+                   f"(carrying {total}) bytes {raw}")
+        if total >= want:
+            return total
+        if i == 0:
+            buy_first_ball(p, f"{tag}1")
+        else:
+            p.confirm(95)                      # A at the counter reopens the shop
+            p.say(f"{tag}{i + 1}open", last(p, f"{tag}{i + 1}open"))
+            for _ in range(4):
+                items = [str(x).upper() for x in (p.status().get("items") or [])]
+                if "BUY" in items:
+                    idx = items.index("BUY")
+                    while p.status().get("selected") != idx:
+                        p.action("up", 20)
+                        p.frames(40)
+                    p.confirm(90)
+                    break
+                if any("BALL" in x for x in items):
+                    break
+                p.confirm(85)
+            p.say(f"{tag}{i + 1}stock", last(p, f"{tag}{i + 1}stock"))
+            p.confirm(90)
+            p.say(f"{tag}{i + 1}qty", last(p, f"{tag}{i + 1}qty"))
+            p.confirm(90)
+            p.say(f"{tag}{i + 1}total", last(p, f"{tag}{i + 1}total"))
+        finish_shop(p, f"{tag}{i + 1}shop")
+    slots, key, raw = ball_pocket(p)
+    return sum(q for _, _, q in slots)
+
+
 def buy_first_ball(p, tag="buy"):
     """Talk to the clerk and buy one of the first ball on the list."""
     unlock(p)
@@ -337,50 +379,56 @@ def flee(p, tag="flee"):
     return p.scene() == "overworld"
 
 
-def throw_from_bag(p, tag="throw", tries=5):
-    """Throw a ball from the bag's own ball pocket, on the battle's first turn.
+def battle_and_catch(p, tag="battle", max_throws=4):
+    """Open the bag from the battle menu and throw until the game says caught.
 
-    The verified chain, in the order the game speaks it: `Fight, top left.`
-    (right) `Bag, top right.` (A opens the bag) - the bag opens on the item
-    pocket, so one more right moves to the Poké Balls pocket - A selects
-    `POKé BALL`, the footer reads `POKé BALL is selected. USE, CANCEL`, A uses
-    it, the game prints `A used POKé BALL!` and the throw resolves.
+    Driven from live state, not from expected speech: a wild ABRA encounter
+    prints no `Fight, top left.` line, so gating on the menu announcements
+    deadlocks. What is always true is the scene: in `battle` the cursor starts
+    on Fight, one right selects Bag and A opens the bag; the bag opens on the
+    item pocket, so walk right until a ball row exists; A selects it, the footer
+    becomes `USE, CANCEL`, and A uses it. Everything the game says during the
+    animation is logged verbatim, which is what carries the capture and Pokedex
+    lines into the transcript.
     """
-    for attempt in range(tries):
-        for i in range(24):
+    throws = 0
+    for _ in range(max_throws):
+        if p.status().get("scene") == "overworld":
+            break
+        p.action("right", 20)          # Fight -> Bag
+        p.frames(65)
+        p.confirm(95)                  # open the bag
+        for _ in range(5):
             st = p.status()
-            if st.get("scene") != "battle":
-                p.say(tag, f"left the battle without a capture line: scene {st.get('scene')}")
-                return False
-            line = last(p, f"{tag}{attempt}_{i}")
-            p.say(f"{tag}{attempt}_{i}", line)
-            low = line.lower()
-            if "gotcha" in low or "was caught" in low:
-                return True
-            if "appeared to be caught" in low:      # broke free; try again
+            if st.get("scene") != "bag":
                 break
-            if "top left" in line:                  # Fight/Bag/Run menu
-                p.action("right", 20)
-                p.frames(55)
-                continue
-            if "top right" in line:                 # Bag is selected
-                p.confirm(85)
-                continue
-            if st.get("scene") == "bag":
-                items = st.get("items") or []
-                if not any("BALL" in str(x).upper() for x in items):
-                    p.action("right", 20)           # move to the ball pocket
-                    p.frames(65)
-                    continue
-                if "selected" in low and "use" in low:
-                    p.confirm(90)                   # USE
-                    continue
-                p.confirm(90)                       # select the ball
-                continue
-            p.confirm(80)
-        else:
-            return False
-    return False
+            items = [str(i).upper() for i in (st.get("items") or [])]
+            if any("BALL" in i for i in items):
+                break
+            p.action("right", 20)      # item pocket -> Poké Balls pocket
+            p.frames(70)
+            p.flush_speech(f"{tag}pocket")
+        p.confirm(95)                  # select the ball
+        p.say(f"{tag}select", last(p, f"{tag}select"))
+        p.confirm(95)                  # USE
+        throws += 1
+        p.say(tag, f"throw {throws}")
+        for _ in range(18):            # let the throw animation resolve
+            p.frames(70)
+            p.flush_speech(tag)
+            heard = capture_lines(p)
+            if any("was caught" in t.lower() or "gotcha" in t.lower() for t in heard):
+                # The Pokedex lines land a beat after the capture line, so keep
+                # draining the speech instead of cutting the transcript here.
+                p.say(tag, f"captured after throw {throws}")
+                for _ in range(14):
+                    p.frames(70)
+                    p.flush_speech(tag)
+                return throws
+            if p.status().get("scene") == "overworld":
+                break
+    p.say(tag, f"throws used: {throws}, scene {p.status().get('scene')}")
+    return throws
 
 
 def cross_edge(p, grid, edge, want_map, tag):
@@ -457,9 +505,84 @@ def wander_to_battle(p, tag="grass", limit=90):
     return p.scene() != "overworld"
 
 
+def dump_party(p):
+    """Append the live party, read from gPlayerParty, to this transcript."""
+    import party as party_mod
+    try:
+        out = party_mod.dump(p)
+    except Exception as exc:
+        p.say("party", f"party read failed: {exc}")
+        return
+    for line in out:
+        p.say("party", str(line))
+
+
+def capture_lines(p, since_tag="battle"):
+    u = p.ask(cmd="emerald_a11y_log").get("utterances") or []
+    return [x["text"] for x in u if int(x.get("seq", 0)) > SESSION_SEQ[0]]
+
+
+def flee(p, tag="flee"):
+    """Leave a wild battle through the battle menu's Run entry."""
+    for _ in range(6):
+        if p.status().get("scene") != "battle":
+            return
+        p.action("down", 20)
+        p.frames(55)
+        p.action("right", 20)
+        p.frames(55)
+        p.confirm(90)
+        p.frames(90)
+        p.flush_speech(tag)
+
+
+def run_encounters(p, rounds=8, tag="hunt"):
+    """Keep meeting wild Pokemon until one is newly registered.
+
+    A save that already owns a species gets no `data was added to the POKeDEX`
+    line for it, and some encounters cannot be caught at all (the ABRA that
+    TELEPORTed away). So the leg is driven by the game's own announcements:
+    known-owned species are left through Run instead of spending a ball, and
+    the hunt only stops when the Pokedex line itself appears.
+    """
+    known = set()
+    for r in range(rounds):
+        slots, _k, _raw = ball_pocket(p)
+        have = sum(q for _, _, q in slots)
+        if have <= 0:
+            p.say(tag, "out of balls")
+            return False
+        if not wander_to_battle(p):
+            p.say(tag, f"round {r + 1}: no encounter")
+            continue
+        seen = last(p, f"{tag}enc{r + 1}")
+        p.say(f"{tag}enc{r + 1}", seen)
+        upper = seen.upper()
+        if "POOCHYENA" in upper:
+            p.say(tag, f"round {r + 1}: POOCHYENA already owns a Pokedex entry, running")
+            flee(p, f"{tag}flee{r + 1}")
+            known.add("POOCHYENA")
+            continue
+        throws = battle_and_catch(p, tag)
+        texts = [t for t in capture_lines(p)]
+        caught = any("was caught" in t.lower() for t in texts)
+        dex = any("added to the POK" in t for t in texts)
+        slots, _k, _raw = ball_pocket(p)
+        p.say(tag, f"round {r + 1}: thrown={throws} caught={caught} pokedex={dex} "
+                   f"balls left={sum(q for _, _, q in slots)}")
+        if caught and dex:
+            return True
+    return False
+
+
 def main():
     p = Pad(transcript=TRANSCRIPT)
-    SESSION_FRAME[0] = int(p.ask(cmd="get_frame").get("frame", 0))
+    # Speech is logged by a ring that outlives a checkpoint load and whose frame
+    # stamps restart, so this session is given a seq floor: anything logged
+    # before the run began can never be quoted as evidence.
+    _u = p.ask(cmd="emerald_a11y_log").get("utterances") or []
+    SESSION_SEQ[0] = max([int(x.get("seq", 0)) for x in _u] or [0])
+    p.log_seq = SESSION_SEQ[0]
     p.say("session", "one session, no restart: Rustboro gym -> Mart -> buy a ball -> "
                      "Route 116 grass -> throw from the bag -> capture")
     from checkpoints import Checkpoints
@@ -495,9 +618,9 @@ def main():
         return
     p.say("map", f"in the Mart: {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
 
-    buy_first_ball(p)
-    finish_shop(p, "shop")
+    bought = buy_until(p, 5, "buy")
     after, after_total = say_count(p, "count_after_buy")
+    p.say("bought", f"pocket holds {bought} balls after shopping")
 
     if not leave_counter(p, "counter"):
         p.say("abort", f"still in the Mart: {curmap(p)}")
@@ -514,14 +637,8 @@ def main():
         p.say("abort", "no wild encounter started")
         return
     p.say("encounter", last(p, "enc"))
-    caught = throw_from_bag(p)
-    p.say("thrown", f"capture line seen={caught}")
-    for i in range(14):
-        p.confirm(85)
-        p.say(f"after{i}", last(p, f"after{i}"))
-        st = p.status()
-        if st.get("scene") == "overworld" and i >= 2:
-            break
+    caught_ok = run_encounters(p)
+    p.say("caught", f"a Pokemon was caught this session: {caught_ok}")
 
     end_slots, end_total = say_count(p, "count_after_throw")
     dump_party(p)
