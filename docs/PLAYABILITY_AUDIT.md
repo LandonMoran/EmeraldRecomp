@@ -80,11 +80,28 @@ was spoken as a sentence. Two narrow filters now drop them: a printed block of
 digits and slashes is not a sentence, and a line of digits and slashes is not a
 menu label either (money stays audible - it is digits with no slash).
 
-The filters build and normal dialogue and menu labels still speak with them in
-place, but the heal itself was **not** re-observed after the change: the party is
-one LV 9 Torchic with 28 HP against Vivian's LV 17 MEDITITE, and it fainted on
-every attempt before the bag could be opened again. Treat the noise as diagnosed
-and patched, not yet confirmed silenced.
+Confirmed in a wild battle on Route 110 (GULPIN, POUND), party at 20 of 26 HP.
+The heal spoke the row, the target and the result and nothing else in between:
+
+```
+Items. SUPER POTION, 1 of 1, 1 in the bag.
+SUPER POTION is selected. USE
+AAAAAAAAAA 8 ♂ 20/
+CANCEL Use on which POKéMON?
+Party.
+AAAAAAAAAA's HP was restored by 6 point(s).
+```
+
+Counting the standalone number-with-slash lines after the potion was chosen: **0**.
+Before the fix the same moment produced six of them (`23/`, `/24`, ... `28/`).
+
+The rule itself is pinned by `tests/a11y_hp_readout_test.cpp`
+(`is_hp_readout()` in `src/accessibility/emerald_text_filter.cpp`): every fragment
+is a readout, while `2300`, `12/28 HP` and item names are still speech.
+
+One small noise is left: the party box prints the level on its own during the
+animation, so a bare `8` is spoken once between `Party.` and the heal sentence.
+Digits alone are also how money is announced, so it is not filtered.
 
 The dev warp's `avatar flags 0x01` refusal was checked too, and the guard is
 right: `PLAYER_AVATAR_FLAG_CONTROLLABLE` really is `1 << 5`, so the flag was
