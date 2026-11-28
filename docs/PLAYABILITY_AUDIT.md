@@ -630,6 +630,19 @@ that is dropped by the harness looks exactly like a sentence the mod never said.
 A press into a ledge also stopped saying `Blocked ...`: naming it twice, once as
 a door and once as a wall, buried the useful word.
 
+Repeats are spoken now. The speaker drops an identical sentence repeated inside
+90 frames so a line refreshed every frame does not stutter, and that guard used
+to swallow a fact that had just become true again. The puzzle layer asks for the
+repeat explicitly (`speak_now(..., allow_repeat)`), and the "already announced"
+keys for pits, vents and ledges re-arm when the tile leaves range: falling into
+the same pit twice says `Pit underfoot.` both times, and walking back up to the
+same pit says `Pit one step south.` again.
+
+The ledge mapping is now pinned by `tests/emerald_terrain_test.cpp`, which checks
+all eight `MB_JUMP_*` behaviours for terrain class, jump vector and the exact
+sentence, plus pits, vents and ordinary ground. Verified by mutation: mapping
+`0x3B` to `LedgeNorth` makes it fail.
+
 **What is still true after the fix:** the mod now *names* every door on the
 route, but it does not propose one. The order of the 65 steps still came from the
 level data; a player exploring by ear has to find the doors, and this run

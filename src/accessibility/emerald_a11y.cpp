@@ -277,7 +277,12 @@ void log_line(const std::string& text, int interrupt) {
     while (g_log.size() > kLogSize) g_log.pop_front();
 }
 
-void say(std::string text, bool interrupt) {
+// allow_repeat: say it even if these exact words were the last thing said. The
+// default drops an identical sentence repeated inside 90 frames so a line that
+// is refreshed every frame does not stutter; a caller passing true is saying
+// the fact has just become true again (you walked back up to the ledge, you fell
+// in the same pit twice) and the repeat is the point.
+void say(std::string text, bool interrupt, bool allow_repeat = false) {
     std::string out;
     bool space = false;
     for (char ch : text) {
@@ -302,7 +307,9 @@ void say(std::string text, bool interrupt) {
                    (static_cast<unsigned char>(out.back()) & 0xC0) == 0x80)
                 out.pop_back();
     }
-    if (!interrupt && out == g_last_spoken && g_frame - g_last_said_frame < 90) return;
+    if (!interrupt && !allow_repeat && out == g_last_spoken &&
+        g_frame - g_last_said_frame < 90)
+        return;
     g_last_spoken = out;
     g_last_said_frame = g_frame;
     log_line(out, interrupt ? 1 : 0);
@@ -1741,17 +1748,8 @@ void install_sink(SpeakFn speak, void (*stop)(), void (*rate)(float)) {
     if (g_rate_fn) g_rate_fn(g_rate);
 }
 
-void speak_now(const char* text, bool interrupt) {
-    if (text) say(text, interrupt);
-}
-
-void speak_again(const char* text) {
-    if (!text || !*text) return;
-    // say() drops an identical sentence inside 90 frames. Forgetting the last
-    // one for this utterance is enough: it is the only state that check reads,
-    // and the next line restores it.
-    g_last_spoken.clear();
-    say(text, false);
+void speak_now(const char* text, bool interrupt, bool allow_repeat) {
+    if (text) say(text, interrupt, allow_repeat);
 }
 
 const char* controller_hotkeys_help() {

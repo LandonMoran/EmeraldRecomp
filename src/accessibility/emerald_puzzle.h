@@ -27,62 +27,12 @@
 #include <cstdint>
 #include <string>
 
+#include "accessibility/emerald_terrain.h"
 #include "touch/emerald_guest.h"
 
 namespace emerald::touch { struct SceneState; }
 
 namespace emerald::accessibility {
-
-// Terrain classes that change how the player can move. Each value maps from the
-// engine's metatile behavior byte (include/constants/metatile_behaviors.h),
-// never from a map id.
-enum class Terrain : int {
-    Plain = 0,
-    Ice,              // MB_ICE
-    ThinIce,          // MB_THIN_ICE: breaks under you
-    CrackedIce,       // MB_CRACKED_ICE
-    SlideEast,        // MB_SLIDE_*: stepping on it slides you that way
-    SlideWest,
-    SlideNorth,
-    SlideSouth,
-    CrackedFloor,     // MB_CRACKED_FLOOR (Sky Pillar)
-    CrackedFloorHole, // MB_CRACKED_FLOOR_HOLE: already open
-    WarpPanel,        // Mossdeep gym warp panels, Trick House floors
-    Pit,              // MB_LAVARIDGE_GYM_1F_WARP: the floor gives way
-    Vent,             // MB_LAVARIDGE_GYM_B1F_WARP: steam throws you back up
-    // MB_JUMP_*: one-way ledges. They carry collision, so a collision-only
-    // reading calls them walls, but the player jumps them from the opposite
-    // side. The direction in the name is the way you jump, which is the one
-    // fact a player without sight cannot otherwise get: Lavaridge's basement
-    // box is entered over a ledge and there is no other door.
-    LedgeEast,
-    LedgeWest,
-    LedgeNorth,
-    LedgeSouth,
-    LedgeNorthEast,
-    LedgeNorthWest,
-    LedgeSouthEast,
-    LedgeSouthWest,
-    ArrowWarp,        // directional warp arrows
-    GymDoor,          // MB_PETALBURG_GYM_DOOR
-    SealedDoor,       // closed Sootopolis / Sky Pillar / Trick House puzzle door
-    MuddySlope,       // Mach Bike
-    BumpySlope,
-    Rail,
-    DeepWater,
-    Waterfall,
-    Current,
-    TrashCan,
-    Sand,
-    Ash,
-    HotSprings,
-    Count
-};
-
-const char* terrain_name(Terrain t);
-
-// One sentence, spoken when the tile becomes the one you face or stand on.
-const char* terrain_speech(Terrain t);
 
 struct PuzzleState {
     bool ok = false;

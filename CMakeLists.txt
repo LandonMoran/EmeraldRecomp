@@ -65,6 +65,10 @@ add_executable(emerald_hp_readout_test
     tests/a11y_hp_readout_test.cpp src/accessibility/emerald_text_filter.cpp)
 target_include_directories(emerald_hp_readout_test PRIVATE src)
 add_test(NAME emerald_hp_readout_test COMMAND emerald_hp_readout_test)
+add_executable(emerald_terrain_test
+    tests/emerald_terrain_test.cpp src/accessibility/emerald_terrain.cpp)
+target_include_directories(emerald_terrain_test PRIVATE src)
+add_test(NAME emerald_terrain_test COMMAND emerald_terrain_test)
 add_executable(emerald_state_slots_test tests/state_slots_test.cpp)
 target_include_directories(emerald_state_slots_test PRIVATE src)
 add_test(NAME emerald_state_slots_test COMMAND emerald_state_slots_test)
@@ -105,6 +109,7 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
             src/accessibility/emerald_map_names.cpp
             src/accessibility/emerald_nav.cpp
             src/accessibility/emerald_puzzle.cpp
+            src/accessibility/emerald_terrain.cpp
             src/mods/emerald_accessibility_plugin.cpp
             src/touch/emerald_scene.cpp
             src/touch/emerald_touch.cpp
