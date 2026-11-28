@@ -58,12 +58,42 @@ class Explorer:
         return (x, y, direction) not in self.walls
 
     # -- one measured step ----------------------------------------------
+    def _battle_guard(self, tag):
+        """A trainer sight line or a wild encounter owns the pad; clear it."""
+        if self.p.scene() == "overworld":
+            return False
+        for i in range(60):
+            if self.p.scene() == "overworld":
+                return True
+            self.p.confirm(80)
+            self.p.flush_speech(f"{tag}battle{i}")
+        return True
+
+    def _pad_guard(self, tag):
+        """A dialogue box owns the pad after a map load; press A until it is gone."""
+        if self.p.scene() == "overworld":
+            d = self.p.ask(cmd="emerald_dev_state")
+            if not d.get("controls_locked") and not d.get("message_box"):
+                return False
+        for i in range(14):
+            self.p.confirm(70)
+            self.p.flush_speech(f"{tag}pad{i}")
+            d = self.p.ask(cmd="emerald_dev_state")
+            if (self.p.scene() == "overworld" and not d.get("controls_locked")
+                    and not d.get("message_box")):
+                self.p.say(tag, "cleared a dialogue that owned the pad")
+                return True
+        return True
+
     def probe(self, direction, tag=None):
         """Try one step. Returns (moved, pos). Records the edge or the wall."""
         tag = tag or self.tag
+        self._pad_guard(tag)
         start = self._pos()
         moved, _ = self.p.step(direction)
         self.p.flush_speech(tag)
+        if self._battle_guard(tag):
+            self.p.say(tag, "a battle interrupted the walk and was cleared")
         pos = self._pos()
         sx, sy = start
         if pos != start:

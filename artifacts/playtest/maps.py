@@ -71,7 +71,8 @@ class Grid:
         header = "    " + "".join(str(x // 10 % 10) for x in range(x0, x1 + 1))
         return "\n".join([header] + out)
 
-    def path(self, start, goal, limit=4000):
+    def path(self, start, goal, limit=4000, blocked=()):
+        blocked = set(blocked)
         if not self.passable(*start):
             # allow the tile the player is standing on even if the grid disagrees
             pass
@@ -84,6 +85,8 @@ class Grid:
             for d, (dx, dy) in DIRS.items():
                 nxt = (cur[0] + dx, cur[1] + dy)
                 if nxt in prev:
+                    continue
+                if nxt in blocked:
                     continue
                 if not self.passable(*nxt) and nxt != goal:
                     continue
@@ -111,3 +114,20 @@ if __name__ == "__main__":
     import sys
     g = Grid(sys.argv[1] if len(sys.argv) > 1 else "MossdeepCity_Layout")
     print(g.ascii(0, 0, min(g.w - 1, 60), min(g.h - 1, 30)))
+
+
+def npc_tiles(map_name):
+    """Tiles occupied by object events on a map, as (x, y) map tiles.
+
+    The collision grid says a tile is walkable even when a trainer is standing
+    on it, so a BFS path can run straight through a person and the walker then
+    stalls against them. Read the people from the map's object list instead.
+    Those coordinates are already map tiles (the +7 engine offset applies only
+    to the live player read), so they are used as they are.
+    """
+    import json as _json
+    try:
+        d = _json.load(open(f"{ROOT}/data/maps/{map_name}/map.json"))
+    except FileNotFoundError:
+        return set()
+    return {(o["x"], o["y"]) for o in d.get("object_events", [])}
