@@ -1,0 +1,83 @@
+{
+ "name": "petalburg-cleared",
+ "note": "Norman beaten; BALANCE BADGE + TM42 (FACADE)",
+ "saved_at": "2026-11-28T08:10:43Z",
+ "map": [
+  8,
+  1
+ ],
+ "pos": [
+  4,
+  3
+ ],
+ "location": {
+  "map": [
+   8,
+   1
+  ],
+  "x": 1,
+  "y": 7,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 11,
+  "y": 10,
+  "map": [
+   8,
+   1
+  ],
+  "facing": "north",
+  "elevation": 0
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   8,
+   1
+  ],
+  "x": 4,
+  "y": 3,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 0,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 14,
+  "last_move": 0,
+  "puzzle_map": true,
+  "open": {
+   "n": true,
+   "e": true,
+   "s": true,
+   "w": true
+  },
+  "grid": [
+   24,
+   126,
+   33760024
+  ],
+  "blocks": [
+   565,
+   574,
+   12801,
+   572
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 3,
+  "var:VAR_PETALBURG_GYM_STATE": 7,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": true,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": true,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": true
+ }
+}

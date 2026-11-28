@@ -18,10 +18,15 @@ GRASS_BEHAVIORS = (MB_TALL_GRASS, MB_LONG_GRASS)
 
 
 def _attrs(tileset, secondary):
+    """Tileset directories are snake_case, but the layout JSON names are not."""
     sub = "secondary" if secondary else "primary"
-    path = os.path.join(ROOT, "data/tilesets", sub, tileset, "metatile_attributes.bin")
-    with open(path, "rb") as fh:
-        return fh.read()
+    snake = "".join("_" + c.lower() if c.isupper() else c for c in tileset).lstrip("_")
+    for name in (snake, tileset):
+        path = os.path.join(ROOT, "data/tilesets", sub, name, "metatile_attributes.bin")
+        if os.path.exists(path):
+            with open(path, "rb") as fh:
+                return fh.read()
+    raise FileNotFoundError(tileset)
 
 
 class Layout:
@@ -34,8 +39,8 @@ class Layout:
         self.height = lay["height"]
         with open(os.path.join(ROOT, lay["blockdata_filepath"]), "rb") as fh:
             self.blocks = fh.read()
-        self.primary = _attrs(lay["primary_tileset"].replace("gTileset_", "").lower(), False)
-        self.secondary = _attrs(lay["secondary_tileset"].replace("gTileset_", "").lower(), True)
+        self.primary = _attrs(lay["primary_tileset"].replace("gTileset_", ""), False)
+        self.secondary = _attrs(lay["secondary_tileset"].replace("gTileset_", ""), True)
 
     def block(self, x, y):
         if not (0 <= x < self.width and 0 <= y < self.height):

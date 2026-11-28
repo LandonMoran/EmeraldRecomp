@@ -177,7 +177,10 @@ the engine's ROM/BIOS import screen, so it is narrated and its status changes
 are announced before the game exists, and TalkBack's live regions are kept
 current for the same screen. See
 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for what is spoken, the mod
-options and the TCP test commands.
+options and the TCP test commands, and
+[docs/PLAYABILITY_AUDIT.md](docs/PLAYABILITY_AUDIT.md) for how much of the game
+has actually been played that way - the audit names the spoken line behind every
+claim and is blunt about the parts that are still missing.
 
 ## How it self-improves
 
@@ -254,6 +257,19 @@ components and code explicitly licensed under other terms retain those terms.
 
 PolyForm Noncommercial 1.0.0 — see [`LICENSE`](LICENSE). Third-party
 components retain their own licenses.
+
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | The spoken interface: what is spoken, the pad commands, settings, name entry, save states without sight |
+| [docs/PLAYABILITY_AUDIT.md](docs/PLAYABILITY_AUDIT.md) | What has actually been proven playable by ear, row by row, with the spoken lines quoted and the transcripts named - and what is still missing before release |
+| [docs/PUZZLE_PLAYTEST.md](docs/PUZZLE_PLAYTEST.md) | The gym and environment puzzle test log behind the audit: each room, what the mod said, what it turned on |
+| [docs/PLAYTEST.md](docs/PLAYTEST.md) | The test harness: how runs are driven over TCP, what is automated, what still needs a device |
+| [docs/a11y-sfx.md](docs/a11y-sfx.md) | The audio cue design alongside the speech |
+| [docs/NETPLAY.md](docs/NETPLAY.md) | Wireless/netplay validation and its limits |
+| [docs/ANDROID_APK_CI.md](docs/ANDROID_APK_CI.md) | The Android build and its CI |
+| [docs/WIDESCREEN_EXPERIMENT.md](docs/WIDESCREEN_EXPERIMENT.md) | The optional widescreen mod |
 
 ## Legal
 

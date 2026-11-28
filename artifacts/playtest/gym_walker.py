@@ -45,6 +45,10 @@ def live_grid(p, width, height):
     The block pointer is read per map: hardcoding Lavaridge's made every other
     gym look like Lavaridge's basement.
     """
+    # struct BackupMapLayout: s32 width, s32 height, u16 *map. This buffer is the
+    # map padded by 7 tiles on every side, so the map's own (0,0) is at (7,7)
+    # here. The unpadded layout from gMapHeader (live_behavior.py) is a
+    # different buffer and indexes from 0.
     head = read(p, BACKUP, 12)
     w, h, blocks = struct.unpack("<III", head)
     n = w * h * 2

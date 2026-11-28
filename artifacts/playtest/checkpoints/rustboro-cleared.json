@@ -1,0 +1,83 @@
+{
+ "name": "rustboro-cleared",
+ "note": "Roxanne beaten; STONE BADGE + TM39 (ROCK TOMB)",
+ "saved_at": "2026-11-28T07:22:21Z",
+ "map": [
+  11,
+  3
+ ],
+ "pos": [
+  5,
+  3
+ ],
+ "location": {
+  "map": [
+   11,
+   3
+  ],
+  "x": 5,
+  "y": 18,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 12,
+  "y": 10,
+  "map": [
+   11,
+   3
+  ],
+  "facing": "north",
+  "elevation": 3
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   11,
+   3
+  ],
+  "x": 5,
+  "y": 3,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 0,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": false,
+  "open": {
+   "n": true,
+   "e": true,
+   "s": true,
+   "w": true
+  },
+  "grid": [
+   26,
+   34,
+   33760024
+  ],
+  "blocks": [
+   12810,
+   12819,
+   12801,
+   12817
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 3,
+  "var:VAR_PETALBURG_GYM_STATE": 2,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": true
+ }
+}

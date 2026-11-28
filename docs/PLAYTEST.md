@@ -347,8 +347,7 @@ are never touched. State blobs are build-specific and are not committed; the
 sidecars are.
 
 The puzzle results, what the mod says during each one, and the status rule live
-in [GYM_PUZZLE_PLAYTEST.md](GYM_PUZZLE_PLAYTEST.md) and
-[ENVIRONMENT_PUZZLE_PLAYTEST.md](ENVIRONMENT_PUZZLE_PLAYTEST.md).
+in [PUZZLE_PLAYTEST.md](PUZZLE_PLAYTEST.md).
 
 ### A party for the gyms
 

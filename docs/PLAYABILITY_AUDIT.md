@@ -9,6 +9,16 @@ checked live against the emulator (`build/EmeraldRecomp`, TCP port 19892) unless
 it says otherwise. "PASS" means the information reached the voice; "MISSING"
 means a player cannot get it at all.
 
+## How a row earns PASS
+
+A row is PASS only when the thing was done by ear from the mod's speech alone:
+the lines that prove it are quoted in the row, and the transcript they came from
+is named. Reaching a tile, or watching the game on a screen, does not count. A
+row marked NOT TESTED has no run; PARTIAL means some of it was heard and some was
+inferred. Two shortcuts are disclosed wherever they were used: a party written
+into the save with real species data (the save never earned one), and dev warps
+to reach a gym (the story was never walked in order).
+
 ## Status
 
 | Capability | Status | Evidence |
@@ -32,9 +42,9 @@ means a player cannot get it at all.
 | Dewford gym | PASS | darkness is visual only, and it really is: the room reads normally while the screen is black. Six trainers, then `Player defeated LEADER BRAWLY!`, `A received the KNUCKLE BADGE from BRAWLY.`, `Obtained the TM08!`, `A put away the TM08 in the TMs HMs POCKET.` (`reports/dewford-walk.txt`) |
 | Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
 | Petalburg gym | PASS | Norman's gym is nine rooms on one map joined by door *signs*, not walkable tiles: stand under one, press A, answer the yes/no prompt, and the game warps you to a fixed destination. Which doors open is the puzzle - the entrance doors need four badges, and each room's doors need that room's trainer beaten - and it was walked by ear in that order. `Player defeated LEADER NORMAN!`, `A received the BALANCE BADGE from DAD!`, `Obtained the TM42!`, `A put away the TM42 in the TMs HMs POCKET.`, `DAD: TM42 contains FACADE…` (`reports/petalburg-walk.txt`) |
-| Fortree gym | NOT TESTED | Winona's gym: four rotating turnstiles decide which way the bridges face. The turnstile behaviour is mapped, nothing has been walked |
-| Mossdeep gym | NOT TESTED | Tate and Liza's gym: statue switches move the floor, 14 warps on a 26x36 map. No run |
-| Sootopolis gym | NOT TESTED | Wallace's gym: two 17x26 floors of cracked ice that breaks into holes, with a slide on every step. Ice and cracked-ice speech exists; no run, and this is the hardest one left |
+| Fortree gym | NOT TESTED | Winona's gym is three rows of one-way jump-south ledges across a left-hand maze, not turnstiles. The ledges already speak (`A ledge. Jump south to cross it.`), the map reads correctly from guest memory, and a 50-step route to Winona exists on paper, but the walk stalls on the gym's floor levels: a step is refused when the target's block elevation differs from the tile the player stands on, and the harness's planner does not yet resolve which tiles connect. Nothing was beaten |
+| Mossdeep gym | NOT TESTED | Tate and Liza's gym is warp panels: 13 `MB_MOSSDEEP_GYM_WARP` tiles on a 26x36 map, plus statues as scenery. Panels are already classed as `WarpPanel` and the same-map warp pairing is derivable from `dest_warp_id`, so the graph is there to build; no run was made |
+| Sootopolis gym | NOT TESTED | Juan's gym: two 17x26 floors, 64 thin-ice tiles and slide tiles on 1F. A step on ice slides until something stops you, and thin ice breaks, so a tile-by-tile plan is wrong by construction - the planner needs slide edges. Ice, thin ice and cracked ice all have speech already; no run was made, and this is the hardest one left |
 | Lavaridge gym | PASS | the pit/vent maze is spoken (`Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.`) and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). Its one-way ledges are spoken too, which is what makes the door to the basement box audible: `Ledge one step south. Jump south to cross it.`, `A ledge. Jump south to cross it.`, and in the read key `Blocked west. Ledge south.` - the first re-walk, before that cue existed, heard nothing at the jump. The route to Flannery is 65 cues - three falls, three geysers and a jump-south ledge at B1F (10,10) that is the only way into the box holding the geyser for her room - walked from the entrance on the cues alone. An ambush from Kindler Danielle left her standing on the pit at (5,2), so the walk took a 24-step detour around her. Flannery beaten: `Player defeated LEADER FLANNERY!`, `A received the HEAT BADGE from FLANNERY.`, `Obtained the TM50!`, `A put away the TM50 in the TMs HMs POCKET.`, `Registered GYM LEADER FLANNERY in the POKéNAV.` |
 
 **Gym coverage at this point: 5 of 8 verified end to end** (Rustboro, Dewford,
@@ -817,3 +827,35 @@ time.
   single largest gap for "fight my way through".
 - Read-status on the party screen reports the same numbers for the whole party,
   so choosing who to send out is no longer a guess between names.
+
+## Release readiness
+
+Checked at the end of the gym pass (`cmake --build build --target EmeraldRecomp`
+and `ctest -R "^emerald_"`, 6/6 passing). What is ready and what is not:
+
+**Ready.** Dialogue, signs, NPCs, doors and map names; the whole battle loop on
+the pad, including HP on both sides, move lists, items in battle and EXP; the bag
+and pocket navigation; shops, buying and money; healing at a Centre; save and
+settings menus; the puzzle readout on the read key; five gyms cleared end to end
+(Rustboro, Dewford, Mauville, Lavaridge, Petalburg) with their badges and TMs
+heard; ledges, pits, vents, warp panels and all three ice classes named.
+
+**Not ready, in the order a player would hit it.**
+
+1. **Fortree, Mossdeep and Sootopolis gyms.** The mechanics are named but none of
+   the three was beaten. Fortree's block is the harness's floor-level model, not
+   the mod: the game speaks the maze correctly, navigating it by ear is what has
+   not been shown. Mossdeep and Sootopolis need slide/warp edges in the planner
+   before the same walk can be attempted.
+2. **Bag item names.** The bag opens and speaks its pocket, but this save carries
+   no items, so no item name has been heard. Buying a Potion answers it.
+3. **Catching a Pokémon.** Needs a ball, which needs item 2.
+4. **Travel between towns.** Doors, warps and map names are spoken; choosing the
+   right road on a route relies on the geometry announcements and has not been
+   walked end to end.
+5. **Music and sound cues.** The spoken interface is complete enough to play by,
+   but the audio side (a11y-sfx) is documented separately and was not re-checked
+   in this pass.
+
+None of the above is a regression: they are the same open items the rows above
+list, collected here so a release decision does not have to read the whole audit.

@@ -8,7 +8,7 @@ to prove a blind player can win:
      records developer diagnostics (`emerald_dev_state`) for the report.
   2. It never claims a puzzle passed. The report it writes is raw evidence; the
      PASS / PARTIAL / FAIL status is set by a human reading the transcript
-     against the rule in docs/GYM_PUZZLE_PLAYTEST.md.
+     against the rule in docs/PUZZLE_PLAYTEST.md.
 
 Commands:
 
