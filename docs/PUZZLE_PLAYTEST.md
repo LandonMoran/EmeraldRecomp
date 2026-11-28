@@ -273,6 +273,21 @@ metatiles, which is exactly what the geometry diff listens for.
 is not derivable from passability alone; the room change is announced, but not
 "the gate now opens east".
 
+**Walker work (2026-11-28).** `artifacts/playtest/gym_graph.py` builds the gym as
+a real graph rather than a scripted route: walk edges from the live 20x25 block
+grid (collision plus the per-edge elevation rule), jump edges over the
+`MB_JUMP_SOUTH` (0x3B) rows at y=6, 12 and 17, same-map warp edges paired from
+`dest_warp_id`, and ice edges that slide until something stops the player. It
+also fixed the actuation that made earlier runs look walled: a single frame of
+input is dropped often enough to fake a wall, so the executor now walks with the
+key held (`pad.walk`) and waits for two equal position reads before judging a
+step. With that, planned routes walk cleanly 14 steps into the maze. The run
+still stalls at the row-18 lip: steps north from (4,19) and (2,19) are refused
+with the player at elevation 3 and the target block at 3, while the same step is
+accepted after a fresh `force_map`, so the remaining question is what the engine
+carries between tiles rather than the plan. Nothing was beaten.
+
+
 **Status:** NOT TESTED.
 
 ## Mossdeep City Gym — 14 / 0
@@ -284,6 +299,14 @@ trigger and terrain layers cover the plates and panels; the statue push is a
 held-movement interaction that produces "You were moved …" only for the player.
 
 **Missing:** statue identity and which switch a statue press has completed.
+
+**Walker work (2026-11-28).** The same graph now derives the panel edges from
+map data: `door_pairs()` resolves the 13 `MB_MOSSDEEP_GYM_WARP` tiles through
+each warp's `dest_warp_id`, and `gym_graph.build_edges` turns "step on panel" into
+a single edge to the paired tile, so a route can cross the room without
+scripting the panel order. No run reached Tate and Liza; the statue pushes and
+the nine floor switches are still outside the graph. Nothing was beaten.
+
 
 **Status:** NOT TESTED.
 
@@ -300,6 +323,14 @@ slide until something stops you."), and a slide is a forced move, announced as
 
 **Missing:** the step counter is not spoken, so the player cannot tell how close
 the next staircase is. This is the clearest remaining gap in the eight gyms.
+
+**Walker work (2026-11-28).** Slide edges are modelled: from a slip tile one
+input goes all the way to the first tile that is not ice/slide
+(`gym_graph.slide_from`), including the behaviour-driven `MB_SLIDE_*` arrows, so
+the planner can plan the ice in single inputs instead of tile by tile. The stairs
+gated on `VAR_ICE_STEP_COUNT` are not part of the graph yet, and no run was made.
+Nothing was beaten.
+
 
 **Status:** NOT TESTED.
 

@@ -64,7 +64,7 @@ _*
 *.bak
 *.csv
 *.frag
-recomp_coverage.json
+recomp_coverage*.json
 
 # Local-only config overrides.
 *.local.toml

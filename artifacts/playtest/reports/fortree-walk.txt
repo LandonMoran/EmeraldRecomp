@@ -1,1 +1,102 @@
+[load-drain0 f240177] Ledge one step north. It only jumps south. You are on the far side.
+[load-drain0 f240371] A ledge. Jump south to cross it.
+[load-drain0 f240803] Ledge one step north. It only jumps south. You are on the far side.
+[load-drain0 f229485] New area. Petalburg City Gym.
+[load-drain0 f229560] DAD: As the GYM LEADER, I can’t express how upset I am…. But as a father, it makes me both happy and a little sad. It’s odd…
+[load-drain0 f230296] Object here. Press A.
+[load-drain0 f230303] Ah, there you are, A! Please come with me. I have something I want you to have.
+[load-drain0 f230500] A warp arrow. Step on it.
+[load-drain0 f230500] New area. Fortree City Gym.
+[load-drain0 f230859] Door one step south. Press A to exit.
+[load-drain0 f231416] Yo, how’s it going, CHAMPION- bound A? FORTREE GYM LEADER WINONA is a master of FLYING-type POKéMON. She’s waiting at the back of this GYM, behind the rotating doors. She’s waiting for new challengers who are trying to take wing! Okay, go for it!
+[load-drain0 f232587] Door two steps south. Press A to exit.
+[load-drain0 f232809] Person west. Press A to talk.
+[load-drain0 f233265] Ledge two steps north. It only jumps south. You are on the far side.
+[load-drain0 f233467] A ledge. Jump south to cross it.
+[load-drain0 f234121] Ledge one step north. It only jumps south. You are on the far side.
+[load-drain0 f234315] A ledge. Jump south to cross it.
+[load-drain0 f234747] Ledge one step north. It only jumps south. You are on the far side.
+[load-drain0 f234941] A ledge. Jump south to cross it.
+[load-drain0 f235373] Ledge one step north. It only jumps south. You are on the far side.
+[load-drain0 f235567] A ledge. Jump south to cross it.
+[load-drain0 f235994] Blocked west.
+[load-drain0 f236625] Ledge two steps north. It only jumps south. You are on the far side.
+[load-drain0 f236839] Ledge two steps north. It only jumps south. You are on the far side.
+[load-drain0 f237049] Object here. Press A.
+[load-drain0 f237722] Blocked west.
+[load-drain0 f238356] Blocked east.
+[load-drain0 f238982] Blocked north.
+[load-drain0 f239608] Blocked north.
+[load-drain0 f240012] Blocked west.
+[load-drain0 f241281] Something to read here. Press A.
+[load-drain0 f241304] Blocked north.
+[load-drain0 f241693] Door two steps south-east. Press A to exit.
+[load-drain0 f242144] Blocked west.
+[load-drain0 f242556] Blocked south.
+[load-drain0 f243182] Blocked south.
+[load-drain0 f243571] Something to read here. Press A.
+[load-drain0 f244252] Blocked south.
+[load-drain0 f245100] Blocked north.
+[load-drain0 f245940] Blocked north.
+[load-drain0 f246352] Blocked east.
+[load-drain0 f246978] Blocked north.
+[load-drain0 f247604] Blocked north.
+[load-drain0 f248008] Blocked west.
+[load-drain0 f248856] Blocked south.
+[load-drain0 f249704] Blocked north.
+[load-drain0 f250330] Blocked north.
+[load-drain0 f250719] Trainer south. Press A to talk.
+[load-drain0 f252026] Blocked east.
+[load-drain0 f252652] Blocked north.
+[load-drain0 f253682] Blocked west.
+[load-drain0 f254966] Blocked west.
+[load-drain0 f255378] Blocked south.
+[load-drain0 f256226] Blocked west.
+[load-drain0 f256630] Blocked south.
+[load-drain0 f257692] Blocked west.
+[load-drain0 f259570] Blocked south.
+[load-drain0 f260418] Blocked east.
+[load-drain0 f261052] Blocked east.
+[load-drain0 f262082] Blocked east.
+[load-drain0 f263112] Blocked east.
+[load-drain0 f264142] Blocked east.
+[load-drain0 f267471] Trainer here. Press A to talk.
+[load-drain0 f268342] Blocked south.
+[load-drain6 f229485] New area. Petalburg City Gym.
+[load-drain7 f229560] DAD: As the GYM LEADER, I can’t express how upset I am…. But as a father, it makes me both happy and a little sad. It’s odd…
+[load-drain25 f230296] Object here. Press A.
+[load-drain25 f230303] Ah, there you are, A! Please come with me. I have something I want you to have.
 [scaffold] force_map -> [12, 1] at (22,30)
+[walk1 f230500] A warp arrow. Step on it.
+[walk1 f230500] New area. Fortree City Gym.
+[walk1 f230859] Door one step south. Press A to exit.
+[walk] (21,30) facing 3
+[walk] (20,30) facing 3
+[walk] (20,29) facing 2
+[walk] (19,29) facing 3
+[walk] (18,29) facing 3
+[walk] (17,29) facing 3
+[walk] (16,29) facing 3
+[walk] (15,29) facing 3
+[walk] (14,29) facing 3
+[walk] (13,29) facing 3
+[walk] (12,29) facing 3
+[walk1 f232905] Trainer south. Press A to talk.
+[walk] (11,29) facing 3
+[walk] (11,28) facing 2
+[walk] (11,27) facing 2
+[walk] (11,26) facing 2
+[walk] blocked at (11,26) facing 2
+[walk] blocked at (11,26) facing 2
+[walk] blocked at (11,26) facing 2
+[walk] (10,26) facing 3
+[walk] (9,26) facing 3
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
+[walk] blocked at (9,26) facing 2
