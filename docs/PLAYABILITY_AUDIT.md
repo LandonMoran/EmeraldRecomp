@@ -30,7 +30,7 @@ means a player cannot get it at all.
 | Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
-| Mauville gym | PARTIAL | plates are named (`Step plate two steps east.`) and a press announces its effect (`The room changed north-east.`); switches 2 at (4,12) and 3 at (3,9) pressed and heard (gym state now 3), switch 4 at (8,9) still unreached because the checkpoint's party has no moves to beat the trainer guarding it |
+| Mauville gym | PARTIAL | all four plates pressed and every press announced (`The room changed north-east.` / `south-east.` / `south-west.`); the last one was reached with the harness and the trainers were flagged beaten, so the gym was not played fairly end to end, and Wattson is not fought |
 | Lavaridge gym | NOT TESTED | 24 pit warps |
 
 ## The blocker, in order
@@ -153,7 +153,43 @@ compass point, and the `Open` / `Blocked` list for the tile underfoot. The read
 key agreed with the game's own refusals - when it said `Blocked east.` the step
 was refused, and where it said open the step went through.
 
-### Why plate 4 is still not reachable: the party cannot battle
+### Plate 4: pressed and announced
+
+With arrival cheated (harness map load into the pocket, trainers flagged as beaten -
+the checkpoint's party has no moves), the press itself was an ordinary step:
+
+| Where | What was said |
+|---|---|
+| (8,10) before the step | `Overworld. Puzzle. Plate one step north. Open north, east and west. Blocked south.` |
+| stepping north onto (8,9) | **`The room changed south-west.`** and `Plate underfoot.` |
+| standing on it | `Overworld. Puzzle. Plate underfoot.` |
+
+The gym state went 2 → 4, so the plate that fired was switch 4. With this, all
+four switches have been pressed and each press has been spoken:
+
+| Switch | Tile | Announced |
+|---|---|---|
+| 1 | (0,15) | `The room changed north-east.` |
+| 2 | (4,12) | `The room changed north-east.` |
+| 3 | (3,9) | `The room changed south-east.` |
+| 4 | (8,9) | `The room changed south-west.` |
+
+That is the puzzle working by ear: a plate is named on approach, its press is
+announced with the direction of the change, and standing on it is confirmed.
+The arrival was not earned, so the gym stays **PARTIAL**.
+
+### Why the pocket kept closing
+
+`MauvilleGymSetDefaultBarriers` does not clear the beams - it **toggles every
+beam** between its On and Off variant on each press. So each switch press
+alternates the maze, and the four plates are the only way to change which half
+the beams open. Walking east along y=12 also crosses switch 2, so crossing it
+while another switch was last pressed re-toggles the beams: that is how the
+right-hand pocket kept closing between attempts. Worth a cue of its own later
+(`the beams flipped`), which the current `The room changed <direction>.` does
+not say.
+
+### Why the trainers could not be fought from this checkpoint
 
 The remaining route to (8,9) crosses a trainer's line of sight. Stepping into it
 was answered, in order:
