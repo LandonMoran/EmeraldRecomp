@@ -336,6 +336,49 @@ trainers; one of them has to be beaten, and battles currently cannot be won.
 
 **Mauville stays PARTIAL.**
 
+### A real Pokémon, three plates in one visit, and the surviving blocker
+
+The EXP hang was the injected test block, not the engine. Writing a real
+Torchic - species 255, base stats 45/60/40/45/70/50 from `species_info.h`,
+`GROWTH_MEDIUM_SLOW`, moves Scratch/Ember/Peck/Growl, and stats computed with
+Gen 3's formula at IV 15, EV 0, neutral nature (`make_mon.py`) - makes the battle
+finish properly:
+
+> `BATTLE GIRL VIVIAN sent out MEDITITE!` · `Go! TORCHIC!` · `TORCHIC used
+> SCRATCH!` · `Foe MEDITITE fainted!` · `TORCHIC gained 331 EXP. Points!` · ...
+> `Player defeated BATTLE GIRL VIVIAN!` · `A got 408 for winning!`
+
+Three trainers were beaten this way - VIVIAN, GUITARIST KIRK (`Player defeated
+GUITARIST KIRK!`, `A got 544 for winning!`) and YOUNGSTER BEN (`TORCHIC was
+poisoned!`, `Player defeated YOUNGSTER BEN!`, `A got 272 for winning!`) - and
+three plates were pressed in one continuous visit, all by cue:
+
+| Order | Tile | Heard | State |
+|---|---|---|---|
+| 1st | (0,15) | `Paths swapped north-east.` + `Plate underfoot.` | 0 → 1 |
+| 2nd | (3,9) | `Paths swapped south-east.` + `Plate underfoot.` | 1 → 3 |
+| 3rd | (4,12) | `Paths swapped north-east.` + `Plate underfoot.` | 3 → 2 |
+
+Two things the run established that the earlier attempts could not:
+
+- **Leaving the gym resets the puzzle.** Stepping out and back in put the state
+  back to 0 with `FLAG_MAUVILLE_GYM_BARRIERS_STATE` false, so all four presses
+  have to happen in one visit. The earlier hope that a map reload would help is
+  wrong: it undoes the presses.
+- **States 2 and 3 close different halves.** At state 3 the pocket is behind
+  switch 2 at (4,12), which is on the only way to it; pressing it drops to state
+  2, and at state 2 both pocket tiles (7,11) and (8,11) report `Blocked north.`
+  from (7,12) and (8,12), while the left half is closed too - from (5,12) north
+  is `Blocked north.` and from (4,12) west is `Blocked west.`. The top approach
+  does not help either: from (4,8) east is open to (5,8) but `Blocked east.`
+  stops it, and (5,9) reads `Open north, south and west. Blocked east.`
+
+So switch 4 at (8,9) was never pressed, and the gym stays **PARTIAL**: three of
+four plates by ear, no fourth. Continue from `mauville-three-plates` (state 2,
+VIVIAN/KIRK/BEN beaten) to find the order that keeps the pocket reachable.
+
+### Second finding
+
 ## Using a potion in battle, end to end
 
 Party at 12 of 28 HP, foe at 27 of 39, cursor on FIGHT. One press right and the
