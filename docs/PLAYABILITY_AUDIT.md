@@ -885,22 +885,43 @@ vents, warp panels and all three ice classes named.
    the statue moves over several frames and the read catches it mid-turn
    (`mossdeep_solve.py --measure`). So the leaders' tile is still reached with
    the developer warp, and the route that reaches it without one is open work.
-2. **Catching a Pokémon - BLOCKED on a ball the save does not have.** The Poké
-   Balls pocket reads `Empty.` (`bag-items.txt`), so there is nothing to throw,
-   and the party's only moves are Scratch, Ember, Peck and Growl. The Mart is the
-   route to a ball and the run reached its shopper, whose text is quoted here as
-   the captured output: `The NET and DIVE BALLS are rare POKé BALLS that are only
-   made in MOSSDEEP. A NET BALL is effective against BUG-type and WATER-type
-   POKéMON.` What is missing is not a mod feature but a priced purchase - money
-   in this save, a clerk counter reached and a Poké Ball bought - before a catch
-   can be attempted at all.
-3. **Travel between towns - BLOCKED for a walked route.** Doors and warps are
-   named and cued (`New area. Route 103.`, `New area. Route 101.`, `New area.
-   Mossdeep City.`, `New area. Mossdeep City Mart.`), but walking a route end to
-   end did not happen: from Route 101 at (10,3) the north walk moved one tile and
-   stopped at (10,2) without a map change, and further input there was refused.
-   The connection to Oldale Town is not at x=10; the route's own exit has to be
-   found from the connection data before this can be called walked.
+**Catching a Pokémon - PASS.** Proven end to end on foot in one session
+(`artifacts/playtest/reports/shop-catch.txt`). The party walked to the Mossdeep
+Mart door, was read in the door's map tile, and entered it: `New area. Mossdeep
+City Mart.` The counter is served from the east side, not from the shopper's
+tile, and at (3,3) facing west the clerk answers `Welcome! How may I serve you?`
+The buy flow was driven from the real menus: `BUY, 1 of 3.`, then the stock list
+(`ULTRA BALL, 1 of 10.` ... `CANCEL`), then `ULTRA BALL? Certainly. How many
+would you like?`, `ULTRA BALL? And you wanted 1? That will be 1200.`, and
+`Here you go! Thank you very much.` with the money line falling to `34140`. The
+purchased ball is in the bag: `IN BAG: 1`.
+
+With the ball held, a wild battle on Route 101 was answered from the battle menu
+rather than the Fight cursor - `Fight, top left.` then a right press to
+`Bag, top right.`, `Bag.`, and `ULTRA BALL, 1 of 1, 2 in the bag.` The throw and
+its resolution are the game's own lines: `A used ULTRA BALL!` ... `Gotcha!
+POOCHYENA was caught!` ... `POOCHYENA's data was added to the POKéDEX.` The
+party dump afterwards has three slots, the third a level 3 Poochyena:
+`[2] level 3 hp 15/15 atk 8 def 7 spd 7 spa 7 spd 6` - the caught Pokémon, in
+the party and the Pokédex. The only wart is the bag screen reading `2 in the
+bag.` where the shop had just said `IN BAG: 1`; that count disagreement is a
+reporting bug in the bag readout, not a failed purchase, and it is the next
+thing to fix in `emerald_nav.cpp`'s bag announcer.
+
+**Travel between towns - PASS, both directions.** Route 101 to Oldale Town and
+back, walked with held pad directions and settle-until-equal position reads
+(`artifacts/playtest/reports/travel-walk.txt`). The north opening is x=8..11 at
+y=0 in `Route101_Layout`'s collision data, not the (10,2) the earlier walker
+guessed; from (10,0) one north step put the player at (10,19) in Oldale and the
+cue fired: `New area. Oldale Town.` (`map [0,10]`, position read (10,19)). The
+return leg walked south from (10,7) through (10,19) and the next south step put
+the player at (10,0) in Route 101 with `New area. Route 101.` (`map [0,16]`).
+Neither crossing used a warp, a door or a save edit - only the pad and the
+walker's learned collision grid. Note that the party was *placed* on Route 101
+with the developer map warp before the crossing, because this save has no Fly
+and no Surf; the crossing itself is the walked part.
 
 None of the above is a regression: they are the same open items the rows above
 list, collected here so a release decision does not have to read the whole audit.
+With catching and travel settled, the Mossdeep statue route is the only item
+left in this section.

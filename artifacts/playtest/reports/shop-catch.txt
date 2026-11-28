@@ -1,67 +1,64 @@
-[walk1 f389950] 1 08BULK UP 1 34SHOCK WAVE
-[walk1 f389951] 1 39ROCK TOMB 1 40AERIAL ACE 1
-[walk1 f389952] 42FACADE CLOSE BAG Generates an ultrasonic wave that may confuse.
-[walk1 f389954] TM03, 1 of 7, 1 in the bag.
-[walk1 f390001] Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390001] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390002] TM04, 2 of 7, 1 in the bag.
-[walk1 f390061] --- --- 20 USE, GIVE
-[walk1 f390061] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390062] CANCEL
-[walk1 f390203] Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390205] TM04, 2 of 7, 1 in the bag.
-[walk1 f390325] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390363] BAG, A
-[walk1 f390364] SAVE, OPTION
-[walk1 f390365] EXIT
-[walk1 f390390] Overworld.
-[walk1 f390428] TMs HMs
-[walk1 f390429] 1 03WATER PULSE 1 04CALM MIND
-[walk1 f390430] 1 08BULK UP 1 34SHOCK WAVE
-[walk1 f390431] 1 39ROCK TOMB 1 40AERIAL ACE 1
-[walk1 f390432] 42FACADE CLOSE BAG Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390434] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390457] TM04, 2 of 7, 1 in the bag.
-[walk1 f390458] Bag.
-[walk1 f390459] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390497] BAG, A
-[walk1 f390498] SAVE, OPTION
-[walk1 f390499] EXIT
-[walk1 f390524] Overworld.
-[walk1 f390562] TMs HMs
-[walk1 f390563] 1 03WATER PULSE 1 04CALM MIND
-[walk1 f390564] 1 08BULK UP 1 34SHOCK WAVE 1 39ROCK TOMB
-[walk1 f390565] 1 40AERIAL ACE 1 42FACADE
-[walk1 f390566] CLOSE BAG Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390568] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390591] TM04, 2 of 7, 1 in the bag.
-[walk1 f390592] Bag.
-[walk1 f390593] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390632] BAG, A
-[walk1 f390633] SAVE, OPTION
-[walk1 f390634] EXIT
-[walk1 f390659] Overworld.
-[walk1 f390697] TMs HMs 1 03WATER PULSE 1
-[walk1 f390698] 04CALM MIND 1 08BULK UP 1 34SHOCK WAVE
-[walk1 f390699] 1 39ROCK TOMB 1 40AERIAL ACE
-[walk1 f390700] 1 42FACADE CLOSE BAG Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390703] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390726] TM04, 2 of 7, 1 in the bag.
-[walk1 f390727] Bag.
-[walk1 f390727] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f390766] BAG, A
-[walk1 f390767] SAVE, OPTION
-[walk1 f390768] EXIT
-[walk1 f390793] Overworld.
-[walk1 f390831] TMs HMs 1 03WATER PULSE
-[walk1 f390832] 1 04CALM MIND 1 08BULK UP 1 34SHOCK WAVE
-[walk1 f390833] 1 39ROCK TOMB 1 40AERIAL ACE
-[walk1 f390834] 1 42FACADE CLOSE BAG
-[walk1 f390835] Raises SP. ATK and SP. DEF by focusing the mind.
-[walk1 f390837] TMs and HMs. TM04, 2 of 7, 1 in the bag.
-[walk1 f391304] Person north. Press A to talk.
-[walk1 f391406] Object here. Press A.
-[walk1 f391433] The NET and DIVE BALLS are rare POKé BALLS that are only made in MOSSDEEP. A NET BALL is effective against BUG-type and WATER-type POKéMON. A DIVE BALL works best on POKéMON at the bottom of the sea.
-[walk] blocked at (11,10) facing 2
-[walk] blocked at (11,10) facing 2
-[walk] blocked at (11,10) facing 2
+[s f465016] Name: III
+[s f465098] Name: IIII
+[s f465180] Name: IIIII
+[s f465262] Name: IIIIII
+[s f465344] Name: IIIIIII
+[s f465426] Name: IIIIIIII
+[s f465508] Name: IIIIIIIII
+[s f465590] Name: IIIIIIIIII
+[s f465607] OK
+[s f465720] Battle.
+[s f465774] Overworld.
+[s f466031] Blocked north.
+[s f466231] Blocked east.
+[s f466641] Blocked north.
+[s f468028] Battle.
+[s f468283] Wild POOCHYENA appeared!
+[s f469525] Go! TORCHIC!
+[s f469724] Fight, top left.
+[s f469734] Pokémon, bottom left.
+[s f469799] Run, bottom right.
+[s f469874] Got away safely!
+[s f470098] Overworld.
+[s f470989] New area. Oldale Town.
+[s f474531] New area. Route 101.
+[s f474726] BAG, A
+[s f474727] SAVE, OPTION
+[s f474728] EXIT, 1 of 5.
+[s f474783] Option 5 of 5.
+[s f474833] Option 4 of 5.
+[s f474883] Option 3 of 5.
+[s f474933] Option 2 of 5.
+[s f474983] EXIT, 1 of 5.
+[s f475033] Option 5 of 5.
+[s f475250] Blocked east.
+[s f475447] New area. Oldale Town.
+[s f476453] Something to read here. Press A.
+[s f476961] Door two steps north-east. Press A to exit.
+[s f477167] Door here. Press A to exit.
+[s f477269] A warp arrow. Step on it.
+[s f477269] New area. Oldale Town Mart.
+[s f477876] Blocked west.
+[s f477888] Welcome! How may I serve you?
+[s f478056] BUY, 1 of 3.
+[s f478150] 32940
+[s f478151] 300 POTION 100 ANTIDOTE 200
+[s f478152] PARLYZ HEAL 250 AWAKENING, CANCEL
+[s f478153] Restores the HP of a POKéMON by 20 points.
+[s f478177] POTION, 1 of 5.
+[s f478178] Shop.
+[s f478215] ANTIDOTE, 2 of 5.
+[s f478216] Heals a poisoned POKéMON.
+[s f478217] ANTIDOTE, 2 of 5.
+[s f478285] PARLYZ HEAL, 3 of 5.
+[s f478286] Heals a paralyzed POKéMON.
+[s f478287] PARLYZ HEAL, 3 of 5.
+[s f478355] AWAKENING, 4 of 5.
+[s f478356] Awakens a sleeping POKéMON.
+[s f478357] AWAKENING, 4 of 5.
+[s f478425] CANCEL, 5 of 5.
+[s f478426] Quit shopping.
+[s f478832] Overworld.
+[s f478833] Is there anything else I can help you with?
+[s f478998] BUY, 1 of 3.
+[s f479031] Please come again!

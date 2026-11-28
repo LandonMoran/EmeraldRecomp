@@ -1,0 +1,66 @@
+[oldale] in (0, 10) at map tile (10, 7) after 'New area. Oldale Town.'
+[s0 f448490] SCRATCH, NORMAL, PP 27 of 35. 1 of 4
+[s0 f448569] TORCHIC used SCRATCH!
+[s0 f448873] Wild POOCHYENA fainted!
+[s0 f449007] TORCHIC gained a boosted 34 EXP. Points!
+[s0 f449327] Overworld.
+[s0 f450125] Battle.
+[s0 f450380] Wild POOCHYENA appeared!
+[s0 f462134] Go! TORCHIC!
+[s0 f462333] Fight, top left.
+[s0 f462343] Bag, top right.
+[s0 f462449] ITEMS, CLOSE BAG
+[s0 f462450] Return to the battle.
+[s0 f462451] Items. Empty.
+[s0 f462474] Empty.
+[s0 f462475] Bag.
+[s0 f462500] Items. Empty.
+[s0 f462501] ITEMS POKé BALLS
+[s0 f462518] Poké balls. ULTRA BALL, 1 of 1, 2 in the bag.
+[s0 f462519] 2 ULTRA BALL, CLOSE BAG A better BALL with a higher catch rate than a GREAT BALL.
+[s0 f462522] ULTRA BALL, 1 of 1, 2 in the bag.
+[s0 f462581] ULTRA BALL is selected. USE, CANCEL
+[s0 f462581] Poké balls. ULTRA BALL, 1 of 1, 2 in the bag.
+[s0 f462590] Option 1 of 2.
+[s0 f462672] Poké balls. ULTRA BALL, 1 of 1, 1 in the bag.
+[s0 f462722] 72 136/ 166 TORCHIC
+[s0 f462724] 3 POOCHYENAfemale
+[s0 f462751] Battle.
+[s0 f462754] A used ULTRA BALL!
+[s0 f463278] Gotcha! POOCHYENA was caught!
+[s0 f463569] POOCHYENA’s data was added to the POKéDEX.
+[s0 f463842] POKéDEX registration completed. 010
+[s0 f463843] POOCHYENA BITE POKéMON HT, WT 1’08” 30.0 lbs.
+[s0 f463844] It savagely threatens foes with bared fangs. It chases after fleeing targets tenaciously. It turns tail and runs, however, if the foe strikes back.
+[s0 f463945] Give a nickname to the captured POOCHYENA?
+[s0 f464381] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[s0 f464405] Name entry.
+[s0 f464428] B
+[s0 f464488] C
+[s0 f464782] I
+[s0 f464852] Name: I
+[s0 f464934] Name: II
+[s0 f465016] Name: III
+[s0 f465098] Name: IIII
+[s0 f465180] Name: IIIII
+[s0 f465262] Name: IIIIII
+[s0 f465344] Name: IIIIIII
+[s0 f465426] Name: IIIIIIII
+[s0 f465508] Name: IIIIIIIII
+[s0 f465590] Name: IIIIIIIIII
+[s0 f465607] OK
+[s0 f465720] Battle.
+[s0 f465774] Overworld.
+[s0 f466031] Blocked north.
+[s0 f466231] Blocked east.
+[s0 f466641] Blocked north.
+[s0 f468028] Battle.
+[s0 f468283] Wild POOCHYENA appeared!
+[s0 f469525] Go! TORCHIC!
+[s0 f469724] Fight, top left.
+[s0 f469734] Pokémon, bottom left.
+[s0 f469799] Run, bottom right.
+[s0 f469874] Got away safely!
+[s0 f470098] Overworld.
+[s0 f470989] New area. Oldale Town.
+[s12 f474531] New area. Route 101.
