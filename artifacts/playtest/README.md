@@ -57,6 +57,7 @@ wherever it matters.
 | [`maps.py`](maps.py) | `map.bin` blocks, collision, object tiles, path finding |
 | [`party.py`](party.py) | Reads `gPlayerParty` slot by slot; boosts stats for test parties and never the level byte |
 | [`mossdeep_solve.py`](mossdeep_solve.py) | The Mossdeep statue model and search (see the audit for where it stops) |
+| [`sootopolis_refight.py`](sootopolis_refight.py) | Re-fights Juan on the healed party so the badge, TM and Pokénav lines land in the transcript (the first capture wrote no speech) |
 | [`checkpoints.py`](checkpoints.py) | Save-state checkpoints (`checkpoints/*.json` + `.state`) used to start runs near a puzzle |
 
 The rest are older one-mechanic runners kept because the audit's gym rows were

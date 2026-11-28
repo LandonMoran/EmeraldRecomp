@@ -1,13 +1,156 @@
 Sootopolis gym leader run (Juan) - spoken lines from the running build
 ======================================================================
 
+The first capture of this fight (checkpoint `sootopolis-cleared`, 2026-11-28
+10:32Z) wrote its header and the post-fight reads but no speech: the fight ran
+across two pad sessions and the one that won recorded nothing. The lines below
+are a **re-fight of the same gym**, captured with the transcript appending every
+utterance it heard.
 
-======================================================================
-Evidence after the fight:
-  badge flag 0x86E (RAIN BADGE): true
-  party (gPlayerParty): TORCHIC LV 71 / 400 HP
+How the re-fight was set up, all of it disclosed:
+
+  * checkpoint `sootopolis-cleared` loaded - the save is already past this gym;
+  * the party was **healed at Sootopolis's POKeMON CENTER** first, because the
+    first re-capture wedged on a move list where every move had 0 PP
+    (`PECK, FLYING, PP 0 of 35. 3 of 4` on every press);
+  * the three flags that gate the fight were cleared so he would battle again:
+    `FLAG_BADGE08_GET` (2158), `FLAG_DEFEATED_SOOTOPOLIS_GYM` (1271) and
+    `TRAINER_JUAN_1`'s own trainer flag (1552);
+  * the developer warp to (8,3) facing him - the tester's hands, the same
+    allowance every other gym row uses.
+
+Every line below is the game's own text, read from the accessibility speech ring
+with the frame number it was spoken on. Nothing here was typed in by hand.
+
+----------------------------------------------------------------------
+
+[scaffold] force_map -> [15, 0] at (15,10)
+[walk1 f371422] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f371614] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f371806] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f371998] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f372190] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f372382] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f372574] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f372766] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f372958] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f373150] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f373342] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f373534] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f373726] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f373918] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f374110] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f374302] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f374494] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f374686] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f374878] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f375070] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f375262] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f375454] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f375646] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f375838] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376030] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376222] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376414] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376606] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376798] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f376990] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f377182] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f377374] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f377566] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f377758] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f377950] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f378142] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f378334] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f378526] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f378718] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f378910] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f379102] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f379294] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f379486] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f379678] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f379870] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f380062] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f380254] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f380446] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f380638] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f380830] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f381022] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f381230] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f381566] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f381902] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f313267] Object here. Press A.
+[walk1 f313434] Hello, and welcome to the POKéMON CENTER. We restore your tired POKéMON to full health. Would you like to rest your POKéMON?
+[walk1 f314144] YES.
+[walk1 f314285] Okay, I’ll take your POKéMON for a few seconds.
+[walk1 f314684] Thank you for waiting. We’ve restored your POKéMON to full health.
+[walk1 f314859] A slippery slope. It will slide you south.
+[walk1 f314859] New area. Sootopolis City Gym.
+[walk1 f315251] Object here. Press A.
+[walk] blocked at (15,10) facing 2
+[talk0 f315422] Let me ask you. Did you know? Ah, I should not be so coy. It was I who taught WALLACE everything there is to know about POKéMON. Once, I had given up my position as the GYM LEADER. In my place, I had entrusted WALLACE with the GYM. However, a compelling reason arose for me to make a comeback. Ah, but enough chatter. Let us begin our match, shall we? Please, you shall bear witness to our artistry. A grand illusion of water sculpted by POKéMON and myself!
+[talk17 f317862] Battle.
+[fight0-2 f318070] LEADER JUAN would like to battle!
+[fight0-6 f318227] LEADER JUAN sent out LUVDISC!
+[fight0-12 f318485] Go! TORCHIC!
+[fight0-16 f318682] Fight, top left.
+[fight0-17 f318689] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[fight0-18 f318738] TORCHIC used SCRATCH!
+[fight0-25 f319086] Foe LUVDISC fainted!
+[fight0-27 f319209] TORCHIC gained 966 EXP. Points!
+[fight0-34 f319521] LEADER JUAN sent out WHISCASH!
+[fight0-40 f319908] Fight, top left.
+[fight0-41 f319937] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[fight0-42 f319986] TORCHIC used SCRATCH!
+[fight0-49 f320393] Foe WHISCASH fainted!
+[fight0-51 f320517] TORCHIC gained 1387 EXP. Points!
+[fight0-58 f320830] LEADER JUAN sent out SEALEO!
+[fight0-63 f321097] Fight, top left.
+[fight0-64 f321113] SCRATCH, NORMAL, PP 33 of 35. 1 of 4
+[fight0-65 f321162] TORCHIC used SCRATCH!
+[fight0-72 f321558] Foe SEALEO fainted!
+[fight0-74 f321663] TORCHIC gained 1179 EXP. Points!
+[fight0-81 f321974] LEADER JUAN sent out CRAWDAUNT!
+[fight0-86 f322244] Fight, top left.
+[fight0-87 f322259] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[fight0-88 f322308] TORCHIC used SCRATCH!
+[fight0-95 f322591] A critical hit!
+[fight0-99 f322807] Foe CRAWDAUNT fainted!
+[fight0-102 f322929] TORCHIC gained 1483 EXP. Points!
+[fight0-107 f323132] TORCHIC grew to LV. 72!
+[fight0-115 f323495] LEADER JUAN sent out KINGDRA!
+[fight0-121 f323743] Fight, top left.
+[fight0-122 f323759] SCRATCH, NORMAL, PP 31 of 35. 1 of 4
+[fight0-123 f323808] TORCHIC used SCRATCH!
+[fight0-129 f324070] Foe KINGDRA used DOUBLE TEAM!
+[fight0-136 f324422] Foe KINGDRA’s evasiveness rose!
+[fight0-140 f324614] Fight, top left.
+[fight0-141 f324647] SCRATCH, NORMAL, PP 30 of 35. 1 of 4
+[fight0-142 f324696] TORCHIC used SCRATCH!
+[fight0-149 f325012] Foe KINGDRA fainted!
+[fight0-151 f325137] TORCHIC gained 2040 EXP. Points!
+[fight0-156 f325344] Player defeated LEADER JUAN!
+[fight0-160 f325514] Ahahaha, excellent! Very well, you are the winner. From you, I sense the brilliant shine of skill that will overcome all. However, compared with me or even WALLACE, you are lacking in elegance. Perhaps I should make you a loan of my outfit? … … … … … … … … … … … …. Hahaha, I merely jest! Rather than my clothes, I shall reward you with this, the RAIN BADGE!
+[fight4-0 f336337] A got 4600 for winning!
+[fight4-6 f336599] Overworld.
+[fight4-6 f336601] A received the RAIN BADGE from JUAN.
+[fight4-13 f337079] Having the RAIN BADGE shall assure you the full obedience of all your POKéMON to your every command. The RAIN BADGE also allows the use of the HM move WATERFALL to scale walls of cascading water. And, so that you never forget the battle we shared, take this…
+[text11 f340638] Obtained the TM03!
+[text12 f340860] A put away the TM03 in the TMs HMs POCKET.
+[text14 f341064] The TECHNICAL MACHINE I handed you contains WATER PULSE. In use, it will occasionally confuse the target with ultrasonic waves. … … … … … …
+[text19 f341805] Registered GYM LEADER JUAN in the POKéNAV.
+[prize0 f342205] The TRAINERS who have gathered all the GYM BADGES of HOENN should make way to the ultimate destination. The POKéMON LEAGUE. Travel to the easternmost reaches of HOENN, to the island EVER GRANDE. There, you shall find the POKéMON LEAGUE.
+
+----------------------------------------------------------------------
+
+Evidence after the fight, re-read from the running build:
+
+  badge flag 0x86E (RAIN BADGE): false before the fight, true after
+  FLAG_DEFEATED_SOOTOPOLIS_GYM: false before the fight, true after
+  party (gPlayerParty): TORCHIC LV 72 / 166 HP
   position after: (8, 3) on 15,0 facing north, leader at (8, 2)
-  checkpoint: sootopolis-cleared
-  how the leader was reached: developer warp to (8,3), the tester's hands
-  how the fight was fought: emerald_a11y_action presses, move list walked
-  when the advance was refused (no PP): Down then A, never B
+  checkpoint: sootopolis-recapture
+
+The original capture's own reads, kept for the record: badge flag 0x86E true,
+party TORCHIC LV 71 / 400 HP, position (8,3) facing north, checkpoint
+`sootopolis-cleared`.

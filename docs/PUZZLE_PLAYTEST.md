@@ -73,12 +73,12 @@ missing party). A mechanic PASS does not make the gym PASS.
 
 | Gym | Group/num | Blocking mechanic (verified) | Mechanic | Full run |
 | --- | --- | --- | --- | --- |
-| Rustboro | 11 / 3 | none: no map scripts, no coord events, trainers only | n/a | NOT TESTED |
-| Dewford | 3 / 3 | darkness level set by `setflashlevel`, lowered per trainer defeated | n/a | NOT TESTED |
-| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | **PARTIAL**: trainer battle won and left correctly; plates 1, 2 and 3 stepped on; plate 4 not reached |
-| Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | NOT TESTED | NOT TESTED |
-| Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
-| Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
+| Rustboro | 11 / 3 | none: no map scripts, no coord events, trainers only | n/a | **PASS**: Roxanne beaten, `STONE BADGE` + `TM39` |
+| Dewford | 3 / 3 | darkness level set by `setflashlevel`, lowered per trainer defeated | n/a | **PASS**: Brawly beaten, `KNUCKLE BADGE` + `TM08`; darkness is visual only |
+| Mauville | 10 / 0 | 4 floor plates (`VAR_MAUVILLE_GYM_STATE` 1-4) raise/lower electric beams with `setmetatile` | **PASS** | **PASS**: four plates in the order 1→2→3→4 in one visit, then Wattson beaten, `DYNAMO BADGE` + `TM34` |
+| Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | **PASS** | **PASS**: Flannery reached on the pit/vent/ledge cues, `HEAT BADGE` + `TM50` |
+| Lavaridge B1F | 4 / 2 | receiving side of the same pit maze, vents and a jump-south ledge box | **PASS** | **PASS**: walked as part of the same run |
+| Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | **PASS** | **PASS**: door chain walked, Norman beaten, `BALANCE BADGE` + `TM42` |
 | Fortree | 12 / 1 | three jump-south ledge rows across a left-hand maze; block elevation decides a step | **PASS** | **PASS**: Winona beaten, `FEATHER BADGE` + `TM40`, flag `0x86C` true |
 | Mossdeep | 14 / 0 | warp panels (`MB_MOSSDEEP_GYM_WARP`), nine floor switches that turn statue groups, leaders need a party of two | **PASS** | **PASS**: Tate & Liza beaten, `MIND BADGE` + `TM04`, flag `0x86D` true; switch and warp edges walked, last stretch by developer warp |
 | Sootopolis 1F | 15 / 0 | ice floor; stairs open at `VAR_ICE_STEP_COUNT` 8 / 28 / 67; JUAN is on this floor | **PASS** | **PASS**: Juan beaten, `RAIN BADGE` + `TM03`, flag `0x86E` true |
@@ -400,12 +400,19 @@ tile that is not ice or a slide arrow, including the behaviour-driven
 looking for the stairs.
 
 The leader was reached at 1F (8,2) from (8,3) with the developer warp the audit
-allows, and beaten in the running build: `Player defeated LEADER JUAN!`, `A
-received the RAIN BADGE from JUAN.`, `Obtained the TM03!`, `A put away the TM03 in
-the TMs HMs POCKET.`, `The TRAINERS who have gathered all the GYM BADGES of HOENN
-should make way...`. Badge flag `0x86E` reads true afterwards; party `TORCHIC LV
-71 / 400 HP`; transcript `reports/sootopolis-leader.txt`; checkpoint
-`sootopolis-cleared`.
+allows, and beaten in the running build. The run that is quoted is the **second**
+fight on this save, because the first wrote its flags but no speech into the
+transcript: it was fought again with the party healed at Sootopolis's POKéMON
+CENTER (the first re-capture wedged on a move list where every move had 0 PP) and
+with the three flags that gate the fight cleared on the same save, so the badge
+could be read before and after. The game's own lines: five foes down, then
+`Player defeated LEADER JUAN!`, `A received the RAIN BADGE from JUAN.`, `Obtained
+the TM03!`, `A put away the TM03 in the TMs HMs POCKET.`, `The TECHNICAL MACHINE I
+handed you contains WATER PULSE.`, `Registered GYM LEADER JUAN in the POKéNAV.`,
+`The TRAINERS who have gathered all the GYM BADGES of HOENN should make way...`.
+Badge flag `0x86E` and `FLAG_DEFEATED_SOOTOPOLIS_GYM` read false before the fight
+and true after it; party `TORCHIC LV 72 / 166 HP`; transcript
+`reports/sootopolis-leader.txt`; checkpoint `sootopolis-recapture`.
 
 **Status: PASS.**
 
