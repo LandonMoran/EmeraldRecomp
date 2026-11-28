@@ -1,0 +1,67 @@
+[step000-east f123996] Foe GEODUDE fainted!
+[step000-east f124090] TORCHIC gained 220 EXP. Points!
+[step000-east f124395] LEADER ROXANNE sent out NOSEPASS!
+[step000-east f124762] Fight, top left.
+[step000-east f124788] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[step000-east f124836] TORCHIC is paralyzed! It can’t move!
+[step000-east f125081] Foe NOSEPASS used HARDEN!
+[step000-east f125369] Foe NOSEPASS’s DEFENSE rose!
+[step000-east f125553] Fight, top left.
+[step000-east f125586] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[step000-east f125635] TORCHIC used SCRATCH!
+[step000-east f125852] It’s not very effective…
+[step000-east f126092] Foe NOSEPASS fainted!
+[step000-east f126226] TORCHIC gained 346 EXP. Points!
+[step000-east f126427] Player defeated LEADER ROXANNE!
+[step000-east f126603] So… I lost…. It seems that I still have much more to learn…. I understand. The POKéMON LEAGUE’s rules state that TRAINERS are to be given this if they defeat a GYM LEADER. Please accept the official POKéMON LEAGUE STONE BADGE.
+[step000-east f132368] A got 1500 for winning!
+[step000-east f132628] Overworld.
+[step000-east f132630] A received the STONE BADGE from ROXANNE.
+[step000-east f133122] The STONE BADGE heightens the ATTACK power of your POKéMON. It also enables them to use the HM move CUT outside of battle. Please take this with you, too.
+[step000-east f135955] Obtained the TM39!
+[step000-east f136177] A put away the TM39 in the TMs HMs POCKET.
+[step000-east f136375] That TECHNICAL MACHINE, TM39, contains ROCK TOMB. It not only inflicts damage by dropping rocks, it also lowers SPEED. If you use a TM, it instantly teaches the move to a POKéMON. Remember, a TM can be used only once, so think before you use it.
+[step000-east f139709] A warp arrow. Step on it.
+[step000-east f139709] New area. Dewford Town Gym.
+[step000-east f139943] Door one step south. Press A to exit.
+[step000-east f140055] Person west. Press A to talk.
+[step000-east f141823] Object here. Press A.
+[step000-east f141898] I’m BRAWLY! DEWFORD’s GYM LEADER! I’ve been churned in the rough waves of these parts, and I’ve grown tough in the pitch-black cave! So you wanted to challenge me? Let me see what you’re made of!
+[step000-east f145143] Battle.
+[step000-east f145328] LEADER BRAWLY would like to battle!
+[step000-east f145462] LEADER BRAWLY sent out MACHOP!
+[step000-east f145721] Go! TORCHIC!
+[step000-east f145920] Fight, top left.
+[step000-east f145966] SCRATCH, NORMAL, PP 16 of 35. 1 of 4
+[step000-east f146015] TORCHIC used SCRATCH!
+[step000-east f146321] Foe MACHOP fainted!
+[step000-east f146426] TORCHIC gained 301 EXP. Points!
+[step000-east f146730] LEADER BRAWLY sent out MEDITITE!
+[step000-east f147013] Fight, top left.
+[step000-east f147034] SCRATCH, NORMAL, PP 15 of 35. 1 of 4
+[step000-east f147206] Foe MEDITITE is tightening its focus!
+[step000-east f147415] TORCHIC used SCRATCH!
+[step000-east f147720] Foe MEDITITE fainted!
+[step000-east f147830] TORCHIC gained 312 EXP. Points!
+[step000-east f148135] LEADER BRAWLY sent out MAKUHITA!
+[step000-east f148432] Fight, top left.
+[step000-east f148468] SCRATCH, NORMAL, PP 14 of 35. 1 of 4
+[step000-east f148517] TORCHIC used SCRATCH!
+[step000-east f148833] Foe MAKUHITA fainted!
+[step000-east f148958] TORCHIC gained 354 EXP. Points!
+[step000-east f149158] Player defeated LEADER BRAWLY!
+[step000-east f149335] Whoah, wow! You made a much bigger splash than I expected! You swamped me! Okay, you’ve got me. Take this GYM BADGE!
+[step000-east f152235] A got 1900 for winning!
+[step000-east f152496] Overworld.
+[step000-east f152853] A received the KNUCKLE BADGE from BRAWLY.
+[step000-east f153343] The KNUCKLE BADGE makes all POKéMON up to Level 30, even those you get in trades, obey without question. And, you’ll be able to use the HM move FLASH outside of battle. If you’d like, use this TECHNICAL MACHINE, too.
+[step000-east f159083] Obtained the TM08!
+[step000-east f159305] A put away the TM08 in the TMs HMs POCKET.
+[step000-east f159503] That TM08 contains BULK UP. It’s a move that raises both ATTACK and DEFENSE stats. … … … … … …
+[step000-east f161782] A warp arrow. Step on it.
+[step000-east f161782] New area. Petalburg City Gym.
+[step000-east f162015] Stairs one step south. Walk onto them.
+[step000-east f162067] Object here. Press A.
+[step001-north f173515] Person west. Press A to talk.
+[step003-east f173619] Door two steps north-east. Press A to exit.
+[step005-north f173738] Blocked north.
