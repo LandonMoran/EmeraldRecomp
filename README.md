@@ -180,10 +180,11 @@ current for the same screen. See
 options and the TCP test commands, and
 [docs/PLAYABILITY_AUDIT.md](docs/PLAYABILITY_AUDIT.md) for how much of the game
 has actually been played that way - the audit names the spoken line behind every
-claim and is blunt about the parts that are still missing. Seven of Hoenn's eight
-gyms have now been cleared by ear with the leader's badge read back out of the
-save block (see the audit's gym table); Mossdeep's double battle is the one still
-open, and it is open on the party the test save carries rather than on the mod.
+claim and is blunt about the parts that are still missing. All eight of Hoenn's
+gyms have now been cleared by ear, each with the leader's badge read back out of
+the save block (see the audit's gym table); what is still open is listed there,
+including Mossdeep's statue-rotation search, which is modelled and exercised but
+not yet solved end to end.
 
 ## How it self-improves
 

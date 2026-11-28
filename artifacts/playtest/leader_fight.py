@@ -87,7 +87,11 @@ def main():
         def ask(self, **kw):
             return self.pad.ask(**kw)
 
-    Checkpoints(conn=S(p)).load(args.checkpoint)
+    # An empty checkpoint means "carry on with the party in memory": Mossdeep
+    # needs the second slot this harness builds, and loading a checkpoint would
+    # put the save's one Pokémon back.
+    if args.checkpoint:
+        Checkpoints(conn=S(p)).load(args.checkpoint)
     p.frames(40)
     before = p.ask(cmd="emerald_dev_flag", id=badge_id)
     log.append("badge flag %s before: %s" % (hex(badge_id), before.get("value")))

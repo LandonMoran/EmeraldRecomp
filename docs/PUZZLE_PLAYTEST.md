@@ -80,7 +80,7 @@ missing party). A mechanic PASS does not make the gym PASS.
 | Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
 | Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
 | Fortree | 12 / 1 | three jump-south ledge rows across a left-hand maze; block elevation decides a step | **PASS** | **PASS**: Winona beaten, `FEATHER BADGE` + `TM40`, flag `0x86C` true |
-| Mossdeep | 14 / 0 | warp panels (`MB_MOSSDEEP_GYM_WARP`), statue scenery, nine plates; leaders need a party of two | PARTIAL | **BLOCKED**: leaders refuse a one-Pokemon party; a duplicated slot stalls the double battle |
+| Mossdeep | 14 / 0 | warp panels (`MB_MOSSDEEP_GYM_WARP`), nine floor switches that turn statue groups, leaders need a party of two | **PASS** | **PASS**: Tate & Liza beaten, `MIND BADGE` + `TM04`, flag `0x86D` true; switch and warp edges walked, last stretch by developer warp |
 | Sootopolis 1F | 15 / 0 | ice floor; stairs open at `VAR_ICE_STEP_COUNT` 8 / 28 / 67; JUAN is on this floor | **PASS** | **PASS**: Juan beaten, `RAIN BADGE` + `TM03`, flag `0x86E` true |
 | Sootopolis B1F | 15 / 1 | ice floor, trainers | NOT TESTED | not needed for the badge |
 
@@ -301,23 +301,48 @@ held-movement interaction that produces "You were moved …" only for the player
 
 **Missing:** statue identity and which switch a statue press has completed.
 
-**Result (2026-11-28).** The panel graph is in place: `gym_graph.build_edges`
-turns each of the 13 `MB_MOSSDEEP_GYM_WARP` tiles into one edge to the tile its
-warp pairs with through `dest_warp_id`, so the room can be crossed without
-hand-picking a panel order. The leaders are not on the live map as ordinary
-objects; the map's own object table puts them at (23,7) and (24,7), and the mod
-reads their intro from there.
+**Result (2026-11-28). PASS.**
 
-The blocker is the party, not the mod: Tate and Liza are a double battle and this
-checkpoint has one Pokémon, so they refuse (`TATE: ...you have only one POKEMON
-that can battle.` `LIZA: We can't battle that...`). Writing a duplicate of the
-party's first slot makes the battle start - `Foe LUNATONE's SITRUS BERRY restored
-health!`, `TORCHIC is paralyzed! It can't move!` - but it stalls before the
-second Pokémon's turn and takes the emulator's TCP server down with it, on three
-separate attempts (including one where the mid-battle stat rewrite was removed).
-No win can be claimed from that, so the row stays blocked.
+The room is two mechanics. `gym_graph.build_edges` turns each of the twelve
+`MB_MOSSDEEP_GYM_WARP` tiles into one edge to the tile its warp pairs with
+through `dest_warp_id`, and each of the nine colour floor switches is a
+coord event that calls `moverotatingtileobjects`: pressing one turns a group of
+statue *objects* a quarter turn, so the same tile is open in one rotation and
+walled in the next. A switch is therefore an edge that relabels the graph, not a
+step - `gym_graph.switch_route` picks it and the runner re-reads the live
+collision grid and object table after every rotation.
 
-**Status: BLOCKED - needs a legitimate two-Pokémon party.**
+That was walked. Pressing switch (3,30) turned the first board
+(`board closed at (6,35); walking 8 steps to switch (3,30)` -> `switch (3,30)
+pressed, board turned (1)`) and a 35-step route appeared where there had been
+none; the walk then crossed the warp chain - (1,32) -> (20,24), east to (23,24)
+and its purple switch, the west warp at (21,24) -> (1,33) - and pressed the blue
+switch (8,10) four times looking for the rotation that opens the top. The last
+stretch to the leaders' tile (23,8) was closed with the developer warp the audit
+allows the tester's hands, because the switch *choice* still oscillates between
+two rooms rather than solving the rotation (that is the open item in the audit).
+
+Tate and Liza are a double battle, and the save carries one Pokémon, so the
+harness builds a real second slot rather than a copy: `party_build.py` writes its
+own personality value, its own IVs, its substructs re-ordered for that value,
+re-encrypted with the Gen 3 XOR cipher and re-checksummed. With that, the battle
+ran as a battle: `LEADER TATELIZA sent out CLAYDOL and XATU!`, each turn named its
+target (`LUNATONE, foe. 2 of 4.`), all four foes went down (`Foe CLAYDOL
+fainted!`, `Foe LUNATONE fainted!`, `Foe SOLROCK fainted!`, `Foe XATU fainted!`)
+and then `Player defeated LEADER TATELIZA!`, `A received the MIND BADGE from
+TATE and LIZA.`, `Obtained the TM04!`.
+
+The previous pass called this block a stall and blamed the duplicated slot. It
+was neither: the game was alive the whole time (frames advancing the whole way)
+sitting on a 0-PP move, because `There's no PP left for this move!` opens a
+message box that owns the pad - the loop pressed Down into it 142 times - and
+because a menu direction press was one frame long, which the pad sampler drops.
+Both are fixed (`kMenuPressFrames` in the mod, and the loop now dismisses the box
+before walking the move list), and the double battle above is what followed.
+
+**Status: PASS** - flag `0x86D` false before, true after; party `(LV 72, 166 HP)`
+and `(LV 72, 177 HP)`; transcript `reports/mossdeep-leader.txt`; checkpoint
+`mossdeep-cleared`.
 
 ## Sootopolis City Gym — 15 / 0 and 15 / 1
 

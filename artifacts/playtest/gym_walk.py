@@ -34,7 +34,10 @@ REPORTS = os.path.join(HERE, "reports")
 DECOMP = os.path.join(HERE, "..", "..", "third_party", "pokeemerald")
 
 DIRS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
-BATTLE_PRESS_LIMIT = 600
+# A double battle is twice the text of a single one and the Mossdeep leaders
+# carry four Pokémon and two Hyper Potions, so one call has to be able to see
+# the whole fight through: 600 presses ran out three-quarters of the way in.
+BATTLE_PRESS_LIMIT = 1600
 
 
 class ProgressLog(list):
@@ -137,12 +140,15 @@ def fight_if_needed(p, tag, log):
             # the party while the battle controller holds its own copy
             # desynchronises the two and the battle stops advancing.
             if text and "no PP" in text:
-                # The cursor sits on a move with no PP left. Do not press B:
-                # that leaves the move list and the next A lands on FIGHT's
-                # first slot again. Walk the list instead and take the next
-                # move; when every move is empty the game uses Struggle.
-                p.ask(cmd="emerald_a11y_action", action="down")
-                p.frames(30)
+                # The cursor sits on a move with no PP left, and the game has put
+                # up "There's no PP left for this move!" over the list. That box
+                # owns the pad: a direction press now goes nowhere, which is how
+                # this loop used to sit on the same empty move for a whole
+                # battle. Dismiss the box with A first, and only then walk the
+                # list; when every move is empty the game falls back to Struggle.
+                p.confirm(34)
+                p.flush_speech(f"{tag}-ppmsg")
+                p.action("down", 24)
                 p.confirm(34)
                 p.flush_speech(f"{tag}-pp")
                 presses += 1

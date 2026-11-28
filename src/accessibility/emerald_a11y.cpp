@@ -1331,11 +1331,18 @@ void nav_frame(Core& c, const SceneState& s) {
 }
 
 // A pad direction means two different things depending on where you are.
-// In a menu it nudges the cursor one place, which is a single-frame tap. In
-// the field the game latches a walk from a *held* key and ignores a one-frame
-// tap (it only turns you in place), so a pad direction there is a step
-// request: hold long enough for one tile, then release. That is also what a
-// blind player expects from a swipe -- one gesture, one tile.
+// In a menu it nudges the cursor one place. In the field the game latches a
+// walk from a *held* key and ignores a one-frame tap (it only turns you in
+// place), so a pad direction there is a step request: hold long enough for one
+// tile, then release. That is also what a blind player expects from a swipe --
+// one gesture, one tile.
+//
+// A one-frame menu tap is not enough either: Emerald samples the pad once per
+// frame and drops a press that lands between two samples of the same key, so a
+// short tap moved nothing in the battle menu and a doubled battle loop could
+// sit on a move it never selected. Four frames is one poll plus margin, and
+// still far short of the menu's own auto-repeat, so one action is one place.
+constexpr int kMenuPressFrames = 4;
 constexpr int kStepPressFrames = 16;
 // A step that begins by turning spends the turn before it can walk: holding
 // only long enough for the walk left the player facing the right way and still
@@ -1365,7 +1372,7 @@ void consume_actions(Core& c, const SceneState& s, const Mem& m) {
         queued.swap(g_actions);
     }
     const bool step = field_step_scene(s);
-    const int dir_press = step ? kStepPressFrames : 1;
+    const int dir_press = step ? kStepPressFrames : kMenuPressFrames;
     const int dir_release = step ? kStepReleaseFrames : 2;
     for (const auto& [raw, arg] : queued) {
         note_action(raw);   // A/B start an interaction; text (or silence) resolves it
@@ -1387,8 +1394,8 @@ void consume_actions(Core& c, const SceneState& s, const Mem& m) {
             case Action::Cancel: c.synth.tap(k::kGbaKeyB, 2, 2); break;
             case Action::Start: c.synth.tap(k::kGbaKeyStart, 2, 2); break;
             case Action::SelectItem: start_nav(s, m, arg); break;
-            case Action::NextItem: c.synth.tap(k::kGbaKeyDown, 1, 2); break;
-            case Action::PrevItem: c.synth.tap(k::kGbaKeyUp, 1, 2); break;
+            case Action::NextItem: c.synth.tap(k::kGbaKeyDown, kMenuPressFrames, 2); break;
+            case Action::PrevItem: c.synth.tap(k::kGbaKeyUp, kMenuPressFrames, 2); break;
             case Action::ReadStatus: {
                 // Scene + selection, plus the text the game last printed when
                 // there is no surface to read (dialogue, cutscene lines): the

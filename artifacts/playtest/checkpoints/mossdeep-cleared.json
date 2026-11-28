@@ -1,7 +1,7 @@
 {
  "name": "mossdeep-cleared",
  "note": "mossdeep beaten",
- "saved_at": "2026-11-28T09:46:07Z",
+ "saved_at": "2026-11-28T12:14:05Z",
  "map": [
   14,
   0
@@ -74,8 +74,8 @@
   "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
   "flag:FLAG_DEFEATED_PETALBURG_GYM": true,
   "flag:FLAG_DEFEATED_FORTREE_GYM": true,
-  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
-  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": true,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": true,
   "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
   "flag:FLAG_DEFEATED_DEWFORD_GYM": true,
   "flag:FLAG_DEFEATED_RUSTBORO_GYM": true

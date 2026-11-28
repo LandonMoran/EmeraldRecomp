@@ -286,6 +286,27 @@ def explore(p, goal, log, fh, max_steps=500):
     return False
 
 
+def switch_route(edges, start, switches, avoid, refused):
+    """The nearest floor switch reachable from here, and the route to it.
+
+    Mossdeep's statues are objects, and a colour switch rotates a group of them
+    a quarter turn. So the board is *state*: the same tile can be open in one
+    rotation and walled in the next. The switch tiles come from the map's own
+    coord events, and pressing one is an edge in the graph like any other step
+    - the difference is that it relabels the rest of the map.
+    """
+    best = None
+    for sw in switches:
+        if sw in avoid or sw == start:
+            continue
+        route = plan(edges, start, sw, avoid, refused, True)
+        if route is None:
+            route = plan(edges, start, sw, avoid, refused, False)
+        if route is not None and (best is None or len(route) < len(best[1])):
+            best = (sw, route)
+    return best if best else (None, None)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--group", type=int, required=True)
@@ -300,7 +321,10 @@ def main():
     ap.add_argument("--checkpoint", default="petalburg-cleared")
     ap.add_argument("--report", required=True)
     ap.add_argument("--explore", action="store_true")
+    ap.add_argument("--switch", action="append", default=[],
+                    help="x,y of a floor switch that rotates statues; repeatable")
     args = ap.parse_args()
+    switches = [tuple(int(v) for v in s.split(",")) for s in args.switch]
 
     p = Pad(transcript=args.report)
     fh = open(args.report + ".log", "w")
@@ -327,16 +351,25 @@ def main():
         fh.flush()
     refused = set()        # (tile, dir) the game refused, learned
     anchors = []           # tiles where the player object had to be respawned
-    for attempt in range(40 if not args.explore else 0):
+    turned = []            # switches pressed, in order: the board's history
+    for attempt in range(60 if not args.explore else 0):
         if here(p) == goal:
             break
         tiles = tiles_of(p, args.width, args.height)
         beh, _meta = live_behaviors(p, args.width, args.height)
         warps = door_pairs(args.group, args.num)
         edges = build_edges(tiles, beh, args.width, args.height, warps)
-        steps = plan(edges, here(p), goal, frozenset(people(p) - {goal}), refused, True)
+        blocked = frozenset(people(p) - {goal})
+        steps = plan(edges, here(p), goal, blocked, refused, True)
+        target = goal
         if steps is None:
-            steps = plan(edges, here(p), goal, frozenset(people(p) - {goal}), refused, False)
+            steps = plan(edges, here(p), goal, blocked, refused, False)
+        if steps is None and switches:
+            sw, route = switch_route(edges, here(p), switches, blocked, refused)
+            if sw is not None:
+                steps, target = route, sw
+                log.append("board closed at %s; walking %d steps to switch %s"
+                           % (here(p), len(route), sw))
         if steps is None:
             log.append("no route from %s (refused %d)" % (here(p), len(refused)))
             break
@@ -398,6 +431,15 @@ def main():
             if not moved:
                 break
         log.append("after attempt %d: %s" % (attempt, here(p)))
+        if target != goal and here(p) == target:
+            # Standing on the switch just fired its script: the statues turned.
+            p.frames(70)
+            drain(p, fh, "turn%d" % attempt)
+            p.flush_speech("turn%d" % attempt)
+            turned.append(target)
+            log.append("switch %s pressed, board turned (%d)" % (target, len(turned)))
+
+    log.append("switches pressed: %d %s" % (len(turned), turned))
 
     log.append("re-anchors: %d %s" % (len(anchors), anchors[:12]))
     if here(p) == goal:
