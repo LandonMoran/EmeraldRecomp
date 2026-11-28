@@ -87,6 +87,15 @@ constexpr int kMbSlideWest = 0x45;
 constexpr int kMbSlideNorth = 0x46;
 constexpr int kMbSlideSouth = 0x47;
 constexpr int kMbTrickHousePuzzle8Floor = 0x48;
+// MB_JUMP_EAST..MB_JUMP_SOUTHWEST are 0x38..0x3F, in the header's order.
+constexpr int kMbJumpEast = 0x38;
+constexpr int kMbJumpWest = 0x39;
+constexpr int kMbJumpNorth = 0x3A;
+constexpr int kMbJumpSouth = 0x3B;
+constexpr int kMbJumpNorthEast = 0x3C;
+constexpr int kMbJumpNorthWest = 0x3D;
+constexpr int kMbJumpSouthEast = 0x3E;
+constexpr int kMbJumpSouthWest = 0x3F;
 constexpr int kMbEastCurrent = 0x50;
 constexpr int kMbWestCurrent = 0x51;
 constexpr int kMbNorthCurrent = 0x52;
@@ -202,6 +211,30 @@ int behavior_at(const Mem& m, int x, int y) {
     return m.u16(attributes + static_cast<std::uint32_t>(index * 2)) & 0xFF;
 }
 
+bool is_ledge(Terrain t) {
+    return t == Terrain::LedgeEast || t == Terrain::LedgeWest ||
+           t == Terrain::LedgeNorth || t == Terrain::LedgeSouth ||
+           t == Terrain::LedgeNorthEast || t == Terrain::LedgeNorthWest ||
+           t == Terrain::LedgeSouthEast || t == Terrain::LedgeSouthWest;
+}
+
+// The way a ledge throws you. Cardinally simple; the diagonals are the same
+// step plus a corner.
+void ledge_jump(Terrain t, int* jx, int* jy) {
+    *jx = *jy = 0;
+    switch (t) {
+        case Terrain::LedgeEast: *jx = 1; break;
+        case Terrain::LedgeWest: *jx = -1; break;
+        case Terrain::LedgeNorth: *jy = -1; break;
+        case Terrain::LedgeSouth: *jy = 1; break;
+        case Terrain::LedgeNorthEast: *jx = 1; *jy = -1; break;
+        case Terrain::LedgeNorthWest: *jx = -1; *jy = -1; break;
+        case Terrain::LedgeSouthEast: *jx = 1; *jy = 1; break;
+        case Terrain::LedgeSouthWest: *jx = -1; *jy = 1; break;
+        default: break;
+    }
+}
+
 Terrain terrain_of_behavior(int behavior) {
     switch (behavior) {
         case kMbIce: return Terrain::Ice;
@@ -218,6 +251,16 @@ Terrain terrain_of_behavior(int behavior) {
         // them. They keep their own names so the cue can say which is which.
         case kMbLavaridge1FWarp: return Terrain::Pit;
         case kMbLavaridgeB1FWarp: return Terrain::Vent;
+        // Ledges block movement like a wall but are crossable from the far
+        // side, so they get their own classes and say which way they jump.
+        case kMbJumpEast: return Terrain::LedgeEast;
+        case kMbJumpWest: return Terrain::LedgeWest;
+        case kMbJumpNorth: return Terrain::LedgeNorth;
+        case kMbJumpSouth: return Terrain::LedgeSouth;
+        case kMbJumpNorthEast: return Terrain::LedgeNorthEast;
+        case kMbJumpNorthWest: return Terrain::LedgeNorthWest;
+        case kMbJumpSouthEast: return Terrain::LedgeSouthEast;
+        case kMbJumpSouthWest: return Terrain::LedgeSouthWest;
         case kMbMossdeepGymWarp:
         case kMbAquaHideoutWarp:
         case kMbBattlePyramidWarp:
@@ -342,6 +385,7 @@ struct Tracker {
     bool trigger_on = false, trigger_raised = false;
     int underfoot_notice_x = -999, underfoot_notice_y = -999;
     int hazard_x = -999, hazard_y = -999;   // last pit/vent announced
+    int ledge_x = -999, ledge_y = -999;     // last ledge announced
 
     int last_opened = 0, last_closed = 0, last_changed = 0;
     int total_changes = 0;   // room changes seen on this map (diagnostics)
@@ -411,6 +455,14 @@ const char* terrain_name(Terrain t) {
         case Terrain::WarpPanel: return "warp_panel";
         case Terrain::Pit: return "pit";
         case Terrain::Vent: return "vent";
+        case Terrain::LedgeEast: return "ledge_east";
+        case Terrain::LedgeWest: return "ledge_west";
+        case Terrain::LedgeNorth: return "ledge_north";
+        case Terrain::LedgeSouth: return "ledge_south";
+        case Terrain::LedgeNorthEast: return "ledge_north_east";
+        case Terrain::LedgeNorthWest: return "ledge_north_west";
+        case Terrain::LedgeSouthEast: return "ledge_south_east";
+        case Terrain::LedgeSouthWest: return "ledge_south_west";
         case Terrain::ArrowWarp: return "arrow_warp";
         case Terrain::GymDoor: return "gym_door";
         case Terrain::SealedDoor: return "sealed_door";
@@ -447,6 +499,17 @@ const char* terrain_speech(Terrain t) {
             return "A pit. Step on it and the floor drops you to the basement.";
         case Terrain::Vent:
             return "A steam vent. Step on it and it throws you back up.";
+        // The direction is the direction you jump, which is also the side you
+        // have to stand on. Saying "Blocked" here is what made Lavaridge's only
+        // door to the basement box invisible.
+        case Terrain::LedgeEast: return "A ledge. Jump east to cross it.";
+        case Terrain::LedgeWest: return "A ledge. Jump west to cross it.";
+        case Terrain::LedgeNorth: return "A ledge. Jump north to cross it.";
+        case Terrain::LedgeSouth: return "A ledge. Jump south to cross it.";
+        case Terrain::LedgeNorthEast: return "A ledge. Jump north-east to cross it.";
+        case Terrain::LedgeNorthWest: return "A ledge. Jump north-west to cross it.";
+        case Terrain::LedgeSouthEast: return "A ledge. Jump south-east to cross it.";
+        case Terrain::LedgeSouthWest: return "A ledge. Jump south-west to cross it.";
         case Terrain::ArrowWarp: return "A warp arrow. Step on it.";
         case Terrain::GymDoor: return "A gym door.";
         case Terrain::SealedDoor: return "A door that is shut.";
@@ -528,6 +591,12 @@ bool read_puzzle(const Mem& m, PuzzleState* out) {
         p.openE = open_way(p.blockE);
         p.openS = open_way(p.blockS);
         p.openW = open_way(p.blockW);
+        const int nx[4] = {pl.x, pl.x + 1, pl.x, pl.x - 1};
+        const int ny[4] = {pl.y - 1, pl.y, pl.y + 1, pl.y};
+        for (int i = 0; i < 4; ++i) {
+            if (is_ledge(terrain_of_behavior(behavior_at(m, nx[i], ny[i]))))
+                p.ledgeMask |= 1 << i;
+        }
     }
     p.lastMoveTiles = g_t.last_move_tiles;
     p.openedBlocks = g_t.last_opened;
@@ -674,7 +743,12 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
                                            p.y != g_t.block_y ||
                                            g_t.press_x != g_t.block_dx ||
                                            g_t.press_y != g_t.block_dy;
-                if (!passable_block(block) && changed_block) {
+                // A ledge is not a wall: it is the door you jump. Naming it
+                // twice (once as terrain, once as "Blocked") would bury the
+                // one useful word in a contradiction.
+                const Terrain into = terrain_of_behavior(
+                    behavior_at(m, p.x + g_t.press_x, p.y + g_t.press_y));
+                if (!passable_block(block) && changed_block && !is_ledge(into)) {
                     g_t.block_value = block;
                     g_t.block_x = p.x;
                     g_t.block_y = p.y;
@@ -850,6 +924,68 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
         }
     }
 
+    // ── Ledges ───────────────────────────────────────────────────────────
+    // A ledge is the one blocked tile that is a door, and the jump happens in
+    // a single press, so there is no frame where turning towards it can speak:
+    // walking straight into one produced no cue at all on the first re-walk.
+    // It is announced by distance and compass point like the pits, before the
+    // step, and the sentence carries the way you jump - a ledge only jumps one
+    // way, and standing on the landing side makes it a wall again.
+    //
+    // No settle gate here, unlike the pits: a pit is stepped onto and you stay
+    // standing, but a ledge is crossed *by* the press, so waiting for the player
+    // to stand still means the cue arrives after the jump - or never at all on a
+    // continuous walk. Two tiles is the whole approach.
+    {
+        int best = 1 << 30, bx = 0, by = 0, jump_x = 0, jump_y = 0;
+        for (int dy = -2; dy <= 2; ++dy) {
+            for (int dx = -2; dx <= 2; ++dx) {
+                const int d = std::abs(dx) + std::abs(dy);
+                if (d < 1 || d > 2) continue;
+                const Terrain t =
+                    terrain_of_behavior(behavior_at(m, p.x + dx, p.y + dy));
+                if (!is_ledge(t)) continue;
+                int jx = 0, jy = 0;
+                ledge_jump(t, &jx, &jy);
+                if (d < best) {
+                    best = d;
+                    bx = dx;
+                    by = dy;
+                    jump_x = jx;
+                    jump_y = jy;
+                }
+            }
+        }
+        if (best < (1 << 30)) {
+            // The jump vector is the way the player travels, so it points from
+            // the standing side to the landing side: same direction as the
+            // ledge seen from here. Opposite means a wall until you walk round.
+            const bool crossable = (bx * jump_x + by * jump_y) > 0;
+            // The approach cue is the one that has to beat the press, so it is
+            // not gated. The far-side cue can wait for the player to stand:
+            // otherwise the jump animation's own frames - where the player is
+            // momentarily over the ledge tile - announce a cut-off route that
+            // is not there.
+            const bool ready = crossable || g_t.still >= kSettleFrames;
+            const bool fresh = g_t.ledge_x != p.x + bx || g_t.ledge_y != p.y + by;
+            if (ready && fresh) {
+                // A map whose only affordance is ledges (Flannery's room) also
+                // has no coord events, so the read key needs telling here too.
+                g_t.puzzle_map = true;
+                g_t.ledge_x = p.x + bx;
+                g_t.ledge_y = p.y + by;
+                const std::string line =
+                    std::string("Ledge ") + (best == 1 ? "one step " : "two steps ") +
+                    compass(bx, by) + ". " +
+                    (crossable ? std::string("Jump ") + compass(jump_x, jump_y) +
+                                     " to cross it."
+                               : std::string("It only jumps ") + compass(jump_x, jump_y) +
+                                     ". You are on the far side.");
+                speak_now(line.c_str(), false);
+            }
+        }
+    }
+
     // ── Pits and vents ───────────────────────────────────────────────────
     // Lavaridge Gym is two floors built out of nothing but these tiles: one
     // drops you into the basement, one throws you back up. Learning that by
@@ -941,7 +1077,12 @@ std::string puzzle_context_speech(const PuzzleState& p) {
     // Ways out of the tile underfoot. Blocked is the fact a wall and a beam
     // share, so this reads the same in every gym.
     bool open[4] = {p.openN, p.openE, p.openS, p.openW};
-    bool blocked[4] = {!p.openN, !p.openE, !p.openS, !p.openW};
+    bool ledge[4];
+    for (int i = 0; i < 4; ++i) ledge[i] = ((p.ledgeMask >> i) & 1) != 0;
+    // A ledge is blocked to walk into but is not a wall: it is reported on its
+    // own line so "Blocked south." never stands where the only door is.
+    bool blocked[4] = {!p.openN && !ledge[0], !p.openE && !ledge[1],
+                       !p.openS && !ledge[2], !p.openW && !ledge[3]};
     int open_count = 0;
     for (int i = 0; i < 4; ++i) open_count += open[i] ? 1 : 0;
     if (open_count == 0) {
@@ -953,10 +1094,25 @@ std::string puzzle_context_speech(const PuzzleState& p) {
         // Only name the blocked ways when there are few enough to be useful.
         int blocked_count = 4 - open_count;
         if (blocked_count <= 2) {
-            out += " Blocked ";
-            append_directions(&out, blocked);
-            out += '.';
+            bool walls[4];
+            int wall_count = 0;
+            for (int i = 0; i < 4; ++i) {
+                walls[i] = blocked[i];
+                wall_count += walls[i] ? 1 : 0;
+            }
+            if (wall_count > 0) {
+                out += " Blocked ";
+                append_directions(&out, walls);
+                out += '.';
+            }
         }
+    }
+    int ledge_count = 0;
+    for (int i = 0; i < 4; ++i) ledge_count += ledge[i] ? 1 : 0;
+    if (ledge_count > 0) {
+        out += " Ledge ";
+        append_directions(&out, ledge);
+        out += '.';
     }
     return out;
 }

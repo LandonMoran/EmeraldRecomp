@@ -126,11 +126,13 @@ def walk(p, log, route=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="lavaridge-gym")
+    ap.add_argument("--report", default=REPORT,
+                    help="transcript to write (default: the first walk's)")
     ap.add_argument("--resume", action="store_true",
                     help="keep the current game state and walk the detour "
                          "around the buried trainer who now stands on (5,2)")
     args = ap.parse_args()
-    p = Pad(transcript=REPORT)
+    p = Pad(transcript=args.report)
     log = []
     route = REMAINDER if args.resume else ROUTE
     if not args.resume:

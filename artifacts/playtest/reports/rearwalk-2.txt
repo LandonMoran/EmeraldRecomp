@@ -1,0 +1,64 @@
+[f0-0 f104081] TORCHIC gained 433 EXP. Points!
+[f0-0 f104283] Player defeated KINDLER COLE!
+[f0-0 f104458] I’m blinded by sweat in my eyes…
+[f0-0 f104619] A got 736 for winning!
+[f0-0 f104881] Overworld.
+[f0-0 f104978] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f104978] Trainer here. Press A to talk.
+[f0-0 f104982] Can your POKéMON withstand 392-degree heat?
+[f0-0 f105340] Battle.
+[f0-0 f105520] COOLTRAINER GERALD would like to battle!
+[f0-0 f105709] COOLTRAINER GERALD sent out KECLEON!
+[f0-0 f105982] Go! TORCHIC!
+[f0-0 f106179] Fight, top left.
+[f0-0 f106213] SCRATCH, NORMAL, PP 21 of 35. 1 of 4
+[f0-0 f106262] TORCHIC used SCRATCH!
+[f0-0 f106583] Foe KECLEON fainted!
+[f0-0 f106703] TORCHIC gained 649 EXP. Points!
+[f0-0 f106905] Player defeated COOLTRAINER GERALD!
+[f0-0 f107122] It didn’t burn hotly enough…
+[f0-0 f107241] A got 1104 for winning!
+[f0-0 f107503] Overworld.
+[f0-0 f107698] Pit two steps north-east.
+[f0-0 f107845] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f107845] Trainer here. Press A to talk.
+[f0-0 f107849] I’m trying to relieve my stress. Don’t come along and stress me out!
+[f0-0 f108309] Battle.
+[f0-0 f108484] KINDLER AXLE would like to battle!
+[f0-0 f108618] KINDLER AXLE sent out NUMEL!
+[f0-0 f108866] Go! TORCHIC!
+[f0-0 f109058] Fight, top left.
+[f0-0 f109066] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[f0-0 f109115] TORCHIC used SCRATCH!
+[f0-0 f109434] Foe NUMEL fainted!
+[f0-0 f109556] TORCHIC gained 433 EXP. Points!
+[f0-0 f109758] Player defeated KINDLER AXLE!
+[f0-0 f109933] I hope FLANNERY flames you good!
+[f0-0 f110094] A got 736 for winning!
+[f0-0 f110356] Overworld.
+[f0-0 f110435] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110455] Pit one step west.
+[f0-0 f110479] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110499] Pit underfoot.
+[f0-0 f110575] A steam vent. Step on it and it throws you back up.
+[f0-0 f110575] Ledge two steps south. Jump south to cross it.
+[f0-0 f110575] Vent underfoot.
+[f0-0 f110575] New area. Lavaridge Town Gym B.
+[f0-0 f110699] Vent two steps north.
+[f0-0 f110731] A steam vent. Step on it and it throws you back up.
+[f0-0 f110803] Vent underfoot.
+[f0-0 f110864] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110864] Pit underfoot.
+[f0-0 f110864] New area. Lavaridge Town Gym.
+[f0-0 f111003] Pit two steps north-east.
+[f0-0 f111211] Pit two steps east.
+[f0-0 f111243] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f111243] Trainer here. Press A to talk.
+[f0-0 f111362] Um… Okay, I’ll battle with you.
+[f0-0 f111662] Battle.
+[f0-0 f111839] BATTLE GIRL DANIELLE would like to battle!
+[f0-0 f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[f0-0 f112275] Go! TORCHIC!
+[f0-0 f112470] Fight, top left.
+[f0-0 f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[f0-0 f112520] Foe MEDITITE used DETECT!

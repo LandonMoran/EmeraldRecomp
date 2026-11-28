@@ -31,7 +31,7 @@ means a player cannot get it at all.
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
 | Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
-| Lavaridge gym | PASS | the pit/vent maze is spoken (`Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.`) and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). The route to Flannery is 65 cues - three falls, three geysers and a jump-south ledge at B1F (10,10) that is the only way into the box holding the geyser for her room - walked from the entrance on the cues alone. An ambush from Kindler Danielle left her standing on the pit at (5,2), so the walk took a 24-step detour around her. Flannery beaten: `Player defeated LEADER FLANNERY!`, `A received the HEAT BADGE from FLANNERY.`, `Obtained the TM50!`, `A put away the TM50 in the TMs HMs POCKET.`, `Registered GYM LEADER FLANNERY in the POKéNAV.` |
+| Lavaridge gym | PASS | the pit/vent maze is spoken (`Pit one step west.`, `Pit underfoot.`, `Vent underfoot.`, `A pit. Step on it and the floor drops you to the basement.`) and both floors read out (`Puzzle. Open north, east and west. Blocked south.`). Its one-way ledges are spoken too, which is what makes the door to the basement box audible: `Ledge one step south. Jump south to cross it.`, `A ledge. Jump south to cross it.`, and in the read key `Blocked west. Ledge south.` - the first re-walk, before that cue existed, heard nothing at the jump. The route to Flannery is 65 cues - three falls, three geysers and a jump-south ledge at B1F (10,10) that is the only way into the box holding the geyser for her room - walked from the entrance on the cues alone. An ambush from Kindler Danielle left her standing on the pit at (5,2), so the walk took a 24-step detour around her. Flannery beaten: `Player defeated LEADER FLANNERY!`, `A received the HEAT BADGE from FLANNERY.`, `Obtained the TM50!`, `A put away the TM50 in the TMs HMs POCKET.`, `Registered GYM LEADER FLANNERY in the POKéNAV.` |
 
 ## The blocker, in order
 
@@ -536,12 +536,15 @@ tested in game tile by tile:
 
 With pits, vents and ledges in the model, the walk is 65 cues from the entrance
 (`reports/lavaridge-walk.txt`, driven by `lavaridge_route.py`): three falls,
-three geysers, and the ledge jump into the box. Noticing a pit, a vent or a
-ledge is the mod's job and it does it by name and distance, so the route was
-followed without looking at a map:
+three geysers, and the ledge jump into the box. Each fall and each lift is
+announced by name and distance while walking:
 
 > `Pit two steps north.` · `Pit one step west.` · `Vent underfoot.` · `New area.
 > Lavaridge Town Gym B.` · `Pit underfoot.` · `New area. Lavaridge Town Gym.`
+
+The ledge on the route is the case that needed the fix described at the end of
+this section: it was the one door that was silent, so this first walk was
+followed partly on the level data rather than on speech.
 
 One thing the model could not know: Kindler Danielle ambushes out of the pit at
 1F (5,2) and then stands on it, so the pit is gone. The walk took a 24-step
@@ -571,11 +574,42 @@ The prize text is three boxes long and the mod reads each one, so the badge and
 the TM are both audible without touching the menu. Transcript:
 `reports/lavaridge-flannery.txt` and `reports/lavaridge-prize2.txt`.
 
-**Gap this run exposed:** nothing in the mod says a tile is a *ledge* you can
-jump. `Blocked south.` is what a ledge sounds like from the north side, so the
-door into the basement box was silent until the level data was read by hand. The
-fix is a `Ledge` terrain that says `A ledge. Jump south.` the way pits say
-`A pit.`; it is not in this build.
+### The gap this run exposed, and the re-walk that found it again
+
+The first pass got here only because the ledges were read out of the level data
+by hand. To a player, the box's door was `Blocked south.` - a wall. The fix was
+a `Ledge` terrain (behaviour `MB_JUMP_*`, eight directions) that names the way
+you jump, and it needed three deliveries before a walk could hear it:
+
+| When | What is said |
+|---|---|
+| walking up to one | `Ledge one step south. Jump south to cross it.` |
+| facing one | `A ledge. Jump south to cross it.` |
+| read key beside one | `Overworld. Puzzle. Open north and east. Blocked west. Ledge south.` |
+| standing on the landing side | `Ledge two steps east. It only jumps south. You are on the far side.` |
+
+The first re-walk is what proved the first attempt was not enough. With only the
+terrain sentence (spoken when you *face* the ledge), the 65-cue walk produced
+**no ledge line at all** at the jump into the box: a press into a ledge turns and
+jumps in one motion, so there is no frame where the player is standing still
+facing it. Grepping the transcript for `ledge` returned nothing.
+
+The approach cue was added for that, and it must not wait for the player to
+settle - the second re-walk confirmed the sentence arrives on the way in:
+
+> `Ledge two steps south. Jump south to cross it.` · `A ledge. Jump south to cross it.`
+> · landed at B1F (10,11) · `Ledge one step north. It only jumps south. You are on
+> the far side.`
+
+A press into a ledge also stopped saying `Blocked ...`: naming it twice, once as
+a door and once as a wall, buried the useful word.
+
+**What is still true after the fix:** the mod now *names* every door on the
+route, but it does not propose one. The order of the 65 steps still came from the
+level data; a player exploring by ear has to find the doors, and this run
+confirms it can hear each of them. The far-side cue waits for the player to stop
+moving, and mobile-play repeats of the same sentence are dropped, so a
+second pass over the same ledge is quieter than the first.
 
 ## Using a potion in battle, end to end
 

@@ -1,0 +1,192 @@
+[walk00-left f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[walk00-left f95382] A warp arrow. Step on it.
+[walk00-left f95382] Door here. Press A to exit.
+[walk00-left f95406] Overworld.
+[walk00-left f95423] Ledge two steps south. Jump south to cross it.
+[walk00-left f95423] New area. Lavaridge Town Gym B.
+[walk00-left f95656] A ledge. Jump south to cross it.
+[walk00-left f95656] Door two steps west. Press A to exit.
+[walk00-left f95676] Vent two steps west.
+[walk00-left f95708] A ledge. Jump south to cross it.
+[walk00-left f95382] A warp arrow. Step on it.
+[walk00-left f95382] New area. Lavaridge Town Gym.
+[walk01-left f95436] Door two steps south-west. Press A to exit.
+[walk01-left f95456] Pit two steps south-west.
+[walk02-up f95496] Person east. Press A to talk.
+[walk07-up f95768] Ledge two steps east. It only jumps south. You are on the far side.
+[walk10-up f95904] Door two steps north-west. Press A to exit.
+[walk10-up f95924] Pit two steps north-west.
+[walk12-left f96008] A pit. Step on it and the floor drops you to the basement.
+[walk12-left f96036] Pit underfoot.
+[walk13-down f96112] A steam vent. Step on it and it throws you back up.
+[walk13-down f96112] Vent underfoot.
+[walk13-down f96112] New area. Lavaridge Town Gym B.
+[walk13-down f96208] Ledge two steps east. It only jumps south. You are on the far side.
+[walk14-down f96260] Ledge two steps west. It only jumps south. You are on the far side.
+[walk18-down f96468] Ledge two steps east. It only jumps south. You are on the far side.
+[walk23-left f96708] Door two steps south-west. Press A to exit.
+[walk23-left f96728] Vent two steps north-west.
+[walk24-left f96760] Trainer south. Press A to talk.
+[fight24-0 f96875] A steam vent. Step on it and it throws you back up.
+[fight24-0 f96879] Come on, get with it! Let’s go before my feelings cool!
+[fight24-0 f97275] Battle.
+[fight24-0 f97450] KINDLER JACE would like to battle!
+[fight24-0 f97584] KINDLER JACE sent out SLUGMA!
+[fight24-0 f97781] Go! TORCHIC!
+[fight24-0 f97979] Fight, top left.
+[fight24-0 f98000] SCRATCH, NORMAL, PP 24 of 35. 1 of 4
+[fight24-0 f98039] TORCHIC used SCRATCH!
+[fight24-6 f98345] Foe SLUGMA fainted!
+[fight24-8 f98472] TORCHIC gained 384 EXP. Points!
+[fight24-13 f98673] Player defeated KINDLER JACE!
+[fight24-17 f98849] It’s so hot, and yet my heart is clutched by ice…
+[fight24-22 f99052] A got 736 for winning!
+[fight24-28 f99313] Overworld.
+[fight24-29 f99410] A steam vent. Step on it and it throws you back up.
+[fight24-29 f99410] Trainer here. Press A to talk.
+[fight24-29 f99414] As much as I love mountains, I especially love volcanoes.
+[fight24-35 f99815] Battle.
+[fight24-38 f99992] HIKER ELI would like to battle!
+[fight24-42 f100130] HIKER ELI sent out NUMEL!
+[fight24-47 f100374] Go! TORCHIC!
+[fight24-52 f100570] Fight, top left.
+[fight24-53 f100592] SCRATCH, NORMAL, PP 23 of 35. 1 of 4
+[fight24-54 f100641] TORCHIC used SCRATCH!
+[fight24-61 f100960] Foe NUMEL fainted!
+[fight24-63 f101082] TORCHIC gained 433 EXP. Points!
+[fight24-68 f101284] Player defeated HIKER ELI!
+[fight24-72 f101459] Well, it seems to me I lost without ever being in control.
+[fight24-78 f101704] A got 920 for winning!
+[fight24-83 f101942] Door one step south. Press A to exit.
+[fight24-84 f101966] Overworld.
+[walk26-up f102097] Trainer east. Press A to talk.
+[walk27-up f102141] Door here. Press A to exit.
+[walk28-up f102213] Vent two steps west.
+[f0-0 f104081] TORCHIC gained 433 EXP. Points!
+[f0-0 f104283] Player defeated KINDLER COLE!
+[f0-0 f104458] I’m blinded by sweat in my eyes…
+[f0-0 f104619] A got 736 for winning!
+[f0-0 f104881] Overworld.
+[f0-0 f104978] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f104978] Trainer here. Press A to talk.
+[f0-0 f104982] Can your POKéMON withstand 392-degree heat?
+[f0-0 f105340] Battle.
+[f0-0 f105520] COOLTRAINER GERALD would like to battle!
+[f0-0 f105709] COOLTRAINER GERALD sent out KECLEON!
+[f0-0 f105982] Go! TORCHIC!
+[f0-0 f106179] Fight, top left.
+[f0-0 f106213] SCRATCH, NORMAL, PP 21 of 35. 1 of 4
+[f0-0 f106262] TORCHIC used SCRATCH!
+[f0-0 f106583] Foe KECLEON fainted!
+[f0-0 f106703] TORCHIC gained 649 EXP. Points!
+[f0-0 f106905] Player defeated COOLTRAINER GERALD!
+[f0-0 f107122] It didn’t burn hotly enough…
+[f0-0 f107241] A got 1104 for winning!
+[f0-0 f107503] Overworld.
+[f0-0 f107698] Pit two steps north-east.
+[f0-0 f107845] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f107845] Trainer here. Press A to talk.
+[f0-0 f107849] I’m trying to relieve my stress. Don’t come along and stress me out!
+[f0-0 f108309] Battle.
+[f0-0 f108484] KINDLER AXLE would like to battle!
+[f0-0 f108618] KINDLER AXLE sent out NUMEL!
+[f0-0 f108866] Go! TORCHIC!
+[f0-0 f109058] Fight, top left.
+[f0-0 f109066] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[f0-0 f109115] TORCHIC used SCRATCH!
+[f0-0 f109434] Foe NUMEL fainted!
+[f0-0 f109556] TORCHIC gained 433 EXP. Points!
+[f0-0 f109758] Player defeated KINDLER AXLE!
+[f0-0 f109933] I hope FLANNERY flames you good!
+[f0-0 f110094] A got 736 for winning!
+[f0-0 f110356] Overworld.
+[f0-0 f110435] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110455] Pit one step west.
+[f0-0 f110479] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110499] Pit underfoot.
+[f0-0 f110575] A steam vent. Step on it and it throws you back up.
+[f0-0 f110575] Ledge two steps south. Jump south to cross it.
+[f0-0 f110575] Vent underfoot.
+[f0-0 f110575] New area. Lavaridge Town Gym B.
+[f0-0 f110699] Vent two steps north.
+[f0-0 f110731] A steam vent. Step on it and it throws you back up.
+[f0-0 f110803] Vent underfoot.
+[f0-0 f110864] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f110864] Pit underfoot.
+[f0-0 f110864] New area. Lavaridge Town Gym.
+[f0-0 f111003] Pit two steps north-east.
+[f0-0 f111211] Pit two steps east.
+[f0-0 f111243] A pit. Step on it and the floor drops you to the basement.
+[f0-0 f111243] Trainer here. Press A to talk.
+[f0-0 f111362] Um… Okay, I’ll battle with you.
+[f0-0 f111662] Battle.
+[f0-0 f111839] BATTLE GIRL DANIELLE would like to battle!
+[f0-0 f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[f0-0 f112275] Go! TORCHIC!
+[f0-0 f112470] Fight, top left.
+[f0-0 f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[f0-0 f112520] Foe MEDITITE used DETECT!
+[walk00-down f107241] A got 1104 for winning!
+[walk00-down f107503] Overworld.
+[walk00-down f107698] Pit two steps north-east.
+[walk00-down f107845] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f107845] Trainer here. Press A to talk.
+[walk00-down f107849] I’m trying to relieve my stress. Don’t come along and stress me out!
+[walk00-down f108309] Battle.
+[walk00-down f108484] KINDLER AXLE would like to battle!
+[walk00-down f108618] KINDLER AXLE sent out NUMEL!
+[walk00-down f108866] Go! TORCHIC!
+[walk00-down f109058] Fight, top left.
+[walk00-down f109066] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[walk00-down f109115] TORCHIC used SCRATCH!
+[walk00-down f109434] Foe NUMEL fainted!
+[walk00-down f109556] TORCHIC gained 433 EXP. Points!
+[walk00-down f109758] Player defeated KINDLER AXLE!
+[walk00-down f109933] I hope FLANNERY flames you good!
+[walk00-down f110094] A got 736 for winning!
+[walk00-down f110356] Overworld.
+[walk00-down f110435] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110455] Pit one step west.
+[walk00-down f110479] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110499] Pit underfoot.
+[walk00-down f110575] A steam vent. Step on it and it throws you back up.
+[walk00-down f110575] Ledge two steps south. Jump south to cross it.
+[walk00-down f110575] Vent underfoot.
+[walk00-down f110575] New area. Lavaridge Town Gym B.
+[walk00-down f110699] Vent two steps north.
+[walk00-down f110731] A steam vent. Step on it and it throws you back up.
+[walk00-down f110803] Vent underfoot.
+[walk00-down f110864] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110864] Pit underfoot.
+[walk00-down f110864] New area. Lavaridge Town Gym.
+[walk00-down f111003] Pit two steps north-east.
+[walk00-down f111211] Pit two steps east.
+[walk00-down f111243] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f111243] Trainer here. Press A to talk.
+[walk00-down f111362] Um… Okay, I’ll battle with you.
+[walk00-down f111662] Battle.
+[walk00-down f111839] BATTLE GIRL DANIELLE would like to battle!
+[walk00-down f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[walk00-down f112275] Go! TORCHIC!
+[walk00-down f112470] Fight, top left.
+[walk00-down f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f112520] Foe MEDITITE used DETECT!
+[walk00-down f112731] Foe MEDITITE protected itself!
+[walk00-down f112918] TORCHIC is paralyzed! It can’t move!
+[walk00-down f113170] Fight, top left.
+[walk00-down f113187] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f113478] Foe MEDITITE used BIDE!
+[walk00-down f113650] Fight, top left.
+[walk00-down f113691] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f113739] TORCHIC is paralyzed! It can’t move!
+[walk00-down f113982] Foe MEDITITE is storing energy!
+[walk00-down f114173] Fight, top left.
+[walk00-down f114195] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f114244] TORCHIC used SCRATCH!
+[walk00-down f114459] A critical hit!
+[walk00-down f114673] Foe MEDITITE fainted!
+[walk00-down f114793] TORCHIC gained 448 EXP. Points!
+[walk00-down f114994] Player defeated BATTLE GIRL DANIELLE!
+[walk00-down f115212] Oh, but you’re too strong.
+[walk00-down f115331] A got 552 for winning!
+[walk00-down f115593] Overworld.

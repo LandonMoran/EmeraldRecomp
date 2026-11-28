@@ -50,6 +50,19 @@ enum class Terrain : int {
     WarpPanel,        // Mossdeep gym warp panels, Trick House floors
     Pit,              // MB_LAVARIDGE_GYM_1F_WARP: the floor gives way
     Vent,             // MB_LAVARIDGE_GYM_B1F_WARP: steam throws you back up
+    // MB_JUMP_*: one-way ledges. They carry collision, so a collision-only
+    // reading calls them walls, but the player jumps them from the opposite
+    // side. The direction in the name is the way you jump, which is the one
+    // fact a player without sight cannot otherwise get: Lavaridge's basement
+    // box is entered over a ledge and there is no other door.
+    LedgeEast,
+    LedgeWest,
+    LedgeNorth,
+    LedgeSouth,
+    LedgeNorthEast,
+    LedgeNorthWest,
+    LedgeSouthEast,
+    LedgeSouthWest,
     ArrowWarp,        // directional warp arrows
     GymDoor,          // MB_PETALBURG_GYM_DOOR
     SealedDoor,       // closed Sootopolis / Sky Pillar / Trick House puzzle door
@@ -94,6 +107,11 @@ struct PuzzleState {
     // route a maze without guessing and without reading anything the player
     // cannot hear.
     bool openN = false, openE = false, openS = false, openW = false;
+
+    // Neighbouring tiles that are ledges: bit 0 north, 1 east, 2 south, 3 west.
+    // A ledge is blocked to walk into but crossable by jumping, so it is the
+    // one blocked direction the read key must not call a wall.
+    int ledgeMask = 0;
 
     // The grid those answers came from, and the raw blocks, for diagnosing a
     // read that disagrees with the game.

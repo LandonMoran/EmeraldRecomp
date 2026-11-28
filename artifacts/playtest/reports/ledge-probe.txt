@@ -1,0 +1,69 @@
+[scaffold] force_map -> [4, 1] at (11,9)
+[4F f110864] Pit underfoot.
+[4F f110864] New area. Lavaridge Town Gym.
+[4F f111003] Pit two steps north-east.
+[4F f111211] Pit two steps east.
+[4F f111243] A pit. Step on it and the floor drops you to the basement.
+[4F f111243] Trainer here. Press A to talk.
+[4F f111362] Um… Okay, I’ll battle with you.
+[4F f111662] Battle.
+[4F f111839] BATTLE GIRL DANIELLE would like to battle!
+[4F f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[4F f112275] Go! TORCHIC!
+[4F f112470] Fight, top left.
+[4F f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[4F f112520] Foe MEDITITE used DETECT!
+[4F f112737] Foe MEDITITE protected itself!
+[4F f112922] TORCHIC used SCRATCH!
+[4F f113041] Foe MEDITITE protected itself!
+[4F f113235] Fight, top left.
+[4F f113251] SCRATCH, NORMAL, PP 18 of 35. 1 of 4
+[4F f113300] TORCHIC used SCRATCH!
+[4F f113605] Foe MEDITITE fainted!
+[4F f113711] TORCHIC gained 448 EXP. Points!
+[4F f113912] Player defeated BATTLE GIRL DANIELLE!
+[4F f114130] Oh, but you’re too strong.
+[4F f114249] A got 552 for winning!
+[4F f114511] Overworld.
+[4F f114642] A pit. Step on it and the floor drops you to the basement.
+[4F f114662] Pit one step west.
+[4F f114686] A pit. Step on it and the floor drops you to the basement.
+[4F f114706] Pit underfoot.
+[4F f114782] A steam vent. Step on it and it throws you back up.
+[4F f114782] Vent underfoot.
+[4F f114782] New area. Lavaridge Town Gym B.
+[4F f115018] Vent two steps east.
+[4F f115050] A steam vent. Step on it and it throws you back up.
+[4F f115114] Vent underfoot.
+[4F f115176] A pit. Step on it and the floor drops you to the basement.
+[4F f115176] Pit underfoot.
+[4F f115176] New area. Lavaridge Town Gym.
+[4F f115314] Pit two steps south.
+[4F f115346] A pit. Step on it and the floor drops you to the basement.
+[4F f115502] A pit. Step on it and the floor drops you to the basement.
+[4F f115530] Pit underfoot.
+[4F f115607] New area. Lavaridge Town Gym B.
+[4F f115754] Ledge two steps south. Jump south to cross it.
+[4F f115786] A ledge. Jump south to cross it.
+[4F f115786] Door two steps west. Press A to exit.
+[4F f115806] Vent two steps west.
+[4F f115838] A ledge. Jump south to cross it.
+[4F f115910] Vent two steps east.
+[4F f115950] A steam vent. Step on it and it throws you back up.
+[4F f115970] Ledge two steps north. It only jumps south. You are on the far side.
+[4F f115994] A steam vent. Step on it and it throws you back up.
+[4F f116014] Ledge two steps north. It only jumps south. You are on the far side.
+[4F f116014] Vent underfoot.
+[4F f116076] A pit. Step on it and the floor drops you to the basement.
+[4F f116076] A ledge. Jump south to cross it.
+[4F f116076] Ledge one step south. Jump south to cross it.
+[4F f116076] Pit underfoot.
+[4F f116076] New area. Lavaridge Town Gym.
+[4F f116129] Ledge one step south. Jump south to cross it.
+[4F f116194] Object here. Press A.
+[4F f116252] Pit one step east.
+[4F f116252] Trainer east. Press A to talk.
+[scaffold] force_map -> [4, 1] at (11,10)
+[scaffold] force_map -> [4, 1] at (11,11)
+[scaffold] force_map -> [4, 2] at (17,15)
+[scaffold] force_map -> [4, 2] at (17,16)
