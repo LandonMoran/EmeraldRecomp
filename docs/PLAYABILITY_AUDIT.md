@@ -113,7 +113,16 @@ Gender is spoken as a word now. The game's font has `'♂' = B5` and `'♀' = B6
 the decoder used to pass those through as U+2642/U+2640 - characters Unicode
 classifies as emoji, which is why a voice could say "male sign emoji" or nothing.
 Holding the line until the HP settles is what keeps a heal to one sentence, since
-the bar repaints the current-HP piece on every step.
+the bar repaints the current-HP piece on every step. The hold also waits for the
+screen to be named, because the row prints on the frame the screen opens and the
+classifier needs more frames than that: the order heard is now
+
+```
+Party.
+AAAAAAAAAA, level 5, male, 400 out of 400 HP.
+```
+
+instead of the row arriving first.
 
 The dev warp's `avatar flags 0x01` refusal was checked too, and the guard is
 right: `PLAYER_AVATAR_FLAG_CONTROLLABLE` really is `1 << 5`, so the flag was

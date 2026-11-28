@@ -99,6 +99,7 @@ std::string g_message;          // latest spoken game text (for repeat/status)
 // says the result once instead of once per frame.
 std::string g_party_pending;
 std::uint64_t g_party_pending_at = 0;
+bool g_kind_announced = false;   // the current screen has said its name
 
 // ── Diagnostic log (TCP) ─────────────────────────────────────────────────
 
@@ -1435,15 +1436,24 @@ void watch(const SceneState& s, const Mem& m) {
         g_had_scene = true;
         g_kind = s.kind;
         g_kind_since = g_frame;
+        g_kind_announced = false;
     }
-    if (g_frame - g_kind_since >= kSceneStableFrames) announce_scene(s.kind);
+    if (g_frame - g_kind_since >= kSceneStableFrames) {
+        announce_scene(s.kind);
+        g_kind_announced = true;
+    }
 
     consume_prints(s, m);
     poll_message_text(s, m);
 
     // Speak a held party row only after the HP stops changing, so the animated
-    // bar produces one sentence rather than one per step.
-    if (!g_party_pending.empty() && g_frame - g_party_pending_at >= 12) {
+    // bar produces one sentence rather than one per step - and only after the
+    // screen has been named. The row prints on the frame the screen opens, while
+    // the classifier needs more frames than that to know it is the party menu, so
+    // without this wait the row arrived before "Party.". The cap keeps a
+    // flickering classifier from holding the line forever.
+    if (!g_party_pending.empty() && g_frame - g_party_pending_at >= 12 &&
+        (g_kind_announced || g_frame - g_party_pending_at >= 90)) {
         if (g_party_pending != g_message) {
             g_message = g_party_pending;
             say(g_party_pending, false);
