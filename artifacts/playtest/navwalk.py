@@ -70,19 +70,25 @@ class Explorer:
         return True
 
     def _pad_guard(self, tag):
-        """A dialogue box owns the pad after a map load; press A until it is gone."""
-        if self.p.scene() == "overworld":
+        """A dialogue or cutscene owns the pad; let it play and advance it.
+
+        Pressing A in a tight loop does not get through a scripted scene: it
+        needs frames to walk its actors and dwell on each line. Wait first,
+        then advance one line, and only report the pad as clear when the mod
+        itself says it is unlocked with no message box open.
+        """
+        for i in range(18):
             d = self.p.ask(cmd="emerald_dev_state")
-            if not d.get("controls_locked") and not d.get("message_box"):
-                return False
-        for i in range(14):
-            self.p.confirm(70)
+            free = (self.p.scene() == "overworld"
+                    and not d.get("controls_locked")
+                    and not d.get("message_box"))
+            if free:
+                if i:
+                    self.p.say(tag, "waited out a scene that owned the pad")
+                return bool(i)
+            self.p.frames(150)
+            self.p.confirm(60)
             self.p.flush_speech(f"{tag}pad{i}")
-            d = self.p.ask(cmd="emerald_dev_state")
-            if (self.p.scene() == "overworld" and not d.get("controls_locked")
-                    and not d.get("message_box")):
-                self.p.say(tag, "cleared a dialogue that owned the pad")
-                return True
         return True
 
     def probe(self, direction, tag=None):
