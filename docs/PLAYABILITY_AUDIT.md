@@ -290,6 +290,52 @@ which is a long automation job (Littleroot, Route 101 rescue, Petalburg, Petalbu
 Woods, Rustboro gym, Devon parts, Briney's boat, Route 110) rather than a session's
 work. **Mauville stays PARTIAL.**
 
+### A party written into the save: it fights, and then the battle stops
+
+The Mauville checkpoint's party count is **zero**, which is why the trainers could
+never be fought. Copying the level-50 test Pokémon's 100-byte party struct out of
+`party-lab` into slot 0 and setting the count byte to 1 does produce a Pokémon
+that battles. Two things had to be fixed on the way, and both are worth knowing:
+
+- The copied mon is a traded Pokémon, so at level 50 with no badges it disobeyed:
+  `AAAAAAAAAA turned away!`. Writing the player's own OTID (`0x816EACCF`, IDNo.
+  44239) over it makes it obey - and it has to be re-encrypted, because the party
+  substructs are XORed with `PID ^ OTID`. Changing the OTID alone turns the
+  Pokémon into a **Bad Egg**: that is exactly what the next battle showed
+  (`Go! Bad EGG!`, HP and level garbage).
+- Its experience field held `962618539` at level 50, so the EXP bar had no sane
+  value to fill to; it was rewritten to `125000`, the level-50 value.
+
+With both fixes the Pokémon fights, and the battle reads correctly by ear:
+
+> `BATTLE GIRL VIVIAN sent out MEDITITE!` · `Go! AAAAAAAAAA!` · `Foe MEDITITE used
+> DETECT!` · `Foe MEDITITE protected itself!` · `AAAAAAAAAA used SCRATCH!` · `Foe
+> MEDITITE fainted!` · `AAAAAAAAAA gained 331 EXP. Points!`
+
+and then the battle **stops there**. Frames keep advancing (39092 -> 40290 across
+successive reads) but A presses are ignored, the speech stays on the EXP line, and
+the mod reports `cue: interact_fail (fail)` on each press - a field cue, from a
+scene that still says battle. The trainer's defeat flag never sets:
+`FLAG` 0x789 for Vivian stays false, so no trainer can be cleared this way.
+
+The likely cause is the injected mon itself: it is the test-block Pokémon, whose
+species/growth data is not a real species, so whatever runs after the EXP line
+cannot finish. Fixing that means writing a real Pokémon (valid species with
+computed stats), not a test block - which is a bigger piece of work than a session's
+edit.
+
+### Switch 1 cannot be pressed without beating VIVIAN
+
+Tried from the clean checkpoint (party count 0, no flags, no warp): the west
+column and the (0,16) tile do not reach the plate. The route in from (2,19) gives
+`up` to (2,17), `left` refused (`Blocked west.`), `up` to (2,16) with
+`Trainer west. Press A to talk.`, and (2,15) reads `Plate two steps west.` - the
+plate at (0,15) sits behind (1,15), and stepping on (1,15) or (1,14) starts
+VIVIAN's battle. So the four plates cannot be pressed by walking around the
+trainers; one of them has to be beaten, and battles currently cannot be won.
+
+**Mauville stays PARTIAL.**
+
 ## Using a potion in battle, end to end
 
 Party at 12 of 28 HP, foe at 27 of 39, cursor on FIGHT. One press right and the
