@@ -106,6 +106,7 @@ answers the whole question instead of saying `Overworld.`:
 | In the gym, away from the switches | `Overworld. Puzzle. Plate seven steps north.` |
 | Standing on a switch | `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.` |
 | Stepping on a switch that fires | `The room changed north-east.` and `Plate underfoot.` |
+| Stepping on a switch that swaps the maze | `Paths swapped north-east.` and `Plate underfoot.` |
 
 The nearest trigger is described by distance and compass point, and a trigger
 that is solid is called **raised** - a raised switch is the pillar a sighted
@@ -126,6 +127,8 @@ the read has to agree with the refusal next to it.
 - `Blocked north.` - a refused step into a beam or wall, once per tile,
   direction and block value, so a beam that flips is heard again.
 - `The room changed north-east.` - the press, with the direction of the change.
+- `Paths swapped north-east.` - a press that closed a way while opening another,
+  which is every Mauville press: the beams are toggled, not cleared.
 - `New area. Mauville City Gym.` on entry.
 
 The route to switch 2 is repeatable from the checkpoint and was walked on these
@@ -185,9 +188,15 @@ beam** between its On and Off variant on each press. So each switch press
 alternates the maze, and the four plates are the only way to change which half
 the beams open. Walking east along y=12 also crosses switch 2, so crossing it
 while another switch was last pressed re-toggles the beams: that is how the
-right-hand pocket kept closing between attempts. Worth a cue of its own later
-(`the beams flipped`), which the current `The room changed <direction>.` does
-not say.
+right-hand pocket kept closing between attempts.
+
+A press that does this used to say `The room changed <direction>.`, the same
+line as a change that only rewrites the switch tile, so the alternation was
+inaudible. A change that both opens and closes a path now says
+**`Paths swapped <direction>.`** - heard on a real switch 2 press as
+`Paths swapped north-east.` with the gym state going 0 → 2. The three cases are
+now distinct: `A path opened …`, `A path closed …`, `Paths swapped …`, and
+`The room changed …` is left for a rewrite that moves no path at all.
 
 ### Why the trainers could not be fought from this checkpoint
 
@@ -202,6 +211,28 @@ the trainers guard the half of the gym that holds switch 4. That is a party
 problem, not a cue problem: the mod said exactly what was wrong at each step.
 With a party that has moves, the same spoken cues lead to (8,9) along the route
 above; until then **plate 4 is PARTIAL, not PASS**.
+
+### Honest replay attempt: 2026-11-28
+
+The run was restarted from `mauville-plate4-before` with no flags set (gym state
+0, `FLAG_MAUVILLE_GYM_BARRIERS_STATE` false, all five trainers live). It stops at
+the same place, and the reason is the save, not the cues:
+
+- The party is **one Pokémon with no moves**. It goes out as `Go! !` (no
+  nickname), the FIGHT command answers `has no moves left!`, and the foe's first
+  `BIDE` ends it with `A is out of usable POKéMON!` and `A whited out!`.
+- That party cannot pass BATTLE GIRL VIVIAN at (1,16), whose line of sight covers
+  the only way to switch 1 at (0,15): stepping to (1,15) or (1,14) starts the
+  battle. Switch 1 therefore cannot be pressed honestly from this checkpoint,
+  and no switch can be pressed before a trainer is beaten.
+- No other checkpoint helps: `party-starter` and `party-ready` are mid-dialogue
+  at Birch's Torchic gift (Rustboro progress does not exist there), and
+  `party-lab` holds the level-50 test mon used for menu work.
+
+So the honest replay needs a save that reaches Mauville with a real party - a
+normal playthrough save, or a checkpoint taken with the starter after it has
+levelled. Nothing in the mod blocks it; the run above is the evidence for that,
+since every refusal and every plate was spoken.
 
 ## Using a potion in battle, end to end
 

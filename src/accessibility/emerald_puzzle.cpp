@@ -760,6 +760,13 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
             speak_now(("A path opened " + where + ".").c_str(), false);
         } else if (closed > 0 && opened == 0) {
             speak_now(("A path closed " + where + ".").c_str(), false);
+        } else if (opened > 0 && closed > 0) {
+            // Paths that were open closed while others opened: the room
+            // swapped one arrangement for another. "The room changed" hid
+            // that, so a player who stepped off a plate to find their route
+            // barred had no way to tell it was the press that did it - which
+            // is exactly what Mauville Gym's beam switches do on every press.
+            speak_now(("Paths swapped " + where + ".").c_str(), false);
         } else {
             speak_now(("The room changed " + where + ".").c_str(), false);
         }
