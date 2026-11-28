@@ -260,6 +260,36 @@ normal playthrough save, or a checkpoint taken with the starter after it has
 levelled. Nothing in the mod blocks it; the run above is the evidence for that,
 since every refusal and every plate was spoken.
 
+### Starting from the Torchic gift instead: the checkpoint is a scaffold
+
+The plan was to take the starter for real, level it, and warp to the gym with
+the game's own warp. The gift itself works and is spoken:
+
+> `PROF. BIRCH: … As thanks for rescuing me, I'd like you to have the POKéMON you
+> used earlier.` · `AAAAAAA received the TORCHIC!` · `While you're at it, why not
+> give a nickname to that TORCHIC?` · `Name cleared.` · `Great! MAY should be
+> happy, too.`
+
+After that the field never comes back. The state stays `controls_locked = 1`,
+`message_box = 2`, with the location record at map `[0,9]` and `x = -1, y = -1`,
+and the only line that plays is Littleroot's
+`It's dangerous if you don't have your own POKéMON.` - the town's own early-game
+gate, which this save does not satisfy.
+
+That is not a mod fault. `party-starter` exists because `get_party.py` arms
+Route 101's rescue by writing `VAR_ROUTE101_STATE = 1` into the save block (its
+docstring says so), so the checkpoint is a scaffold held together around one
+scripted event: the starter can be handed over, but the story state around it was
+never played, and the game's own gate refuses to let the field continue. No flags
+were set and no coordinates were poked in this attempt; the only writes were the
+checkpoint files.
+
+So there is no honest four-plate run to quote yet. The two ways to get one are a
+save at Mauville with a real party, or playing the early game from a fresh boot -
+which is a long automation job (Littleroot, Route 101 rescue, Petalburg, Petalburg
+Woods, Rustboro gym, Devon parts, Briney's boat, Route 110) rather than a session's
+work. **Mauville stays PARTIAL.**
+
 ## Using a potion in battle, end to end
 
 Party at 12 of 28 HP, foe at 27 of 39, cursor on FIGHT. One press right and the
