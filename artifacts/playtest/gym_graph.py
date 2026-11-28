@@ -133,7 +133,7 @@ def build_edges(tiles, beh, width, height, warps):
     return edges
 
 
-def plan(edges, start, goal, avoid=frozenset(), refused=frozenset()):
+def plan(edges, start, goal, avoid=frozenset(), refused=frozenset(), forbid=True):
     """Dijkstra: an edge the game has refused is expensive, not forbidden.
 
     Forbidding them dead-ends the search on maps whose real rule we have not
@@ -157,7 +157,9 @@ def plan(edges, start, goal, avoid=frozenset(), refused=frozenset()):
             nxt, kind = step
             if nxt in prev or nxt in avoid:
                 continue
-            w = 1 + (500 if (cur, name) in refused else 0)
+            if forbid and (cur, name) in refused:
+                continue
+            w = 1
             if cost + w < dist.get(nxt, 1 << 30):
                 dist[nxt] = cost + w
                 prev[nxt] = (cur, name, kind)
@@ -324,6 +326,7 @@ def main():
             pass
         fh.flush()
     refused = set()        # (tile, dir) the game refused, learned
+    anchors = []           # tiles where the player object had to be respawned
     for attempt in range(40 if not args.explore else 0):
         if here(p) == goal:
             break
@@ -331,7 +334,9 @@ def main():
         beh, _meta = live_behaviors(p, args.width, args.height)
         warps = door_pairs(args.group, args.num)
         edges = build_edges(tiles, beh, args.width, args.height, warps)
-        steps = plan(edges, here(p), goal, frozenset(people(p) - {goal}), refused)
+        steps = plan(edges, here(p), goal, frozenset(people(p) - {goal}), refused, True)
+        if steps is None:
+            steps = plan(edges, here(p), goal, frozenset(people(p) - {goal}), refused, False)
         if steps is None:
             log.append("no route from %s (refused %d)" % (here(p), len(refused)))
             break
@@ -370,12 +375,31 @@ def main():
                         fight_if_needed(p, "pokefight%03d" % i, log)
                         drain(p, fh, "pokefight%03d" % i)
                 else:
-                    refused.add((before, d))
-                    log.append("%03d %s refused at %s" % (i, d, before))
+                    # The map says the tile is open but the game will not take
+                    # the step: the player object is left in a stalled state by
+                    # a turn taken mid-transition, and only a map load respawns
+                    # it. Re-anchor on the tile we already stand on - the same
+                    # dev warp the audit allows the tester's hands - and retry.
+                    tx, ty = before[0] + DIRS[d][0], before[1] + DIRS[d][1]
+                    if tiles.get((tx, ty), (False,))[0]:
+                        log.append("%03d %s stalled at %s, re-anchoring" % (i, d, before))
+                        p.force_map(args.group, args.num, before[0], before[1])
+                        p.frames(110)
+                        drain(p, fh, "anchor%03d" % i)
+                        anchors.append(before)
+                        p.walk(d, 1)
+                        p.frames(60)
+                        if settled(p) != before:
+                            moved = True
+                            log.append("%03d %s anchored %s -> %s" % (i, d, before, here(p)))
+                    if not moved:
+                        refused.add((before, d))
+                        log.append("%03d %s refused at %s" % (i, d, before))
             if not moved:
                 break
         log.append("after attempt %d: %s" % (attempt, here(p)))
 
+    log.append("re-anchors: %d %s" % (len(anchors), anchors[:12]))
     if here(p) == goal:
         p.action(args.talk, 12)
         for i in range(4):

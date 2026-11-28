@@ -34,7 +34,7 @@ REPORTS = os.path.join(HERE, "reports")
 DECOMP = os.path.join(HERE, "..", "..", "third_party", "pokeemerald")
 
 DIRS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
-BATTLE_PRESS_LIMIT = 160
+BATTLE_PRESS_LIMIT = 600
 
 
 class ProgressLog(list):
@@ -108,6 +108,7 @@ def fight_if_needed(p, tag, log):
     """
     presses = 0
     idle = 0
+    pp_hop = 0
     last_text = p.status().get("last_print")
     for_text = 0
     while presses < BATTLE_PRESS_LIMIT and idle < 80:
@@ -132,8 +133,22 @@ def fight_if_needed(p, tag, log):
             # throw away the test stat block mid-battle, so re-apply it before
             # each press. Cheap, and only while a battle or its text owns the
             # game; nothing about the puzzle is touched.
-            if scene == "battle":
-                party.boost(p)
+            # Stats are boosted before the battle starts, never during: writing
+            # the party while the battle controller holds its own copy
+            # desynchronises the two and the battle stops advancing.
+            if text and "no PP" in text:
+                # The cursor sits on a move with no PP left. Do not press B:
+                # that leaves the move list and the next A lands on FIGHT's
+                # first slot again. Walk the list instead and take the next
+                # move; when every move is empty the game uses Struggle.
+                p.ask(cmd="emerald_a11y_action", action="down")
+                p.frames(30)
+                p.confirm(34)
+                p.flush_speech(f"{tag}-pp")
+                presses += 1
+                for_text = 0
+                idle = 0
+                continue
             p.confirm(40)
             p.flush_speech(f"{tag}-{presses}")
             presses += 1

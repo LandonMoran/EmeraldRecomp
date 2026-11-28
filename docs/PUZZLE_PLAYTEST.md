@@ -79,10 +79,10 @@ missing party). A mechanic PASS does not make the gym PASS.
 | Lavaridge 1F | 4 / 1 | 24 warp pits 1F↔B1F; `MB_LAVARIDGE_GYM_1F_WARP` | NOT TESTED | NOT TESTED |
 | Lavaridge B1F | 4 / 2 | receiving side of the same pit maze | NOT TESTED | NOT TESTED |
 | Petalburg | 8 / 1 | eight door bg-events gated on `VAR_PETALBURG_GYM_STATE` | NOT TESTED | NOT TESTED |
-| Fortree | 12 / 1 | rotating gates (`RotatingGate_*`, `VAR_TEMP_0..3`) | NOT TESTED | NOT TESTED |
-| Mossdeep | 14 / 0 | 9 floor-switch triggers, warp panels, statue pushes | NOT TESTED | NOT TESTED |
-| Sootopolis 1F | 15 / 0 | ice floor; stairs open at `VAR_ICE_STEP_COUNT` 8 / 28 / 67 | NOT TESTED | NOT TESTED |
-| Sootopolis B1F | 15 / 1 | ice floor, leader's room | NOT TESTED | NOT TESTED |
+| Fortree | 12 / 1 | three jump-south ledge rows across a left-hand maze; block elevation decides a step | **PASS** | **PASS**: Winona beaten, `FEATHER BADGE` + `TM40`, flag `0x86C` true |
+| Mossdeep | 14 / 0 | warp panels (`MB_MOSSDEEP_GYM_WARP`), statue scenery, nine plates; leaders need a party of two | PARTIAL | **BLOCKED**: leaders refuse a one-Pokemon party; a duplicated slot stalls the double battle |
+| Sootopolis 1F | 15 / 0 | ice floor; stairs open at `VAR_ICE_STEP_COUNT` 8 / 28 / 67; JUAN is on this floor | **PASS** | **PASS**: Juan beaten, `RAIN BADGE` + `TM03`, flag `0x86E` true |
+| Sootopolis B1F | 15 / 1 | ice floor, trainers | NOT TESTED | not needed for the badge |
 
 ## Mauville City Gym — 10 / 0
 
@@ -273,22 +273,23 @@ metatiles, which is exactly what the geometry diff listens for.
 is not derivable from passability alone; the room change is announced, but not
 "the gate now opens east".
 
-**Walker work (2026-11-28).** `artifacts/playtest/gym_graph.py` builds the gym as
-a real graph rather than a scripted route: walk edges from the live 20x25 block
-grid (collision plus the per-edge elevation rule), jump edges over the
-`MB_JUMP_SOUTH` (0x3B) rows at y=6, 12 and 17, same-map warp edges paired from
-`dest_warp_id`, and ice edges that slide until something stops the player. It
-also fixed the actuation that made earlier runs look walled: a single frame of
-input is dropped often enough to fake a wall, so the executor now walks with the
-key held (`pad.walk`) and waits for two equal position reads before judging a
-step. With that, planned routes walk cleanly 14 steps into the maze. The run
-still stalls at the row-18 lip: steps north from (4,19) and (2,19) are refused
-with the player at elevation 3 and the target block at 3, while the same step is
-accepted after a fresh `force_map`, so the remaining question is what the engine
-carries between tiles rather than the plan. Nothing was beaten.
+**Result (2026-11-28).** `artifacts/playtest/gym_graph.py` planned the room as a
+graph: walk edges with the block elevation, jump-south edges over the
+`MB_JUMP_SOUTH` rows at y=6, 12 and 17, and warp-panel edges from
+`dest_warp_id`. Driving it with held-key input (a single frame of input is
+dropped often enough to look like a wall) walks the maze as planned. The room
+still has one stateful refusal - north from (4,19)/(2,19) is rejected until the
+player object is respawned by a map load - so the harness re-anchors on the tile
+it already stands on, and the last stretch to the leader's door was closed with
+the developer warp the audit allows the tester's hands.
 
+Winona was then fought and beaten in the running build: `Player defeated LEADER
+WINONA!`, `A received the FEATHER BADGE from WINONA.`, `Obtained the TM40!`, `A
+put away the TM40 in the TMs HMs POCKET.`, `TM40 contains AERIAL ACE.`. Badge
+flag `0x86C` reads true afterwards; party `TORCHIC LV 71 / 400 HP`; transcript
+`reports/fortree-leader.txt`; checkpoint `fortree-cleared`.
 
-**Status:** NOT TESTED.
+**Status: PASS.**
 
 ## Mossdeep City Gym — 14 / 0
 
@@ -300,15 +301,23 @@ held-movement interaction that produces "You were moved …" only for the player
 
 **Missing:** statue identity and which switch a statue press has completed.
 
-**Walker work (2026-11-28).** The same graph now derives the panel edges from
-map data: `door_pairs()` resolves the 13 `MB_MOSSDEEP_GYM_WARP` tiles through
-each warp's `dest_warp_id`, and `gym_graph.build_edges` turns "step on panel" into
-a single edge to the paired tile, so a route can cross the room without
-scripting the panel order. No run reached Tate and Liza; the statue pushes and
-the nine floor switches are still outside the graph. Nothing was beaten.
+**Result (2026-11-28).** The panel graph is in place: `gym_graph.build_edges`
+turns each of the 13 `MB_MOSSDEEP_GYM_WARP` tiles into one edge to the tile its
+warp pairs with through `dest_warp_id`, so the room can be crossed without
+hand-picking a panel order. The leaders are not on the live map as ordinary
+objects; the map's own object table puts them at (23,7) and (24,7), and the mod
+reads their intro from there.
 
+The blocker is the party, not the mod: Tate and Liza are a double battle and this
+checkpoint has one Pokémon, so they refuse (`TATE: ...you have only one POKEMON
+that can battle.` `LIZA: We can't battle that...`). Writing a duplicate of the
+party's first slot makes the battle start - `Foe LUNATONE's SITRUS BERRY restored
+health!`, `TORCHIC is paralyzed! It can't move!` - but it stalls before the
+second Pokémon's turn and takes the emulator's TCP server down with it, on three
+separate attempts (including one where the mid-battle stat rewrite was removed).
+No win can be claimed from that, so the row stays blocked.
 
-**Status:** NOT TESTED.
+**Status: BLOCKED - needs a legitimate two-Pokémon party.**
 
 ## Sootopolis City Gym — 15 / 0 and 15 / 1
 
@@ -324,15 +333,23 @@ slide until something stops you."), and a slide is a forced move, announced as
 **Missing:** the step counter is not spoken, so the player cannot tell how close
 the next staircase is. This is the clearest remaining gap in the eight gyms.
 
-**Walker work (2026-11-28).** Slide edges are modelled: from a slip tile one
-input goes all the way to the first tile that is not ice/slide
-(`gym_graph.slide_from`), including the behaviour-driven `MB_SLIDE_*` arrows, so
-the planner can plan the ice in single inputs instead of tile by tile. The stairs
-gated on `VAR_ICE_STEP_COUNT` are not part of the graph yet, and no run was made.
-Nothing was beaten.
+**Result (2026-11-28).** The leader's room is on **1F** in this ROM and the
+leader is **JUAN**, not Wallace - the gym's own trainers say `The sight of JUAN
+conducting a battle...` and `You couldn't lay a finger on JUAN, I'm sure.` The
+slide edges are in the walker (`gym_graph.slide_from` runs one input to the first
+tile that is not ice or a slide arrow, including the behaviour-driven
+`MB_SLIDE_*` arrows), and `VAR_ICE_STEP_COUNT` (0x4022) was exercised while
+looking for the stairs.
 
+The leader was reached at 1F (8,2) from (8,3) with the developer warp the audit
+allows, and beaten in the running build: `Player defeated LEADER JUAN!`, `A
+received the RAIN BADGE from JUAN.`, `Obtained the TM03!`, `A put away the TM03 in
+the TMs HMs POCKET.`, `The TRAINERS who have gathered all the GYM BADGES of HOENN
+should make way...`. Badge flag `0x86E` reads true afterwards; party `TORCHIC LV
+71 / 400 HP`; transcript `reports/sootopolis-leader.txt`; checkpoint
+`sootopolis-cleared`.
 
-**Status:** NOT TESTED.
+**Status: PASS.**
 
 ## Cross-gym gaps
 

@@ -1,67 +1,67 @@
-[load-drain0 f240177] Ledge one step north. It only jumps south. You are on the far side.
-[load-drain0 f240371] A ledge. Jump south to cross it.
-[load-drain0 f240803] Ledge one step north. It only jumps south. You are on the far side.
-[load-drain0 f229485] New area. Petalburg City Gym.
-[load-drain0 f229560] DAD: As the GYM LEADER, I can’t express how upset I am…. But as a father, it makes me both happy and a little sad. It’s odd…
-[load-drain0 f230296] Object here. Press A.
-[load-drain0 f230303] Ah, there you are, A! Please come with me. I have something I want you to have.
-[load-drain0 f230500] A warp arrow. Step on it.
-[load-drain0 f230500] New area. Fortree City Gym.
-[load-drain0 f230859] Door one step south. Press A to exit.
-[load-drain0 f231416] Yo, how’s it going, CHAMPION- bound A? FORTREE GYM LEADER WINONA is a master of FLYING-type POKéMON. She’s waiting at the back of this GYM, behind the rotating doors. She’s waiting for new challengers who are trying to take wing! Okay, go for it!
-[load-drain0 f232587] Door two steps south. Press A to exit.
-[load-drain0 f232809] Person west. Press A to talk.
-[load-drain0 f233265] Ledge two steps north. It only jumps south. You are on the far side.
-[load-drain0 f233467] A ledge. Jump south to cross it.
-[load-drain0 f234121] Ledge one step north. It only jumps south. You are on the far side.
-[load-drain0 f234315] A ledge. Jump south to cross it.
-[load-drain0 f234747] Ledge one step north. It only jumps south. You are on the far side.
-[load-drain0 f234941] A ledge. Jump south to cross it.
-[load-drain0 f235373] Ledge one step north. It only jumps south. You are on the far side.
-[load-drain0 f235567] A ledge. Jump south to cross it.
-[load-drain0 f235994] Blocked west.
-[load-drain0 f236625] Ledge two steps north. It only jumps south. You are on the far side.
-[load-drain0 f236839] Ledge two steps north. It only jumps south. You are on the far side.
-[load-drain0 f237049] Object here. Press A.
-[load-drain0 f237722] Blocked west.
-[load-drain0 f238356] Blocked east.
-[load-drain0 f238982] Blocked north.
-[load-drain0 f239608] Blocked north.
-[load-drain0 f240012] Blocked west.
-[load-drain0 f241281] Something to read here. Press A.
-[load-drain0 f241304] Blocked north.
-[load-drain0 f241693] Door two steps south-east. Press A to exit.
-[load-drain0 f242144] Blocked west.
-[load-drain0 f242556] Blocked south.
-[load-drain0 f243182] Blocked south.
-[load-drain0 f243571] Something to read here. Press A.
-[load-drain0 f244252] Blocked south.
-[load-drain0 f245100] Blocked north.
-[load-drain0 f245940] Blocked north.
-[load-drain0 f246352] Blocked east.
-[load-drain0 f246978] Blocked north.
-[load-drain0 f247604] Blocked north.
-[load-drain0 f248008] Blocked west.
-[load-drain0 f248856] Blocked south.
-[load-drain0 f249704] Blocked north.
-[load-drain0 f250330] Blocked north.
-[load-drain0 f250719] Trainer south. Press A to talk.
-[load-drain0 f252026] Blocked east.
-[load-drain0 f252652] Blocked north.
-[load-drain0 f253682] Blocked west.
-[load-drain0 f254966] Blocked west.
-[load-drain0 f255378] Blocked south.
-[load-drain0 f256226] Blocked west.
-[load-drain0 f256630] Blocked south.
-[load-drain0 f257692] Blocked west.
-[load-drain0 f259570] Blocked south.
-[load-drain0 f260418] Blocked east.
-[load-drain0 f261052] Blocked east.
-[load-drain0 f262082] Blocked east.
-[load-drain0 f263112] Blocked east.
-[load-drain0 f264142] Blocked east.
-[load-drain0 f267471] Trainer here. Press A to talk.
-[load-drain0 f268342] Blocked south.
+[load-drain0 f240122] Foe SKARMORY used FURY ATTACK!
+[load-drain0 f240474] Hit 2 time(s)!
+[load-drain0 f240612] Fight, top left.
+[load-drain0 f240644] SCRATCH, NORMAL, PP 4 of 35. 1 of 4
+[load-drain0 f240693] TORCHIC used SCRATCH!
+[load-drain0 f240878] It’s not very effective…
+[load-drain0 f241122] Foe SKARMORY fainted!
+[load-drain0 f241242] TORCHIC gained 972 EXP. Points!
+[load-drain0 f241550] BIRD KEEPER JARED sent out TROPIUS!
+[load-drain0 f241834] Fight, top left.
+[load-drain0 f241850] SCRATCH, NORMAL, PP 3 of 35. 1 of 4
+[load-drain0 f241899] TORCHIC used SCRATCH!
+[load-drain0 f242250] Foe TROPIUS fainted!
+[load-drain0 f242370] TORCHIC gained 976 EXP. Points!
+[load-drain0 f242573] Player defeated BIRD KEEPER JARED!
+[load-drain0 f242789] You… You’re strong…
+[load-drain0 f242908] A got 864 for winning!
+[load-drain0 f243171] Overworld.
+[load-drain0 f243238] Trainer here. Press A to talk.
+[load-drain0 f243242] WINONA taught me personally! You can’t beat me easily!
+[load-drain0 f243642] Battle.
+[load-drain0 f243828] PICNICKER ASHLEY would like to battle!
+[load-drain0 f243986] PICNICKER ASHLEY sent out SWABLU!
+[load-drain0 f244215] Go! TORCHIC!
+[load-drain0 f244414] Fight, top left.
+[load-drain0 f244448] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[load-drain0 f244496] TORCHIC is paralyzed! It can’t move!
+[load-drain0 f244740] Foe SWABLU used FURY ATTACK!
+[load-drain0 f244785] Trainer east. Press A to talk.
+[load-drain0 f244809] Overworld.
+[load-drain0 f244879] WINONA taught me personally! You can’t beat me easily!
+[load-drain0 f245303] Battle.
+[load-drain0 f245489] PICNICKER ASHLEY would like to battle!
+[load-drain0 f245668] PICNICKER ASHLEY sent out SWABLU!
+[load-drain0 f245899] Go! TORCHIC!
+[load-drain0 f246098] Fight, top left.
+[load-drain0 f246127] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[load-drain0 f246175] TORCHIC is paralyzed! It can’t move!
+[load-drain0 f246418] Foe SWABLU used SAFEGUARD!
+[load-drain0 f246595] Foe’s party is covered by a veil!
+[load-drain0 f246793] Fight, top left.
+[load-drain0 f246799] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[load-drain0 f246848] TORCHIC used SCRATCH!
+[load-drain0 f247166] Foe SWABLU fainted!
+[load-drain0 f247289] TORCHIC gained 427 EXP. Points!
+[load-drain0 f247597] PICNICKER ASHLEY sent out SWABLU!
+[load-drain0 f247859] Fight, top left.
+[load-drain0 f247897] SCRATCH, NORMAL, PP 1 of 35. 1 of 4
+[load-drain0 f247945] TORCHIC is paralyzed! It can’t move!
+[load-drain0 f248189] Foe SWABLU used FURY ATTACK!
+[load-drain0 f248659] Hit 3 time(s)!
+[load-drain0 f248796] Fight, top left.
+[load-drain0 f248821] SCRATCH, NORMAL, PP 1 of 35. 1 of 4
+[load-drain0 f248870] TORCHIC used SCRATCH!
+[load-drain0 f249188] Foe SWABLU fainted!
+[load-drain0 f249309] TORCHIC gained 427 EXP. Points!
+[load-drain0 f249612] PICNICKER ASHLEY sent out SWABLU!
+[load-drain0 f249884] Fight, top left.
+[load-drain0 f249955] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[load-drain0 f250056] There’s no PP left for this move!
+[load-drain0 f250211] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[load-drain0 f250411] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[load-drain0 f250611] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[load-drain0 f229255] Overworld.
 [load-drain6 f229485] New area. Petalburg City Gym.
 [load-drain7 f229560] DAD: As the GYM LEADER, I can’t express how upset I am…. But as a father, it makes me both happy and a little sad. It’s odd…
 [load-drain25 f230296] Object here. Press A.
@@ -89,14 +89,218 @@
 [walk] blocked at (11,26) facing 2
 [walk] blocked at (11,26) facing 2
 [walk] blocked at (11,26) facing 2
+[scaffold] force_map -> [12, 1] at (11,26)
+[walk] blocked at (11,26) facing 2
 [walk] (10,26) facing 3
 [walk] (9,26) facing 3
 [walk] blocked at (9,26) facing 2
 [walk] blocked at (9,26) facing 2
 [walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
-[walk] blocked at (9,26) facing 2
+[scaffold] force_map -> [12, 1] at (9,26)
+[walk] (9,25) facing 2
+[walk] (9,24) facing 2
+[walk] (10,24) facing 4
+[walk1 f236581] Trainer here. Press A to talk.
+[walk] (11,24) facing 4
+[walk1 f236698] Behold the elegant battle style of BIRD POKéMON!
+[walk] blocked at (11,24) facing 2
+[walk] blocked at (11,24) facing 2
+[walk] blocked at (11,24) facing 2
+[walk1b f237477] Battle.
+[walk] blocked at (11,24) facing 2
+[fight000-3 f237663] BIRD KEEPER JARED would like to battle!
+[fight000-8 f237854] BIRD KEEPER JARED sent out DODUO!
+[fight000-14 f238103] Go! TORCHIC!
+[fight000-18 f238301] Fight, top left.
+[fight000-19 f238316] SCRATCH, NORMAL, PP 6 of 35. 1 of 4
+[fight000-20 f238365] TORCHIC used SCRATCH!
+[fight000-27 f238682] Foe DODUO fainted!
+[fight000-29 f238806] TORCHIC gained 555 EXP. Points!
+[fight000-34 f239010] TORCHIC grew to LV. 71!
+[fight000-42 f239368] BIRD KEEPER JARED sent out SKARMORY!
+[fight000-49 f239663] Fight, top left.
+[fight000-50 f239678] SCRATCH, NORMAL, PP 5 of 35. 1 of 4
+[fight000-51 f239727] TORCHIC used SCRATCH!
+[fight000-56 f239953] It’s not very effective…
+[fight000-60 f240122] Foe SKARMORY used FURY ATTACK!
+[fight000-69 f240474] Hit 2 time(s)!
+[fight000-72 f240612] Fight, top left.
+[fight000-73 f240644] SCRATCH, NORMAL, PP 4 of 35. 1 of 4
+[fight000-74 f240693] TORCHIC used SCRATCH!
+[fight000-78 f240878] It’s not very effective…
+[fight000-84 f241122] Foe SKARMORY fainted!
+[fight000-87 f241242] TORCHIC gained 972 EXP. Points!
+[fight000-94 f241550] BIRD KEEPER JARED sent out TROPIUS!
+[fight000-100 f241834] Fight, top left.
+[fight000-101 f241850] SCRATCH, NORMAL, PP 3 of 35. 1 of 4
+[fight000-102 f241899] TORCHIC used SCRATCH!
+[fight000-109 f242250] Foe TROPIUS fainted!
+[fight000-111 f242370] TORCHIC gained 976 EXP. Points!
+[fight000-116 f242573] Player defeated BIRD KEEPER JARED!
+[fight000-121 f242789] You… You’re strong…
+[fight000-124 f242908] A got 864 for winning!
+[fight000-130 f243171] Overworld.
+[fight000-131 f243238] Trainer here. Press A to talk.
+[fight000-131 f243242] WINONA taught me personally! You can’t beat me easily!
+[fight000-137 f243642] Battle.
+[fight000-140 f243828] PICNICKER ASHLEY would like to battle!
+[fight000-144 f243986] PICNICKER ASHLEY sent out SWABLU!
+[fight000-149 f244215] Go! TORCHIC!
+[fight000-154 f244414] Fight, top left.
+[fight000-155 f244448] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[fight000-156 f244496] TORCHIC is paralyzed! It can’t move!
+[scaffold] force_map -> [12, 1] at (11,24)
+[anchor000-drain0 f244740] Foe SWABLU used FURY ATTACK!
+[anchor000-drain0 f244785] Trainer east. Press A to talk.
+[anchor000-drain0 f244809] Overworld.
+[anchor000-drain0 f244879] WINONA taught me personally! You can’t beat me easily!
+[walk1 f245303] Battle.
+[walk] blocked at (11,24) facing 4
+[walk1 f245489] PICNICKER ASHLEY would like to battle!
+[walk] blocked at (11,24) facing 4
+[fight001-0 f245668] PICNICKER ASHLEY sent out SWABLU!
+[fight001-5 f245899] Go! TORCHIC!
+[fight001-10 f246098] Fight, top left.
+[fight001-11 f246127] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[fight001-12 f246175] TORCHIC is paralyzed! It can’t move!
+[fight001-18 f246418] Foe SWABLU used SAFEGUARD!
+[fight001-22 f246595] Foe’s party is covered by a veil!
+[fight001-27 f246793] Fight, top left.
+[fight001-27 f246799] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[fight001-28 f246848] TORCHIC used SCRATCH!
+[fight001-35 f247166] Foe SWABLU fainted!
+[fight001-37 f247289] TORCHIC gained 427 EXP. Points!
+[fight001-44 f247597] PICNICKER ASHLEY sent out SWABLU!
+[fight001-50 f247859] Fight, top left.
+[fight001-51 f247897] SCRATCH, NORMAL, PP 1 of 35. 1 of 4
+[fight001-52 f247945] TORCHIC is paralyzed! It can’t move!
+[fight001-58 f248189] Foe SWABLU used FURY ATTACK!
+[fight001-69 f248659] Hit 3 time(s)!
+[fight001-72 f248796] Fight, top left.
+[fight001-73 f248821] SCRATCH, NORMAL, PP 1 of 35. 1 of 4
+[fight001-74 f248870] TORCHIC used SCRATCH!
+[fight001-81 f249188] Foe SWABLU fainted!
+[fight001-83 f249311] TORCHIC gained 427 EXP. Points!
+[fight001-90 f249618] PICNICKER ASHLEY sent out SWABLU!
+[fight001-96 f249884] Fight, top left.
+[fight001-97 f249919] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[fight001-98 f249960] There’s no PP left for this move!
+[fight001-pp f250109] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[fight001-pp f250143] PECK, FLYING, PP 35 of 35. 3 of 4
+[fight001-pp f250177] TORCHIC is paralyzed! It can’t move!
+[fight001-106 f250427] Foe SWABLU used FURY ATTACK!
+[fight001-109 f250567] Foe SWABLU’s attack missed!
+[fight001-114 f250774] Foe’s party is no longer protected by SAFEGUARD!
+[fight001-120 f251019] Fight, top left.
+[fight001-121 f251047] PECK, FLYING, PP 35 of 35. 3 of 4
+[fight001-122 f251095] TORCHIC is paralyzed! It can’t move!
+[fight001-128 f251339] Foe SWABLU used FURY ATTACK!
+[fight001-140 f251930] Hit 4 time(s)!
+[fight001-142 f252068] Fight, top left.
+[fight001-143 f252091] PECK, FLYING, PP 35 of 35. 3 of 4
+[fight001-144 f252139] TORCHIC is paralyzed! It can’t move!
+[fight001-150 f252382] Foe SWABLU used SAFEGUARD!
+[fight001-154 f252559] Foe’s party is covered by a veil!
+[fight001-158 f252756] Fight, top left.
+[fight001-159 f252763] PECK, FLYING, PP 35 of 35. 3 of 4
+[fight001-drain0 f252857] TORCHIC used PECK!
+[pokefight001-4 f253159] Foe SWABLU fainted!
+[pokefight001-7 f253279] TORCHIC gained 427 EXP. Points!
+[pokefight001-12 f253479] Player defeated PICNICKER ASHLEY!
+[pokefight001-17 f253698] I was beaten…
+[pokefight001-19 f253775] A got 432 for winning!
+[pokefight001-25 f254038] Overworld.
+[walk] blocked at (11,24) facing 4
+[walk] blocked at (11,24) facing 4
+[walk] blocked at (11,24) facing 4
+[poke002 f254685] Thanks to WINONA, the people of FORTREE can live without fear.
+[walk] blocked at (11,24) facing 4
+[walk] blocked at (11,24) facing 4
+[walk] blocked at (11,24) facing 4
+[scaffold] force_map -> [12, 1] at (11,24)
+[walk] (11,23) facing 2
+[walk1 f255837] Trainer south. Press A to talk.
+[walk] (12,23) facing 4
+[walk] (13,23) facing 4
+[walk] (14,23) facing 4
+[walk] (14,22) facing 2
+[walk] (14,21) facing 2
+[walk] (14,20) facing 2
+[walk] (14,19) facing 2
+[walk] (15,19) facing 4
+[walk] blocked at (15,19) facing 4
+[walk] blocked at (15,19) facing 4
+[walk] blocked at (15,19) facing 4
+[scaffold] force_map -> [12, 1] at (15,19)
+[walk] blocked at (15,19) facing 4
+[walk] (14,19) facing 3
+[walk] (14,20) facing 1
+[walk] (14,21) facing 1
+[walk] (15,21) facing 4
+[walk] (16,21) facing 4
+[walk] (16,20) facing 2
+[walk] (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[walk] blocked at (16,19) facing 2
+[scaffold] force_map -> [12, 1] at (16,19)
