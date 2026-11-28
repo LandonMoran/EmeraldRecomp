@@ -41,6 +41,19 @@ SWITCH_RAISED, SWITCH_PRESSED = 0x205, 0x206
 IMPASSABLE = 0x0400
 SWITCHES = [(0, 15, 1), (4, 12, 2), (3, 9, 3), (8, 9, 4)]   # x, y, state number
 
+# Object events from the map's own map.json, all MOVEMENT_TYPE_* that stand
+# still. They block their tile whether or not the trainer has been beaten: a
+# beaten trainer stays where he was, which is why (5,10) is refused in game even
+# though the beam under BEN has collision 0. Wattson at (5,2) is the goal's
+# neighbour, so he is here too - the walk stops at (5,3).
+NPCS = frozenset({(5, 2),   # WATTSON
+                  (7, 8),   # GUITARIST SHAWN
+                  (1, 16),  # BATTLE GIRL VIVIAN
+                  (5, 10),  # YOUNGSTER BEN
+                  (1, 13),  # GUITARIST KIRK
+                  (7, 20),  # the guide by the door
+                  (7, 10)})  # BUG MANIAC ANGELO
+
 
 def load():
     raw = open(MAP, "rb").read()
@@ -121,6 +134,8 @@ def toggle(grid):
 def passable(grid, x, y):
     if not (0 <= x < W and 0 <= y < H):
         return False
+    if (x, y) in NPCS:
+        return False
     return ((grid[y][x] >> 10) & 3) == 0
 
 
@@ -183,15 +198,62 @@ def solve(grids, start=(4, 19)):
     return path
 
 
+def route_to(grids, start, k0, state0, goal):
+    """Shortest walk from start to goal, pressing switches as they are crossed."""
+    s0 = (start[0], start[1], k0, state0)
+    prev = {s0: None}
+    q = collections.deque([s0])
+    goalst = None
+    while q:
+        x, y, k, state = q.popleft()
+        if (x, y) == goal:
+            goalst = (x, y, k, state)
+            break
+        for dx, dy, d in ((0, -1, "up"), (1, 0, "right"), (0, 1, "down"), (-1, 0, "left")):
+            nx, ny = x + dx, y + dy
+            if not passable(grids[k], nx, ny):
+                continue
+            nk, nstate = k, state
+            for sx, sy, sn in SWITCHES:
+                if (nx, ny) == (sx, sy) and state != sn:
+                    nk, nstate = k + 1, sn
+            st = (nx, ny, nk, nstate)
+            if st in prev:
+                continue
+            prev[st] = ((x, y, k, state), d)
+            q.append(st)
+    if not goalst:
+        return None
+    out = []
+    st = goalst
+    while prev[st] is not None:
+        pst, d = prev[st]
+        out.append((d, st))
+        st = pst
+    out.reverse()
+    return out
+
+
 def main():
     base = load()
     grids = [base]
-    for i in range(4):
+    for i in range(6):          # the walk to Wattson needs a fifth press
         grids.append(toggle(grids[-1]))
 
     for k in range(5):
         marks = {(sx, sy) for sx, sy, _ in SWITCHES}
         show(grids[k], "after %d press(es)" % k, marks)
+
+    walk = route_to(grids, (8, 9), 4, 4, (5, 3))
+    print("Wattson walk from the fourth plate: %s" % (
+        "NO ROUTE" if not walk else "%d steps" % len(walk)))
+    if walk:
+        print("  " + ", ".join(d for d, _ in walk))
+        for d, st in walk:
+            if st[2] != 4 and st[2] != (walk[walk.index((d, st)) - 1][1][2]
+                                        if walk.index((d, st)) else 4):
+                print("  extra press at (%d,%d) -> presses=%d state=%d"
+                      % (st[0], st[1], st[2], st[3]))
 
     path = solve(grids)
     if not path:

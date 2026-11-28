@@ -1,64 +1,64 @@
-[r01 f72610] Trainer south. Press A to talk.
-[r01 f72680] Paths swapped north-east.
-[r01 f72682] Plate underfoot.
-[r01 f72742] Step plate one step west.
-[r01 f72950] Step plate two steps north.
-[r01 f73044] Paths swapped north-east.
-[r01 f73046] Plate underfoot.
-[r01 f73098] Step plate one step south.
-[r01 f73130] Trainer east. Press A to talk.
-[r01 f73202] Step plate one step west.
-[r01 f73260] Paths swapped south-east.
-[r01 f73262] Plate underfoot.
-[r01 f73314] Step plate one step west.
-[r01 f73410] Step plate two steps east.
-[r01 f73523] Trainer here. Press A to talk.
-[r01 f73527] I love shiny things!
-[r01 f73795] Battle.
-[r01 f73975] BUG MANIAC ANGELO would like to battle!
-[r01 f74128] BUG MANIAC ANGELO sent out ILLUMISE!
-[r01 f74401] Go! TORCHIC!
-[r01 f74599] Fight, top left.
-[r01 f74632] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
-[r01 f74681] TORCHIC used SCRATCH!
-[r01 f74988] Foe ILLUMISE fainted!
-[r01 f75104] TORCHIC gained 531 EXP. Points!
-[r01 f75411] BUG MANIAC ANGELO sent out VOLBEAT!
-[r01 f75695] Fight, top left.
-[r01 f75724] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
-[r01 f75773] TORCHIC used SCRATCH!
-[r01 f76080] Foe VOLBEAT fainted!
-[r01 f76196] TORCHIC gained 531 EXP. Points!
-[r01 f76398] Player defeated BUG MANIAC ANGELO!
-[r01 f76615] Oh… My eyes are frazzled…
-[r01 f76734] A got 1020 for winning!
-[r01 f76996] Overworld.
-[r01 f77063] Trainer here. Press A to talk.
-[r01 f77067] I trained under WATTSON! There ain’t no way I’ll lose easily!
-[r01 f77491] Battle.
-[r01 f77670] GUITARIST SHAWN would like to battle!
-[r01 f77824] GUITARIST SHAWN sent out VOLTORB!
-[r01 f78061] Go! TORCHIC!
-[r01 f78260] Fight, top left.
-[r01 f78286] SCRATCH, NORMAL, PP 33 of 35. 1 of 4
-[r01 f78335] TORCHIC used SCRATCH!
-[r01 f78637] Foe VOLTORB fainted!
-[r01 f78758] TORCHIC gained 375 EXP. Points!
-[r01 f79065] GUITARIST SHAWN sent out MAGNEMITE!
-[r01 f79415] Fight, top left.
-[r01 f79462] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
-[r01 f79511] TORCHIC used SCRATCH!
-[r01 f79728] It’s not very effective…
-[r01 f79966] Foe MAGNEMITE fainted!
-[r01 f80102] TORCHIC gained 324 EXP. Points!
-[r01 f80302] Player defeated GUITARIST SHAWN!
-[r01 f80479] Unplugged and turned off…
-[r01 f80598] A got 544 for winning!
-[r01 f80860] Overworld.
-[r01 f80912] Paths swapped south-west.
-[r01 f80914] Plate underfoot.
-[r01 f80966] Step plate one step east.
-[r01 f81005] Blocked west.
-[r01 f81322] Step plate one step west.
-[r01 f81421] Blocked north.
-[r01 f80946] Trainer west. Press A to talk.
+[settle-a0 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[settle-a0 f80955] Plate underfoot.
+[settle-a0 f80960] Overworld.
+[r01 f80988] Trainer west. Press A to talk.
+[r01 f81008] Step plate one step north.
+[r05 f81208] Step plate two steps west.
+[r07 f81300] Trainer here. Press A to talk.
+[r10 f81468] Step plate one step west.
+[r11 f81526] Paths swapped south-east.
+[r11 f81528] Plate underfoot.
+[r12 f81580] Step plate one step west.
+[r19 f81924] Person north. Press A to talk.
+[face f81968] Object here. Press A.
+[talk f82027] I’ve given up on my plans to convert the city, I have. And so, I put my time into making door traps in my GYM. Oh? Now, what are you doing here? What’s that? You say you’ve gotten past all my rigged doors? Wahahahah! Now, that is amusing! Then, I, WATTSON, the LEADER of MAUVILLE GYM, shall electrify you!
+[wattson-a31 f83371] Battle.
+[wattson-a35 f83561] LEADER WATTSON would like to battle!
+[wattson-a39 f83704] LEADER WATTSON sent out VOLTORB!
+[wattson-a44 f83940] Go! TORCHIC!
+[wattson-a49 f84137] Fight, top left.
+[wattson-a50 f84166] SCRATCH, NORMAL, PP 31 of 35. 1 of 4
+[wattson-a51 f84215] TORCHIC used SCRATCH!
+[wattson-a58 f84519] Foe VOLTORB fainted!
+[wattson-a61 f84638] TORCHIC gained 441 EXP. Points!
+[wattson-a68 f84947] LEADER WATTSON sent out ELECTRIKE!
+[wattson-a75 f85228] Fight, top left.
+[wattson-a76 f85258] SCRATCH, NORMAL, PP 30 of 35. 1 of 4
+[wattson-a77 f85307] TORCHIC used SCRATCH!
+[wattson-a84 f85611] Foe ELECTRIKE fainted!
+[wattson-a87 f85730] TORCHIC gained 445 EXP. Points!
+[wattson-a94 f86038] LEADER WATTSON sent out MAGNETON!
+[wattson-a101 f86335] Fight, top left.
+[wattson-a102 f86350] SCRATCH, NORMAL, PP 29 of 35. 1 of 4
+[wattson-a103 f86399] TORCHIC used SCRATCH!
+[wattson-a108 f86596] It’s not very effective…
+[wattson-a111 f86760] Foe MAGNETON used THUNDER WAVE!
+[wattson-a118 f87049] TORCHIC is paralyzed! It may be unable to move!
+[wattson-a125 f87311] Fight, top left.
+[wattson-a126 f87358] SCRATCH, NORMAL, PP 28 of 35. 1 of 4
+[wattson-a127 f87406] Foe MAGNETON used SONICBOOM!
+[wattson-a133 f87653] TORCHIC used SCRATCH!
+[wattson-a137 f87845] It’s not very effective…
+[wattson-a141 f88015] Fight, top left.
+[wattson-a142 f88030] SCRATCH, NORMAL, PP 27 of 35. 1 of 4
+[wattson-a144 f88127] LEADER WATTSON used SUPER POTION!
+[wattson-a150 f88367] Foe MAGNETON’s SUPER POTION restored health!
+[wattson-a155 f88606] TORCHIC used SCRATCH!
+[wattson-a160 f88794] It’s not very effective…
+[wattson-a164 f88965] Fight, top left.
+[wattson-a165 f88996] SCRATCH, NORMAL, PP 26 of 35. 1 of 4
+[wattson-a166 f89044] Foe MAGNETON used SONICBOOM!
+[wattson-a172 f89291] TORCHIC used SCRATCH!
+[wattson-a176 f89482] It’s not very effective…
+[wattson-a182 f89724] Foe MAGNETON fainted!
+[wattson-a185 f89846] TORCHIC gained 759 EXP. Points!
+[wattson-a192 f90155] LEADER WATTSON sent out MANECTRIC!
+[wattson-a199 f90436] Fight, top left.
+[wattson-a200 f90466] SCRATCH, NORMAL, PP 25 of 35. 1 of 4
+[wattson-a201 f90515] Foe MANECTRIC used HOWL!
+[wattson-a208 f90799] Foe MANECTRIC’s ATTACK rose!
+[wattson-a212 f90977] TORCHIC used SCRATCH!
+[wattson-a218 f91217] A critical hit!
+[wattson-a223 f91426] Foe MANECTRIC fainted!
+[wattson-a225 f91526] TORCHIC gained 864 EXP. Points!
+[wattson-a230 f91727] Player defeated LEADER WATTSON!

@@ -30,7 +30,7 @@ means a player cannot get it at all.
 | Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
-| Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data. Wattson himself is not fought - the walk up to him is still open work |
+| Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data, then Wattson was walked to on the cue alone and beaten: `Player defeated LEADER WATTSON!`, `A received the DYNAMO BADGE from WATTSON.`, `Obtained the TM34!` |
 | Lavaridge gym | NOT TESTED | 24 pit warps |
 
 ## The blocker, in order
@@ -69,7 +69,8 @@ means a player cannot get it at all.
 
 **Status: PASS for the puzzle.** All four plates are pressed in one continuous
 visit and every press is spoken. The order is not a guess: it comes from the game's
-own barrier function. Wattson is not fought.
+own barrier function, and the walk past it to Wattson was taken on the cue alone
+before he was beaten for the DYNAMO BADGE.
 
 The attempt-by-attempt sections below are kept because the failures they document
 are real, but where one of them concludes the gym cannot be passed, the run at the
@@ -404,15 +405,54 @@ data, not mod behaviour; the cues under test are unchanged. Checkpoint
 `mauville-four-plates` holds the solved state (state 4, standing on (8,9), puzzle
 `changes: 8`, all four sides open).
 
-#### What is still open
+#### The walk to Wattson, and the gym beaten
 
-Wattson. The four plates do not end the gym by themselves: after four presses the
-maze is on the even layout, whose row 7 - the beam wall under Wattson - is closed,
-and a fifth press is needed to open the walk up. `gym_sim.py` routes that
-(8,9) -> (5,3) in 19 steps via a repeat press on switch 3, but in game the walk
-stalled at (5,11) with `Blocked` where the model expects a beam to be crossable,
-so the model's beam passability is still wrong in at least one spot. That is the
-next thing to fix in `gym_sim.py`; the puzzle itself is solved.
+The beam maths was right; the model was missing people. (5,10) is where YOUNGSTER
+BEN stands, and a beaten trainer does not leave his tile, so the step north out of
+(5,11) is refused by the NPC, not by a beam - `gym_sim.py` was treating an occupied
+tile as walkable. The fix belongs in the model, not the game: every object event in
+`data/maps/MauvilleCity_Gym/map.json` now blocks its tile (`NPCS` in `gym_sim.py`),
+which is also why the route changed.
+
+With that, the same search gives a 19-step walk from the fourth plate to (5,3),
+the tile below Wattson, with one extra press on switch 3 at (3,9) - legal, because
+the state var had moved on to 4 - to open row 7. Walked in game, every step taken
+on the read key's own words:
+
+| At | Heard |
+|---|---|
+| (5,12) | `Plate one step west.` |
+| (5,11) | `Plate two steps south-west. Open north, south and west. Blocked east.` |
+| (4,10) | `Plate two steps south.` |
+| (3,9) | `Plate underfoot. Open east, south and west. Blocked north.` (the fifth press) |
+| (4,8) | `Plate two steps south-west. Open north, east and south. Blocked west.` |
+| (4,3) | `Plate seven steps south-west. Open north, east and south. Blocked west.` |
+| (5,3) | `Plate eight steps south-west. Open north, south and west. Blocked east.` |
+
+Then the leader, start to finish, all spoken:
+
+> `Now, what are you doing here? What's that? You say you've gotten past all my
+> rigged doors? Wahahahah! Now, that is amusing! Then I, WATTSON, the LEADER of
+> MAUVILLE GYM, shall electrify you!` · `LEADER WATTSON would like to battle!` ·
+> `LEADER WATTSON sent out VOLTORB!` · `LEADER WATTSON sent out ELECTRIKE!` ·
+> `LEADER WATTSON sent out MAGNETON!` · `LEADER WATTSON used SUPER POTION!` ·
+> `LEADER WATTSON sent out MANECTRIC!` · `Player defeated LEADER WATTSON!` ·
+> `A got 2400 for winning!` · `Wahahahah! Fine, I lost! You ended up giving me a
+> thrill! Take this BADGE!` · `A received the DYNAMO BADGE from WATTSON.` ·
+> `With the DYNAMO BADGE, POKéMON can use ROCK SMASH out of battle. And, it will
+> make your POKéMON a little bit faster, too.` · `A path opened south-east.` ·
+> `Obtained the TM34!` · `A put away the TM34 in the TMs HMs POCKET.` ·
+> `That TM34 there contains SHOCK WAVE. It's a trustworthy move that never
+> misses!` · `Registered GYM LEADER WATTSON in the POKéNAV.`
+
+`A path opened south-east.` is the mod reporting Wattson's own
+`MauvilleGymDeactivatePuzzle` clearing the beams on defeat - the same swap cue,
+working from the other side of the fight. The flags confirm it:
+`FLAG_DEFEATED_MAUVILLE_GYM` set, `FLAG_RECEIVED_TM_SHOCK_WAVE` set, and checkpoint
+`mauville-gym-cleared` holds the state at (5,3) with the badge in hand.
+
+So Mauville is finished by ear end to end: four plates in the one working order,
+the trainers beaten on the way, the leader beaten, the badge and the TM spoken.
 
 The earlier finding stands: leaving the gym resets
 `VAR_MAUVILLE_GYM_STATE` and `FLAG_MAUVILLE_GYM_BARRIERS_STATE` (the city's

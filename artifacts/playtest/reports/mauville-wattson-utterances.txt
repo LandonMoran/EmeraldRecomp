@@ -1,0 +1,66 @@
+Wattson walk - mod utterances
+
+f81580   Step plate one step west.
+f81924   Person north. Press A to talk.
+f81968   Object here. Press A.
+f82027   I’ve given up on my plans to convert the city, I have. And so, I put my time into making door traps in my GYM. Oh? Now, what are you doing here? What’s that? You say you’ve gotten past all my rigged doors? Wahahahah! Now, that is amusing! Then, I, WATTSON, the LEADER of MAUVILLE GYM, shall electrify you!
+f83371   Battle.
+f83561   LEADER WATTSON would like to battle!
+f83704   LEADER WATTSON sent out VOLTORB!
+f83940   Go! TORCHIC!
+f84137   Fight, top left.
+f84166   SCRATCH, NORMAL, PP 31 of 35. 1 of 4
+f84215   TORCHIC used SCRATCH!
+f84519   Foe VOLTORB fainted!
+f84638   TORCHIC gained 441 EXP. Points!
+f84947   LEADER WATTSON sent out ELECTRIKE!
+f85228   Fight, top left.
+f85258   SCRATCH, NORMAL, PP 30 of 35. 1 of 4
+f85307   TORCHIC used SCRATCH!
+f85611   Foe ELECTRIKE fainted!
+f85730   TORCHIC gained 445 EXP. Points!
+f86038   LEADER WATTSON sent out MAGNETON!
+f86335   Fight, top left.
+f86350   SCRATCH, NORMAL, PP 29 of 35. 1 of 4
+f86399   TORCHIC used SCRATCH!
+f86596   It’s not very effective…
+f86760   Foe MAGNETON used THUNDER WAVE!
+f87049   TORCHIC is paralyzed! It may be unable to move!
+f87311   Fight, top left.
+f87358   SCRATCH, NORMAL, PP 28 of 35. 1 of 4
+f87406   Foe MAGNETON used SONICBOOM!
+f87653   TORCHIC used SCRATCH!
+f87845   It’s not very effective…
+f88015   Fight, top left.
+f88030   SCRATCH, NORMAL, PP 27 of 35. 1 of 4
+f88127   LEADER WATTSON used SUPER POTION!
+f88367   Foe MAGNETON’s SUPER POTION restored health!
+f88606   TORCHIC used SCRATCH!
+f88794   It’s not very effective…
+f88965   Fight, top left.
+f88996   SCRATCH, NORMAL, PP 26 of 35. 1 of 4
+f89044   Foe MAGNETON used SONICBOOM!
+f89291   TORCHIC used SCRATCH!
+f89482   It’s not very effective…
+f89724   Foe MAGNETON fainted!
+f89846   TORCHIC gained 759 EXP. Points!
+f90155   LEADER WATTSON sent out MANECTRIC!
+f90436   Fight, top left.
+f90466   SCRATCH, NORMAL, PP 25 of 35. 1 of 4
+f90515   Foe MANECTRIC used HOWL!
+f90799   Foe MANECTRIC’s ATTACK rose!
+f90977   TORCHIC used SCRATCH!
+f91217   A critical hit!
+f91426   Foe MANECTRIC fainted!
+f91526   TORCHIC gained 864 EXP. Points!
+f91727   Player defeated LEADER WATTSON!
+f91903   Wahahahah! Fine, I lost! You ended up giving me a thrill! Take this BADGE!
+f92232   A got 2400 for winning!
+f92493   Overworld.
+f92495   A received the DYNAMO BADGE from WATTSON.
+f92992   With the DYNAMO BADGE, POKéMON can use ROCK SMASH out of battle. And, it will make your POKéMON a little bit faster, too. Hmm… You should take this, too!
+f93571   A path opened south-east.
+f93573   Obtained the TM34!
+f93795   A put away the TM34 in the TMs HMs POCKET.
+f93992   That TM34 there contains SHOCK WAVE. It’s a trustworthy move that never misses! You can count on it! … … … … … …
+f94527   Registered GYM LEADER WATTSON in the POKéNAV.

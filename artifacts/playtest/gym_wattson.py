@@ -16,8 +16,10 @@ from checkpoints import Checkpoints  # noqa: E402
 from pad import Pad  # noqa: E402
 
 REPORTS = os.path.join(HERE, "reports")
-ROUTE = ([("down", 3), ("left", 3), ("up", 3), ("left", 2), ("right", 1),
-          ("up", 6), ("right", 1)])
+# gym_sim.py route_to((8,9), k=4, state=4) -> (5,3), with NPC tiles blocked:
+# BEN stands on (5,10), which is what refused the old route.
+ROUTE = [("down", 3), ("left", 3), ("up", 1), ("left", 1), ("up", 2),
+         ("left", 1), ("right", 1), ("up", 6), ("right", 1)]
 
 
 class Shim:
@@ -69,12 +71,19 @@ def main():
             drain(p, "r%02d" % tag, log, 80)
 
     log.append("at %s; talking to Wattson" % (tile(p),))
+    p.step("up")            # turn to face him
+    p.flush_speech("face")
     p.confirm(40)
     p.flush_speech("talk")
     drain(p, "wattson", log)
     log.append("after talk: %s map %s" % (tile(p), tuple(p.map())))
 
     cps.save("mauville-wattson-cleared", note="four plates then the walk to Wattson")
+    u = p.ask(cmd="emerald_a11y_log").get("utterances") or []
+    with open(os.path.join(REPORTS, "mauville-wattson-utterances.txt"), "w") as fh:
+        fh.write("Wattson walk - mod utterances\n\n")
+        for e in u:
+            fh.write("f%-7d %s\n" % (e["frame"], e["text"]))
     out = "\n".join(log)
     open(os.path.join(REPORTS, "mauville-wattson.log"), "w").write(out + "\n")
     print(out)

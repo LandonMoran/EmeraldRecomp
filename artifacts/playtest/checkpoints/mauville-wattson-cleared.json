@@ -1,14 +1,14 @@
 {
  "name": "mauville-wattson-cleared",
  "note": "four plates then the walk to Wattson",
- "saved_at": "2026-11-28T05:01:23Z",
+ "saved_at": "2026-11-28T05:11:03Z",
  "map": [
   10,
   0
  ],
  "pos": [
   5,
-  11
+  3
  ],
  "location": {
   "map": [
@@ -21,12 +21,12 @@
  },
  "object": {
   "x": 12,
-  "y": 18,
+  "y": 10,
   "map": [
    10,
    0
   ],
-  "facing": "east",
+  "facing": "north",
   "elevation": 0
  },
  "puzzle": {
@@ -36,17 +36,17 @@
    0
   ],
   "x": 5,
-  "y": 11,
+  "y": 3,
   "underfoot": "plain",
   "facing": "plain",
   "triggers": 4,
-  "trigger_dist": 2,
-  "trigger_dx": -1,
-  "trigger_dy": 1,
+  "trigger_dist": 8,
+  "trigger_dx": -2,
+  "trigger_dy": 6,
   "changed": 0,
   "opened": 0,
   "closed": 0,
-  "changes": 8,
+  "changes": 2,
   "last_move": 0,
   "puzzle_map": true,
   "open": {
@@ -61,17 +61,17 @@
    33760024
   ],
   "blocks": [
-   563,
-   1560,
+   550,
+   1583,
    522,
-   570
+   557
   ]
  },
  "state": {
-  "var:VAR_MAUVILLE_GYM_STATE": 4,
-  "var:VAR_PETALBURG_GYM_STATE": 0,
-  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": false,
-  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "var:VAR_MAUVILLE_GYM_STATE": 3,
+  "var:VAR_PETALBURG_GYM_STATE": 1,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
   "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
   "flag:FLAG_DEFEATED_FORTREE_GYM": false,
   "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
