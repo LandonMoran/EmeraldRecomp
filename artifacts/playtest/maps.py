@@ -8,7 +8,7 @@ from the warp table's (map tile). Both facts are in the game data, so read them
 instead of discovering them one bump at a time:
 
 * a layout's ``map.bin`` is width*height little-endian u16 blocks, row-major,
-  16 blocks per row;
+  with no header (the file's first block is the first tile);
 * each block is ``metatileId | collision << 10 | elevation << 12``;
 * collision 0 is passable, anything else blocks.
 
@@ -36,6 +36,11 @@ class Grid:
             raise KeyError(layout_name)
         self.w, self.h = lay["width"], lay["height"]
         raw = open(f"{ROOT}/{lay['blockdata_filepath']}", "rb").read()
+        expect = self.w * self.h * 2
+        if len(raw) != expect:
+            raise ValueError(
+                f"{layout_name}: map.bin is {len(raw)} bytes, {self.w}x{self.h} "
+                f"blocks need {expect}")
         self.blocks = list(struct.unpack("<%dH" % (self.w * self.h), raw))
 
     def block(self, x, y):

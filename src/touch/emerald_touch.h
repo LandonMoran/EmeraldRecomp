@@ -104,6 +104,7 @@ bool field_tap(Core& core, const SceneState& s, const gbarecomp::Gesture& g,
 bool field_drag(Core& core, const SceneState& s, const gbarecomp::Gesture& g);
 void field_frame(Core& core, FrameCtx& ctx);
 void field_walk_to(int x, int y);   // arm a route to a map tile (TCP driven)
+void field_walk_cancel();           // drop the armed/active route
 void field_overlay(gbarecomp::HostOverlay& ov);
 void battle_overlay(gbarecomp::HostOverlay& ov, const SceneState& s);
 bool battle_panel_tap(Core& core, const SceneState& s, float dx, float dy);

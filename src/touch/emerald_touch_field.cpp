@@ -372,6 +372,7 @@ Exec g_exec;
 // overworld frame so it runs inside the game loop rather than mid-command.
 struct PendingWalk {
     bool armed = false;
+    bool cancel = false;
     Tile tile;
 };
 PendingWalk g_pending_walk;
@@ -725,10 +726,20 @@ bool field_drag(Core& c, const SceneState& s, const k::Gesture& g) {
 
 void field_walk_to(int x, int y) {
     g_pending_walk.armed = true;
+    g_pending_walk.cancel = false;
     g_pending_walk.tile = Tile{x, y};
 }
 
+void field_walk_cancel() {
+    g_pending_walk.armed = false;
+    g_pending_walk.cancel = true;
+}
+
 void field_frame(Core& c, FrameCtx& ctx) {
+    if (g_pending_walk.cancel) {
+        g_pending_walk.cancel = false;
+        if (g_exec.active) stop(c, "tcp-cancel");
+    }
     if (g_pending_walk.armed && !g_exec.active && ctx.scene.field.overworld) {
         const Tile t = g_pending_walk.tile;
         g_pending_walk.armed = false;

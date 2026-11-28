@@ -48,17 +48,29 @@ def unlock(p, limit=30):
 
 
 def ball_pocket(p):
-    """[(slot, itemId, quantity)] with the save key applied."""
+    """[(slot, itemId, quantity)] for the pocket that holds balls.
+
+    The pocket offset moves with the bag layout the game has built, so rather
+    than trust one constant the whole pockets window is scanned and the run of
+    sixteen slots whose item ids are balls wins. Quantities are XORed with the
+    save key; item ids are stored plainly.
+    """
     sb1 = p.saveblock()
     sb2 = struct.unpack("<I", rd(p.s, "read_iwram", 0x03005D90, 4))[0]
     key = struct.unpack("<H", rd(p.s, "read_ewram", sb2 + 0xAC, 2))[0]
-    raw = rd(p.s, "read_ewram", sb1 + BALL_OFFSET, BALL_SLOTS * 4)
-    out = []
-    for i in range(BALL_SLOTS):
-        iid, qty = struct.unpack("<HH", raw[i * 4:(i + 1) * 4])
-        if iid:
-            out.append((i, iid, qty ^ key))
-    return out, key
+    best, best_hits = [], 0
+    for off in range(0x600, 0x700, 4):
+        raw = rd(p.s, "read_ewram", sb1 + off, BALL_SLOTS * 4)
+        slots = []
+        for i in range(BALL_SLOTS):
+            iid, qty = struct.unpack("<HH", raw[i * 4:(i + 1) * 4])
+            if 1 <= iid <= 12:            # the twelve ball ids
+                q = qty ^ key
+                if q <= 99:
+                    slots.append((i, iid, q))
+        if len(slots) > best_hits:
+            best, best_hits = slots, len(slots)
+    return best, key
 
 
 def say_count(p, tag):
@@ -67,37 +79,78 @@ def say_count(p, tag):
     return slots
 
 
+def finish_shop(p, tag="shop"):
+    """Walk the shop's own menus out: confirm the sale, then cancel to the floor.
+
+    The clerk answers the quantity with a yes/no, then prints the sale and the
+    money, then shows the stock list again; only cancel leaves the counter.
+    """
+    heard_sale = False
+    for i in range(14):
+        st = p.status()
+        if st.get("scene") != "shop":
+            break
+        items = st.get("items") or []
+        upper = [str(x).upper() for x in items]
+        if "YES" in upper and "NO" in upper:
+            idx = upper.index("YES")
+            while p.status().get("selected") != idx:
+                p.action("up", 20)
+                p.frames(35)
+            p.confirm(85)
+        elif any(u.startswith(("POK", "ULTRA", "GREAT", "MASTER", "PREMIER"))
+                 for u in upper):
+            p.action("cancel", 20)
+            p.frames(55)
+        else:
+            p.confirm(85)
+        line = last(p, f"{tag}{i}")
+        p.say(f"{tag}{i}", line)
+        if "here you go" in line.lower():
+            heard_sale = True
+    p.say(tag, f"sale heard={heard_sale} scene={p.status().get('scene')}")
+    # Deliberately no unlock() here: the player is facing the clerk, and a
+    # stray A press reopens the counter menu.
+    return heard_sale
+
+
 def walk(p, grid, target, tag, blocked=(), limit=240):
     """Step toward `target`, re-planning from the live tile after every step.
 
-    Executing one BFS route blind desynchronises the moment a step is refused
-    (a person in the way, a trainer battle, an elevation change): the walker
-    keeps issuing the rest of the old route from the wrong square and wanders
-    off the map. Re-reading the tile and re-planning each step makes the route
-    self-correcting and lets a stuck walker say exactly where it is stuck.
+    Two things the static grid cannot know are handled here rather than being
+    guessed at load time: a person standing in the lane (passed in `blocked`),
+    and a tile the grid calls open but the game refuses - a ledge, a one-way
+    drop, a counter. A refused step marks that tile unusable for the rest of
+    this walk and the route is rebuilt around it, so the walker learns the
+    difference between the map data and the room instead of stalling on it.
     """
     e = navwalk.Explorer(p, tag)
     pos = obj_to_map(*navwalk.settled(p))
+    avoid = set()
     p.say(tag, f"from ({pos[0]},{pos[1]}) to {target}")
-    stuck = 0
     for _ in range(limit):
         if pos == target:
             return pos
-        path = grid.path(pos, target, blocked=blocked)
+        path = grid.path(pos, target, blocked=set(blocked) | avoid)
         if not path:
-            p.say(tag, f"no path from {pos} to {target}")
+            p.say(tag, f"no path from {pos} to {target} (avoiding {len(avoid)} tiles)")
             return pos
         before = pos
         e.probe(path[0])
         p.frames(18)
         pos = obj_to_map(*navwalk.settled(p))
         if pos == before:
-            stuck += 1
-            if stuck >= 8:
+            d = path[0]
+            dx, dy = navwalk.DIRS[d] if hasattr(navwalk, "DIRS") else (0, 0)
+            if (dx, dy) == (0, 0):
+                from maps import DIRS as _D
+                dx, dy = _D[d]
+            nxt = (before[0] + dx, before[1] + dy)
+            if nxt in avoid:
                 p.say(tag, f"stuck at {pos} heading for {target}")
                 return pos
-        else:
-            stuck = 0
+            avoid.add(nxt)
+            p.say(tag, f"({before[0]},{before[1]}) refuses {d} to {nxt}; routing around it")
     p.say(tag, f"gave up at {pos} heading for {target}")
     return pos
 
@@ -198,10 +251,6 @@ def buy_first_ball(p, tag="buy"):
     p.say(f"{tag}qty", last(p, f"{tag}qty"))
     p.confirm(80)
     p.say(f"{tag}total", last(p, f"{tag}total"))
-    for i in range(3):
-        p.confirm(80)
-        p.say(f"{tag}line{i}", last(p, f"{tag}line{i}"))
-    leave_shop(p, f"{tag}leave")
 
 
 def flee(p, tag="flee"):
@@ -298,9 +347,48 @@ def wander_to_battle(p, tag="grass", limit=90):
     return p.scene() != "overworld"
 
 
+def bag_screen(p, tag="bag"):
+    """Open the real bag and quote the announcer, without derailing the run."""
+    unlock(p)
+    try:
+        p.action("start", 20)
+        p.frames(60)
+        st = p.status()
+        items = st.get("items") or []
+        p.say(tag, f"start menu: {items}")
+        if not any(i.upper().startswith("BAG") for i in items):
+            p.action("cancel", 20)
+            p.frames(40)
+            return None
+        idx = next(i for i, v in enumerate(items) if v.upper().startswith("BAG"))
+        while p.status().get("selected") != idx:
+            p.action("down", 20)
+            p.frames(40)
+        p.confirm(90)
+        p.say(tag, last(p, f"{tag}open"))
+        # walk the pocket list to the ball pocket
+        for i in range(6):
+            t = last(p, f"{tag}p{i}")
+            if "BALL" in t.upper() and "of" in t:
+                p.say(tag, f"announcer: {t}")
+                break
+            p.action("right", 20)
+            p.frames(50)
+        p.action("cancel", 20)
+        p.frames(60)
+        p.action("cancel", 20)
+        p.frames(60)
+        unlock(p)
+        return True
+    except Exception as exc:                      # keep the session alive
+        p.say(tag, f"bag screen skipped: {exc}")
+        unlock(p)
+        return None
+
+
 def main():
     p = Pad(transcript=TRANSCRIPT)
-    p.say("session", "Rustboro save -> out of the gym -> Mart on foot -> buy a ball -> Route 116 grass -> catch")
+    p.say("session", "one session: Rustboro gym -> Mart -> buy a ball -> Route 116 grass -> catch")
     from checkpoints import Checkpoints
 
     class S:
@@ -325,21 +413,40 @@ def main():
         return
 
     tw = Grid('LAYOUT_RUSTBORO_CITY')
-    go_to_warp(p, tw, [(16, 45)], (11, 4), "mart_door", people=npc_tiles('RustboroCity'))
-    p.say("map", f"in the Mart: {curmap(p)}")
-    if curmap(p) != (11, 4):
+    go_to_warp(p, tw, [(16, 45)], (11, 7), "mart_door", people=npc_tiles('RustboroCity'))
+    p.say("map", f"in the Mart: {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
+    if curmap(p) != (11, 7):
         p.say("abort", "did not reach the Mart")
         return
 
     buy_first_ball(p)
-    say_count(p, "count_after_buy")
+    after_buy = say_count(p, "count_after_buy")
 
-    mg = Grid('LAYOUT_MART')
-    go_to_warp(p, mg, [(6, 7), (7, 7)], (0, 3), "mart_out")
+    finish_shop(p, "shop")
+
+    # The clerk's farewell is still on screen; one A closes it, and only one -
+    # another A at the counter reopens the menu.
+    for i in range(6):
+        st = p.ask(cmd="emerald_dev_state")
+        if not st.get("message_box"):
+            break
+        p.confirm(70)
+        p.frames(45)
+        p.say(f"farewell{i}", last(p, f"farewell{i}"))
+    p.frames(60)
+    for i in range(10):
+        if curmap(p) != (11, 7):
+            break
+        p.step("south")
+        p.frames(85)
+        p.flush_speech(f"walkout{i}")
+    p.say("mart_out", f"map {curmap(p)} tile {obj_to_map(*navwalk.settled(p))}")
     p.say("map", f"back in Rustboro: {curmap(p)}")
+    if curmap(p) != (0, 3):
+        p.say("abort", "did not leave the Mart")
+        return
 
-    walk(p, tw, (10, 40), "rustboro_east", blocked=npc_tiles('RustboroCity'))
-    step_onto(p, "east", (11, 40), "to_route116")
+    cross_edge(p, tw, ("x", 1), (11, 40), "to_route116")
     p.say("map", f"on Route 116: {curmap(p)} tile {obj_to_map(*navwalk.settled(p))}")
     if curmap(p) != (11, 40):
         p.say("abort", "did not reach Route 116")
@@ -351,13 +458,13 @@ def main():
     p.say("encounter", last(p, "enc"))
     caught = throw_from_bag(p)
     p.say("thrown", f"capture={caught}")
-    for i in range(10):
+    for i in range(12):
         if p.scene() == "overworld":
             break
-        p.confirm(80)
+        p.confirm(85)
         p.say(f"after{i}", last(p, f"after{i}"))
     say_count(p, "count_after_throw")
-    p.say("final", f"scene {p.scene()} map {curmap(p)}")
+    p.say("final", f"scene {p.scene()} map {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
 
 
 if __name__ == "__main__":

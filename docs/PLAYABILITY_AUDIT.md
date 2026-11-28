@@ -931,6 +931,16 @@ and registered. A re-run with the fixed pad now writes the full narrative in one
 file; until that is filed, this item is a PASS on the capture itself and a
 recorded shortfall on the transcript, not a clean PASS.
 
+**The flagged 2-vs-1 discrepancy, settled from the game's own output.** The
+shop's `IN BAG:` line is not a bag count at all. On the counter screen the game
+printed `IN BAG: 0 200 01` before a POKé BALL sale and `IN BAG: 9 200 01` on a
+later visit - three fields whose first value tracks the list row, whose second
+is the unit price (200 for a POKé BALL) and whose third is the quantity being
+bought. Reading that line as "1 in the bag" was the mistake; the bag announcer's
+`2 in the bag.` was the true pocket count for a save that already held two
+balls. No announcer fix is needed, and the decrement proof must be read from the
+pocket, not from the shop line.
+
 **The single-session re-run, this pass.** With the pad appending again the run
 was retried as one unbroken session from every checkpoint on disk, walking the
 whole way with held pad directions and, for the routes it could plan, the
