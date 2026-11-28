@@ -1,0 +1,8 @@
+# artifacts/playtest/reports/target-cue.txt - appended by each pad session
+# --- new pad session ---
+[session] one session: arm a navigation target one tile away, walk onto it, hear the arrival cue
+[start] map (11, 3) tile (5, 3)
+[armed] target (6,3) from (5, 3)
+[arrive f139701] Object here. Press A.
+[arrive f139875] You have arrived.
+[moved] right -> (6, 3)

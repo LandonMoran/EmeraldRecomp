@@ -1,0 +1,64 @@
+[walk00-down f107241] A got 1104 for winning!
+[walk00-down f107503] Overworld.
+[walk00-down f107698] Pit two steps north-east.
+[walk00-down f107845] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f107845] Trainer here. Press A to talk.
+[walk00-down f107849] I’m trying to relieve my stress. Don’t come along and stress me out!
+[walk00-down f108309] Battle.
+[walk00-down f108484] KINDLER AXLE would like to battle!
+[walk00-down f108618] KINDLER AXLE sent out NUMEL!
+[walk00-down f108866] Go! TORCHIC!
+[walk00-down f109058] Fight, top left.
+[walk00-down f109066] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[walk00-down f109115] TORCHIC used SCRATCH!
+[walk00-down f109434] Foe NUMEL fainted!
+[walk00-down f109556] TORCHIC gained 433 EXP. Points!
+[walk00-down f109758] Player defeated KINDLER AXLE!
+[walk00-down f109933] I hope FLANNERY flames you good!
+[walk00-down f110094] A got 736 for winning!
+[walk00-down f110356] Overworld.
+[walk00-down f110435] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110455] Pit one step west.
+[walk00-down f110479] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110499] Pit underfoot.
+[walk00-down f110575] A steam vent. Step on it and it throws you back up.
+[walk00-down f110575] Ledge two steps south. Jump south to cross it.
+[walk00-down f110575] Vent underfoot.
+[walk00-down f110575] New area. Lavaridge Town Gym B.
+[walk00-down f110699] Vent two steps north.
+[walk00-down f110731] A steam vent. Step on it and it throws you back up.
+[walk00-down f110803] Vent underfoot.
+[walk00-down f110864] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f110864] Pit underfoot.
+[walk00-down f110864] New area. Lavaridge Town Gym.
+[walk00-down f111003] Pit two steps north-east.
+[walk00-down f111211] Pit two steps east.
+[walk00-down f111243] A pit. Step on it and the floor drops you to the basement.
+[walk00-down f111243] Trainer here. Press A to talk.
+[walk00-down f111362] Um… Okay, I’ll battle with you.
+[walk00-down f111662] Battle.
+[walk00-down f111839] BATTLE GIRL DANIELLE would like to battle!
+[walk00-down f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[walk00-down f112275] Go! TORCHIC!
+[walk00-down f112470] Fight, top left.
+[walk00-down f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f112520] Foe MEDITITE used DETECT!
+[walk00-down f112731] Foe MEDITITE protected itself!
+[walk00-down f112918] TORCHIC is paralyzed! It can’t move!
+[walk00-down f113170] Fight, top left.
+[walk00-down f113187] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f113478] Foe MEDITITE used BIDE!
+[walk00-down f113650] Fight, top left.
+[walk00-down f113691] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f113739] TORCHIC is paralyzed! It can’t move!
+[walk00-down f113982] Foe MEDITITE is storing energy!
+[walk00-down f114173] Fight, top left.
+[walk00-down f114195] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-down f114244] TORCHIC used SCRATCH!
+[walk00-down f114459] A critical hit!
+[walk00-down f114673] Foe MEDITITE fainted!
+[walk00-down f114793] TORCHIC gained 448 EXP. Points!
+[walk00-down f114994] Player defeated BATTLE GIRL DANIELLE!
+[walk00-down f115212] Oh, but you’re too strong.
+[walk00-down f115331] A got 552 for winning!
+[walk00-down f115593] Overworld.

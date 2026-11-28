@@ -46,6 +46,9 @@ class Conn:
     def read_iwram(self, addr, n):
         return self.read("iwram", addr, n)
 
+    def read_rom(self, addr, n):
+        return self.read("rom", addr, n)
+
     def write(self, addr, blob):
         return self.cmd("write_mem", addr=addr, hex=blob.hex())
 

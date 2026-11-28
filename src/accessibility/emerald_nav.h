@@ -54,6 +54,13 @@ struct NavState {
     int warpCount = 0;
     WarpInfo warps[8];
 
+    // Map connections: which edge of this map walks onto another map. A town's
+    // exits are not warps, so without these a player hears the geometry and
+    // nothing about where the road goes.
+    struct ConnEdge { int direction; int dist; int mapGroup; int mapNum; };
+    int connCount = 0;
+    ConnEdge conns[8];
+
     int nearestWarp = -1;    // index into warps, -1 when the map has none in range
     int warpDx = 0, warpDy = 0, warpDist = 0;
 

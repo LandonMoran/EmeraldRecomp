@@ -83,6 +83,24 @@ constexpr std::uint32_t gBagPosition = 0x0203CE58;
 constexpr std::uint32_t gBagMenu = 0x0203CE54;
 constexpr std::uint32_t gPartyMenu = 0x0203CEC8;
 constexpr std::uint32_t gPlayerPartyCount = 0x020244E9;
+constexpr std::uint32_t gPlayerParty = 0x020244EC;             // 6 x 0x64
+// struct Item, 0x2C bytes each, indexed by item id: u8 name[14] at +0,
+// u16 itemId at +14, u16 price at +16. Located in the ROM by its own strings
+// (MASTER BALL at id 1, ULTRA BALL one stride later) and checked against the
+// prices the shop charges: POKé BALL 200, POTION 300.
+constexpr std::uint32_t gItems = 0x085839A0;
+constexpr std::uint32_t kItemSize = 0x2C;
+// SaveBlock1 bag pockets, four bytes per slot: u16 itemId, u16 quantity.
+constexpr std::uint32_t kBagItems = 0x560;      // 30 slots
+constexpr std::uint32_t kBagKeyItems = 0x5D8;   // 30 slots
+constexpr std::uint32_t kBagPokeBalls = 0x650;  // 16 slots
+constexpr std::uint32_t kBagTmHm = 0x690;       // 64 slots
+constexpr std::uint32_t kBagBerries = 0x790;    // 46 slots
+// struct BagPosition: exitCallback +0, location +4, pocket +5,
+// pocketSwitchArrowPos +6, cursorPosition[5] +8 (u16 each), scrollPosition[5].
+// The bag screen's own cursor, since its item rows are not a ListMenu.
+constexpr std::uint32_t kBagPocket = 5;
+constexpr std::uint32_t kBagCursor = 8;
 }  // namespace addr
 
 namespace fn {

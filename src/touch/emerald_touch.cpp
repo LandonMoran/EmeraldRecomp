@@ -669,6 +669,24 @@ int tcp_command(const char* request, void (*write)(void*, const char*, std::size
         emit();
         return 1;
     }
+    if (cmd == "emerald_touch_walk") {
+        // Map tiles, as they appear in the layout and the warp table. The
+        // planner works in engine coords, where a map tile (x, y) is drawn at
+        // (x + 7, y + 7) because of the 7-tile border.
+        const int x = static_cast<int>(req.integer("x", 0));
+        const int y = static_cast<int>(req.integer("y", 0));
+        field_walk_to(x + 7, y + 7);
+        out = "{\"ok\":true,\"armed\":true,\"x\":" + std::to_string(x) +
+              ",\"y\":" + std::to_string(y) + "}";
+        emit();
+        return 1;
+    }
+    if (cmd == "emerald_touch_stop") {
+        field_walk_cancel();
+        out = "{\"ok\":true,\"cancel\":true}";
+        emit();
+        return 1;
+    }
     if (cmd == "emerald_touch_field") {
         out = field_json();
         emit();

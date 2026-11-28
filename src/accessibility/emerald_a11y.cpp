@@ -17,9 +17,12 @@
 
 #include "emerald_a11y.h"
 
+#include "emerald_text_filter.h"  // readouts (health box) vs speech
 #include "emerald_cues.h"    // audio cues + interaction outcomes
 #include "emerald_hotkeys.h"  // pad commands, chord decoding
 #include "emerald_nav.h"     // exits, stairs, adjacent people/items
+#include "emerald_puzzle.h"  // terrain, room changes, forced moves
+#include "dev/emerald_devtools.h"  // dev-only warp service (compiled out normally)
 #include "emerald_settings.h"  // pad-editable spoken settings
 
 #include <algorithm>
@@ -90,6 +93,13 @@ std::uint64_t g_frame = 0;
 std::string g_last_spoken;
 std::uint64_t g_last_said_frame = 0;
 std::string g_message;          // latest spoken game text (for repeat/status)
+// The party box is drawn in pieces - "20" then "/", then the max HP - and the
+// current-HP piece is repainted once per step of the bar while HP animates. A
+// line built from it is held here until the number stops moving, so a potion
+// says the result once instead of once per frame.
+std::string g_party_pending;
+std::uint64_t g_party_pending_at = 0;
+bool g_kind_announced = false;   // the current screen has said its name
 
 // ── Diagnostic log (TCP) ─────────────────────────────────────────────────
 
@@ -119,10 +129,22 @@ std::vector<PrintEvent> g_prints;
 std::uint64_t g_prints_seen = 0;
 std::string g_last_print;
 
-// Labels drawn into the current menu window, in draw order. The game prints its
-// own option strings (including the player's name in the Start menu), so this
-// is the label list without guessing anything.
-std::vector<std::string> g_labels;
+// Labels drawn into a menu window, in draw order. The game prints its own
+// option strings (including the player's name in the Start menu), so this is
+// the label list without guessing anything.
+//
+// A menu prints its entries on the frame it opens; the classifier only calls it
+// a menu a frame or two later, which is a surface change, and the surface change
+// used to drop exactly those labels. So two generations are kept: the one being
+// filled and the one that arrived just before, matched back by window id. That
+// is what makes the Start menu audible - every door to the party, the bag and
+// saving goes through it.
+struct LabelSet {
+    std::uint8_t window = 0xFF;
+    std::vector<std::string> labels;
+};
+LabelSet g_labels;
+LabelSet g_labels_prev;
 
 // ── Watched state ────────────────────────────────────────────────────────
 
@@ -151,6 +173,7 @@ bool g_naming_button = false;
 std::string g_naming_typed;
 
 bool g_pending_item = false;
+int g_bag_row = -1;   // (pocket << 16) | cursor, to hear every move in the bag
 int g_pending_deadline = 0;
 
 // ── Navigation ("select this item") ─────────────────────────────────────
@@ -227,8 +250,11 @@ std::string decode(const Mem& m, std::uint32_t address, std::size_t max_len,
                 case 0xB2: out += "\xE2\x80\x9D"; break;        // ”
                 case 0xB3: out += "\xE2\x80\x98"; break;        // ‘
                 case 0xB4: out += "\xE2\x80\x99"; break;        // ’
-                case 0xB5: out += "\xE2\x99\x82"; break;        // ♂
-                case 0xB6: out += "\xE2\x99\x80"; break;        // ♀
+                // Gender is a font glyph (charmap: '♂' = B5, '♀' = B6). Speech
+                // says the word: U+2642 is treated as emoji by several engines,
+                // so "male sign" or nothing at all came out of it.
+                case 0xB5: out += "male"; break;
+                case 0xB6: out += "female"; break;
                 case 0xB8: out += ','; break;
                 case 0xBA: out += '/'; break;
                 case 0x1B: out += "\xC3\xA9"; break;            // é
@@ -251,7 +277,12 @@ void log_line(const std::string& text, int interrupt) {
     while (g_log.size() > kLogSize) g_log.pop_front();
 }
 
-void say(std::string text, bool interrupt) {
+// allow_repeat: say it even if these exact words were the last thing said. The
+// default drops an identical sentence repeated inside 90 frames so a line that
+// is refreshed every frame does not stutter; a caller passing true is saying
+// the fact has just become true again (you walked back up to the ledge, you fell
+// in the same pit twice) and the repeat is the point.
+void say(std::string text, bool interrupt, bool allow_repeat = false) {
     std::string out;
     bool space = false;
     for (char ch : text) {
@@ -276,7 +307,9 @@ void say(std::string text, bool interrupt) {
                    (static_cast<unsigned char>(out.back()) & 0xC0) == 0x80)
                 out.pop_back();
     }
-    if (!interrupt && out == g_last_spoken && g_frame - g_last_said_frame < 90) return;
+    if (!interrupt && !allow_repeat && out == g_last_spoken &&
+        g_frame - g_last_said_frame < 90)
+        return;
     g_last_spoken = out;
     g_last_said_frame = g_frame;
     log_line(out, interrupt ? 1 : 0);
@@ -493,6 +526,23 @@ bool window_is_battle_labels(const SceneState& s, std::uint32_t window) {
     return s.battle.active && s.battle.control != BattleControl::None && window != 0;
 }
 
+// Which windows have been seen holding menu labels. A menu prints its entries
+// the frame it opens, and the classifier needs a frame or two to call it a menu;
+// on a reopen the prints can arrive before that, and they were then read out as
+// dialogue while the labels behind them stayed empty - so the Start menu said
+// "POKéMON BAG" once and then only "Option 2 of 6". A window that has held menu
+// labels keeps being read as one for as long as a menu is up.
+std::uint32_t g_menu_windows = 0;
+
+bool window_holds_labels(const SceneState& s, std::uint32_t window) {
+    if (window_is_menu(s, window) || window_is_battle_labels(s, window)) {
+        if (window < 32) g_menu_windows |= 1u << window;
+        return true;
+    }
+    if (!(s.menu.live || s.start_menu || s.battle.active)) return false;
+    return window < 32 && (g_menu_windows & (1u << window)) != 0;
+}
+
 // ── Labels ───────────────────────────────────────────────────────────────
 
 const char* const kActionLabels[4] = {"Fight", "Bag", "Pok\xC3\xA9mon", "Run"};
@@ -523,7 +573,13 @@ std::string list_item_name(const Mem& m, const ListState& l, int index) {
 
 std::string menu_label(const MenuState& menu, int index) {
     const int slot = index - menu.min;
-    if (slot >= 0 && slot < static_cast<int>(g_labels.size())) return g_labels[slot];
+    const auto in = [&](const LabelSet& set) -> const std::string* {
+        if (set.window != menu.window) return nullptr;
+        if (slot < 0 || slot >= static_cast<int>(set.labels.size())) return nullptr;
+        return &set.labels[slot];
+    };
+    if (const std::string* live = in(g_labels)) return *live;
+    if (const std::string* before = in(g_labels_prev)) return *before;
     return {};
 }
 
@@ -547,6 +603,138 @@ std::string move_speech(const Mem& m, const emerald::touch::BattleState& b, int 
     std::snprintf(tail, sizeof(tail), ", %s, PP %d of %d.", type.empty() ? "unknown type"
                                                                         : type.c_str(),
                   m.u8(mon + 0x24 + slot), max_pp);
+    return out + tail;
+}
+
+// Every battler on the field, with the one number a fight cannot be played
+// without. The game draws HP bars; a player who cannot see them has no way to
+// know whether to attack, switch or heal, and the message log only says
+// "fainted" once it is too late to decide anything.
+std::string battle_field_speech(const Mem& m) {
+    const int count = std::min<int>(4, m.u8(addr::gBattlersCount));
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gBattleMons + static_cast<std::uint32_t>(i) * 0x58;
+        const int max_hp = m.u16(mon + 0x2C);
+        if (max_hp <= 0) continue;
+        const int hp = m.u16(mon + 0x28);
+        const int level = m.u8(mon + 0x2A);
+        std::string name = decode(m, mon + 0x30, 11);
+        if (name.empty()) name = "Pok\xC3\xA9mon";
+        const bool foe = (i & 1) != 0;
+        char part[128];
+        std::snprintf(part, sizeof(part), "%s%s%s level %d, %d of %d HP%s.",
+                      out.empty() ? "" : " ", foe ? "Foe " : "", name.c_str(), level,
+                      hp, max_hp, hp == 0 ? ", fainted" : "");
+        out += part;
+    }
+    return out;
+}
+
+// The party, as a whole. The party screen's own labels only give names, so
+// choosing which Pokémon to send out was a guess between identical-looking
+// entries: the numbers that decide it live in the party structures.
+std::string party_field_speech(const Mem& m) {
+    const int count = std::min<int>(6, m.u8(addr::gPlayerPartyCount));
+    std::string out;
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gPlayerParty + static_cast<std::uint32_t>(i) * 0x64;
+        const int level = m.u8(mon + 0x54);
+        const int hp = m.u16(mon + 0x56);
+        const int max_hp = m.u16(mon + 0x58);
+        if (max_hp <= 0) continue;
+        std::string name = decode(m, mon + 0x08, 10);
+        if (name.empty()) name = "Pok\xC3\xA9mon";
+        char part[128];
+        std::snprintf(part, sizeof(part), "%s%s level %d, %d out of %d HP%s.",
+                      out.empty() ? "" : " ", name.c_str(), level, hp, max_hp,
+                      hp == 0 ? ", fainted" : "");
+        out += part;
+    }
+    return out;
+}
+
+// The bag. Its screen is not a ListMenu whose entries are the items: the only
+// entry the list carries is "CLOSE BAG", and the item rows are drawn by the bag
+// menu itself without passing through the text printer, so a player with a Poké
+// Ball in the pocket heard "Bag. CLOSE BAG, 1 of 1." and nothing else. The
+// contents are read from the save block instead, and named from the game's own
+// item table.
+std::string item_name(const Mem& m, int id) {
+    if (id <= 0) return {};
+    std::string name = decode(m, addr::gItems + static_cast<std::uint32_t>(id) * addr::kItemSize, 14);
+    return name;
+}
+
+// The bag works like any other menu, so it reads like one: whichever row the
+// cursor is on, with where it sits and how many are carried. The bag's own
+// pocket and cursor live in gBagPosition; its rows are not a ListMenu, so
+// nothing else reports them.
+struct BagPocket {
+    std::uint32_t offset;
+    int slots;
+    const char* name;
+};
+// gBagPosition.pocket is the *display* order of the tabs - ITEMS, POKE BALLS,
+// TM/HM, BERRIES, KEY ITEMS (constants/item.h's ITEMS_POCKET..KEY_ITEMS_POCKET) -
+// not the POCKET_* enum, which numbers key items second. Reading it as the enum
+// made the Poké Balls tab answer "Empty" while the ball was plainly there.
+const BagPocket kBagPockets[5] = {
+    {addr::kBagItems, 30, "Items"},
+    {addr::kBagPokeBalls, 16, "Pok\xC3\xA9 balls"},
+    {addr::kBagTmHm, 64, "TMs and HMs"},
+    {addr::kBagBerries, 46, "Berries"},
+    {addr::kBagKeyItems, 30, "Key items"},
+};
+
+int bag_pocket(const Mem& m) {
+    const int pocket = m.u8(addr::gBagPosition + addr::kBagPocket);
+    return pocket >= 0 && pocket < 5 ? pocket : -1;
+}
+
+int bag_cursor(const Mem& m, int pocket) {
+    if (pocket < 0) return 0;
+    return m.u16(addr::gBagPosition + addr::kBagCursor + static_cast<std::uint32_t>(pocket) * 2);
+}
+
+// "Poké balls. POKé BALL, 1 of 1, 1 in the bag." A quantity is stored XORed with
+// the save's encryption key (item.c's GetBagItemQuantity), so the raw word is not
+// the number carried: one Poké Ball reads back as 4762 until the key is applied.
+std::string bag_cursor_speech(const Mem& m, bool with_pocket) {
+    const std::uint32_t sb1 = m.u32(addr::gSaveBlock1Ptr);
+    if (sb1 < 0x02000000u || sb1 > 0x02040000u) return {};
+    const int pocket = bag_pocket(m);
+    if (pocket < 0) return {};
+    const int key = m.u16(m.u32(addr::gSaveBlock2Ptr) + 0xAC);
+    const BagPocket& p = kBagPockets[pocket];
+    const int cursor = bag_cursor(m, pocket);
+
+    int total = 0;
+    int id = 0;
+    int count = 0;
+    for (int i = 0; i < p.slots; ++i) {
+        const std::uint32_t slot = sb1 + p.offset + static_cast<std::uint32_t>(i) * 4;
+        const int slotId = m.u16(slot);
+        if (slotId <= 0) continue;
+        if (total == cursor) {
+            id = slotId;
+            count = m.u16(slot + 2) ^ key;
+        }
+        ++total;
+    }
+
+    std::string out;
+    if (with_pocket) {
+        out += p.name;
+        out += ". ";
+    }
+    if (total == 0) return out + "Empty.";
+    if (cursor >= total) return out + "Close bag.";
+    std::string name = item_name(m, id);
+    if (name.empty()) name = "Item " + std::to_string(id);
+    char tail[96];
+    std::snprintf(tail, sizeof(tail), "%s, %d of %d, %d in the bag.", name.c_str(), cursor + 1,
+                  total, count);
     return out + tail;
 }
 
@@ -668,7 +856,11 @@ int list_index(const ListState& l) { return l.scroll + l.selected; }
 // Fill `out` with what the current selection is. Returns false when the label
 // could not be resolved (so the caller can wait a frame for captured labels).
 bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
-    if (s.menu.live) {
+    // While a message box is up the cursor is not what the player is looking at,
+    // and reading it out answers the question that was asked two presses ago.
+    // Saying nothing leaves the caller free to speak the message instead.
+    const bool text_up = !s.battle.active && m.u8(addr::sFieldMessageBoxMode) != 0;
+    if (s.menu.live && !text_up) {
         const MenuState& menu = s.menu;
         const int count = menu.max - menu.min + 1;
         const int pos = menu.cursor - menu.min + 1;
@@ -681,6 +873,15 @@ bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
         if (count > 2) *out += ", " + std::to_string(pos) + " of " + std::to_string(count);
         *out += ".";
         return true;
+    }
+    // The bag's rows are its own, so both the list path and read-status ask the
+    // pockets rather than the list: that is where the quantity is.
+    if (s.kind == SceneKind::Bag) {
+        const std::string here = bag_cursor_speech(m, false);
+        if (!here.empty()) {
+            *out = here;
+            return true;
+        }
     }
     if (s.list.live) {
         const ListState& l = s.list;
@@ -700,7 +901,14 @@ bool item_speech(const SceneState& s, const Mem& m, std::string* out) {
             case BattleControl::SafariAction: {
                 *out = action_label(b.control, b.action_cursor);
                 if (out->empty()) *out = "Choice";
-                *out += ", " + std::to_string(b.action_cursor + 1) + " of 4.";
+                // The action menu is a 2x2 grid, not a list: FIGHT and BAG on the
+                // top row, POKéMON and RUN below. "1 of 4" made a player press
+                // down for BAG and land on POKéMON, so the position is what is
+                // said - it is what the screen shows.
+                static const char* const kWhere[4] = {
+                    "top left", "top right", "bottom left", "bottom right"};
+                const int at = b.action_cursor & 3;
+                *out += ", " + std::string(kWhere[at]) + ".";
                 return true;
             }
             case BattleControl::Move: {
@@ -745,14 +953,35 @@ std::string status_text(const SceneState& s, const Mem& m) {
         item_speech(s, m, &what);
 
     switch (s.kind) {
-        case SceneKind::Overworld:
-            return what.empty() ? "Overworld." : "Overworld. " + what;
-        case SceneKind::Battle:
-            return what.empty() ? "Battle." : "Battle. " + what;
-        case SceneKind::Bag:
-            return what.empty() ? "Bag." : "Bag. " + what;
-        case SceneKind::Party:
-            return what.empty() ? "Party." : "Party. " + what;
+        case SceneKind::Overworld: {
+            // On a puzzle map, plain "Overworld." leaves out the only thing
+            // that matters: where the switch is, whether it is down, and which
+            // way out of this tile. Saying it here costs nothing on ordinary
+            // ground because a map with no puzzle adds nothing.
+            PuzzleState pz;
+            const std::string context =
+                read_puzzle(m, &pz) ? puzzle_context_speech(pz) : std::string();
+            std::string text = what.empty() ? "Overworld." : "Overworld. " + what;
+            if (!context.empty()) text += " " + context;
+            return text;
+        }
+        case SceneKind::Battle: {
+            const std::string field = battle_field_speech(m);
+            if (field.empty()) return what.empty() ? "Battle." : "Battle. " + what;
+            return "Battle. " + field + (what.empty() ? "" : " " + what);
+        }
+        case SceneKind::Bag: {
+            // The cursor row is the whole answer; appending the generic surface
+            // text would say the same item twice.
+            const std::string here = bag_cursor_speech(m, true);
+            if (here.empty()) return what.empty() ? "Bag." : "Bag. " + what;
+            return "Bag. " + here;
+        }
+        case SceneKind::Party: {
+            const std::string members = party_field_speech(m);
+            if (members.empty()) return what.empty() ? "Party." : "Party. " + what;
+            return "Party. " + members + (what.empty() ? "" : " " + what);
+        }
         case SceneKind::TitleMenus:
             return what.empty() ? "Title and main menu." : "Main menu. " + what;
         case SceneKind::Boot:
@@ -828,11 +1057,45 @@ void announce_scene(SceneKind kind) {
 // AddTextPrinter receives a whole string, often several lines at once: a Yes/No
 // prompt arrives as "YES\nNO", the title menu as "NEW GAME\nOPTION". The lines
 // are what the player reads as separate entries, so each one is its own label.
-void add_label(const std::string& text) {
+void add_label(std::uint32_t window, const std::string& text) {
     if (text.empty()) return;
-    if (g_labels.empty() || g_labels.back() != text) g_labels.push_back(text);
-    if (g_labels.size() > static_cast<std::size_t>(kMaxItems))
-        g_labels.erase(g_labels.begin());
+    if (g_labels.window != static_cast<std::uint8_t>(window)) {
+        g_labels_prev = std::move(g_labels);
+        g_labels = LabelSet{};
+        g_labels.window = static_cast<std::uint8_t>(window);
+    }
+    if (g_labels.labels.empty() || g_labels.labels.back() != text) g_labels.labels.push_back(text);
+    if (g_labels.labels.size() > static_cast<std::size_t>(kMaxItems))
+        g_labels.labels.erase(g_labels.labels.begin());
+}
+
+// The party screen prints its rows as separate pieces: nickname, level, gender
+// glyph and the current HP followed by the slash that the max-HP piece continues
+// (party_menu.c: DisplayPartyPokemonHP ends the string with CHAR_SLASH). Said as
+// printed that is "AAAAAAAAAA 8 male 20/", which stops mid-thought. The row is
+// rebuilt into one whole sentence from the party itself, so the player hears
+// "AAAAAAAAAA, level 8, male, 20 out of 26 HP."
+std::string party_box_line(const Mem& m, const std::string& text) {
+    std::string gender;
+    if (text.find("female") != std::string::npos) gender = "female";
+    else if (text.find("male") != std::string::npos) gender = "male";
+    if (gender.empty()) return {};   // not a party row (a prompt, a menu block)
+    const int count = std::min<int>(6, m.u8(addr::gPlayerPartyCount));
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gPlayerParty + static_cast<std::uint32_t>(i) * 0x64;
+        const std::string name = decode(m, mon + 0x08, 10);
+        if (name.empty() || text.rfind(name, 0) != 0) continue;
+        const int level = m.u8(mon + 0x54);
+        const int hp = m.u16(mon + 0x56);
+        const int max_hp = m.u16(mon + 0x58);
+        if (max_hp <= 0) continue;
+        char line[160];
+        std::snprintf(line, sizeof(line), "%s, level %d, %s, %d out of %d HP%s.",
+                      name.c_str(), level, gender.c_str(), hp, max_hp,
+                      hp == 0 ? ", fainted" : "");
+        return line;
+    }
+    return {};
 }
 
 void consume_prints(const SceneState& s, const Mem& m) {
@@ -855,8 +1118,17 @@ void consume_prints(const SceneState& s, const Mem& m) {
         // printed "YES\nNO" from dialogue into that menu's two labels.
         if (g_frame < p.frame + 2) { later.push_back(p); continue; }
         if (window_is_list(s, p.window)) continue;   // names come from ListMenu
-        if (window_is_menu(s, p.window) || window_is_battle_labels(s, p.window)) {
-            for (const std::string& line : p.lines) add_label(line);
+        if (window_holds_labels(s, p.window)) {
+            for (const std::string& line : p.lines) {
+                // A health box repaints its numbers through the same printer while
+                // the bar animates, so a single potion prints "23/", "/24", ...
+                // "28/" and each one was announced as a menu entry. Digits and
+                // slashes are a readout, not something to move a cursor onto:
+                // the healed total is spoken by the party line and by the game's
+                // own "HP was restored" sentence. Money is all digits with no
+                // slash and is left alone.
+                if (!emerald::accessibility::is_hp_readout(line)) add_label(p.window, line);
+            }
             continue;
         }
         // Battle narration lives in the message window (B_WIN_MSG = 0). Other
@@ -893,6 +1165,24 @@ void consume_prints(const SceneState& s, const Mem& m) {
     }
     g_prints.swap(later);
     if (message.empty()) return;
+    // A party row is spoken as one sentence once its HP stops moving (see
+    // party_box_line and the settle check in watch()). This is matched on the row
+    // itself, not on the scene: the box prints on the frame the screen opens,
+    // before the classifier has had the frames it needs to call it a party menu.
+    {
+        std::string row = party_box_line(m, message);
+        if (!row.empty()) {
+            g_party_pending = row;
+            g_party_pending_at = g_frame;
+            return;
+        }
+    }
+    // A health box repaints its numbers through this printer while the bar
+    // animates, so healing prints "23/", "/24" ... "28/" and each fragment was
+    // spoken as its own sentence. Digits and slashes are a readout: the game
+    // says "HP was restored by N points" itself and the party line gives the
+    // total. Money is digits with no slash and is left alone.
+    if (emerald::accessibility::is_hp_readout(message)) return;
     if (message == g_message) return;
     g_message = message;
     say(message, false);
@@ -1041,11 +1331,18 @@ void nav_frame(Core& c, const SceneState& s) {
 }
 
 // A pad direction means two different things depending on where you are.
-// In a menu it nudges the cursor one place, which is a single-frame tap. In
-// the field the game latches a walk from a *held* key and ignores a one-frame
-// tap (it only turns you in place), so a pad direction there is a step
-// request: hold long enough for one tile, then release. That is also what a
-// blind player expects from a swipe -- one gesture, one tile.
+// In a menu it nudges the cursor one place. In the field the game latches a
+// walk from a *held* key and ignores a one-frame tap (it only turns you in
+// place), so a pad direction there is a step request: hold long enough for one
+// tile, then release. That is also what a blind player expects from a swipe --
+// one gesture, one tile.
+//
+// A one-frame menu tap is not enough either: Emerald samples the pad once per
+// frame and drops a press that lands between two samples of the same key, so a
+// short tap moved nothing in the battle menu and a doubled battle loop could
+// sit on a move it never selected. Four frames is one poll plus margin, and
+// still far short of the menu's own auto-repeat, so one action is one place.
+constexpr int kMenuPressFrames = 4;
 constexpr int kStepPressFrames = 16;
 // A step that begins by turning spends the turn before it can walk: holding
 // only long enough for the walk left the player facing the right way and still
@@ -1075,7 +1372,7 @@ void consume_actions(Core& c, const SceneState& s, const Mem& m) {
         queued.swap(g_actions);
     }
     const bool step = field_step_scene(s);
-    const int dir_press = step ? kStepPressFrames : 1;
+    const int dir_press = step ? kStepPressFrames : kMenuPressFrames;
     const int dir_release = step ? kStepReleaseFrames : 2;
     for (const auto& [raw, arg] : queued) {
         note_action(raw);   // A/B start an interaction; text (or silence) resolves it
@@ -1097,8 +1394,8 @@ void consume_actions(Core& c, const SceneState& s, const Mem& m) {
             case Action::Cancel: c.synth.tap(k::kGbaKeyB, 2, 2); break;
             case Action::Start: c.synth.tap(k::kGbaKeyStart, 2, 2); break;
             case Action::SelectItem: start_nav(s, m, arg); break;
-            case Action::NextItem: c.synth.tap(k::kGbaKeyDown, 1, 2); break;
-            case Action::PrevItem: c.synth.tap(k::kGbaKeyUp, 1, 2); break;
+            case Action::NextItem: c.synth.tap(k::kGbaKeyDown, kMenuPressFrames, 2); break;
+            case Action::PrevItem: c.synth.tap(k::kGbaKeyUp, kMenuPressFrames, 2); break;
             case Action::ReadStatus: {
                 // Scene + selection, plus the text the game last printed when
                 // there is no surface to read (dialogue, cutscene lines): the
@@ -1148,7 +1445,8 @@ void watch(const SceneState& s, const Mem& m) {
     g_surface_changed = surface != g_surface;
     if (g_surface_changed) {
         g_surface = surface;
-        g_labels.clear();
+        g_labels_prev = std::move(g_labels);
+        g_labels = LabelSet{};
         g_pending_item = false;
     }
 
@@ -1162,11 +1460,30 @@ void watch(const SceneState& s, const Mem& m) {
         g_had_scene = true;
         g_kind = s.kind;
         g_kind_since = g_frame;
+        g_kind_announced = false;
     }
-    if (g_frame - g_kind_since >= kSceneStableFrames) announce_scene(s.kind);
+    if (g_frame - g_kind_since >= kSceneStableFrames) {
+        announce_scene(s.kind);
+        g_kind_announced = true;
+    }
 
     consume_prints(s, m);
     poll_message_text(s, m);
+
+    // Speak a held party row only after the HP stops changing, so the animated
+    // bar produces one sentence rather than one per step - and only after the
+    // screen has been named. The row prints on the frame the screen opens, while
+    // the classifier needs more frames than that to know it is the party menu, so
+    // without this wait the row arrived before "Party.". The cap keeps a
+    // flickering classifier from holding the line forever.
+    if (!g_party_pending.empty() && g_frame - g_party_pending_at >= 12 &&
+        (g_kind_announced || g_frame - g_party_pending_at >= 90)) {
+        if (g_party_pending != g_message) {
+            g_message = g_party_pending;
+            say(g_party_pending, false);
+        }
+        g_party_pending.clear();
+    }
 
     // A battle starting is announced by the game itself — the encounter
     // effect and the battle music — so the layer adds nothing there, exactly as
@@ -1277,6 +1594,23 @@ void watch(const SceneState& s, const Mem& m) {
         g_naming_column = -9999;
         g_naming_button = false;
         g_naming_typed.clear();
+    }
+
+    // The bag: its rows are drawn by the bag menu, so there is no menu cursor to
+    // follow. Its pocket and cursor are in gBagPosition, and every change of
+    // either is a row the player just moved to.
+    if (s.kind == SceneKind::Bag && !s.menu.live && !s.list.live) {
+        const int pocket = bag_pocket(m);
+        const int cursor = bag_cursor(m, pocket);
+        const int row = pocket < 0 ? -1 : (pocket << 16) | (cursor & 0xFFFF);
+        if (row != g_bag_row) {
+            const bool pocket_changed = g_bag_row < 0 || (g_bag_row >> 16) != pocket;
+            g_bag_row = row;
+            const std::string text = bag_cursor_speech(m, pocket_changed);
+            if (!text.empty()) say(text, false);
+        }
+    } else {
+        g_bag_row = -1;
     }
 
     // A menu opened before its labels were captured: retry briefly.
@@ -1408,7 +1742,9 @@ std::uint16_t input_frame(const gbarecomp::TouchFrameInfo* frame) {
     // Audio cues age their interaction expectations, then the navigation layer
     // reports exits, floor changes and whatever the player just walked up to.
     cues_frame();
+    puzzle_frame(s, m, frame->host_keyinput);
     nav_frame(s, m);
+    emerald::dev::frame();
     return swallow_keys ? 0 : keys;
 }
 
@@ -1419,8 +1755,8 @@ void install_sink(SpeakFn speak, void (*stop)(), void (*rate)(float)) {
     if (g_rate_fn) g_rate_fn(g_rate);
 }
 
-void speak_now(const char* text, bool interrupt) {
-    if (text) say(text, interrupt);
+void speak_now(const char* text, bool interrupt, bool allow_repeat) {
+    if (text) say(text, interrupt, allow_repeat);
 }
 
 const char* controller_hotkeys_help() {
@@ -1455,13 +1791,16 @@ void enable(bool on) {
     if (g_enabled == on) return;
     g_enabled = on;
     g_prints.clear();
-    g_labels.clear();
+    g_labels = LabelSet{};
+    g_labels_prev = LabelSet{};
     g_pending_item = false;
     g_state_menu = false;
     g_state_op = StateOp{};
     g_nav.active = false;
     cues_reset();
     nav_reset();
+    puzzle_reset();
+    emerald::dev::reset();
     g_had_scene = false;
     g_kind = SceneKind::Unknown;
     g_menu_live = false;
@@ -1503,7 +1842,8 @@ void reset() {
     // feature's activation pass runs.
     register_text_probe();
     enable(false);
-    g_labels.clear();
+    g_labels = LabelSet{};
+    g_labels_prev = LabelSet{};
     g_prints.clear();
     g_nav = Nav{};
 }
@@ -1602,7 +1942,7 @@ void tcp_status(std::string* out) {
     if (s.menu.live) {
         for (int i = s.menu.min; i <= s.menu.max && i - s.menu.min < kMaxItems; ++i) {
             std::string label = menu_label(s.menu, i);
-            if (label.empty()) label = "Option " + std::to_string(i - s.menu.min + 1);
+            if (label.empty()) label = "Option " + std::to_string(i - s.menu.min + 1);  // no name captured
             if (!first) *out += ",";
             first = false;
             gbarecomp::json::append_quoted(*out, label);
@@ -1620,14 +1960,35 @@ void tcp_status(std::string* out) {
     *out += "}";
 }
 
-void tcp_action(const std::string& name, int arg) {
+// Returns false for a name that is not an action. The caller reports that: an
+// unknown action used to be accepted silently, so a harness sending "north"
+// instead of "up" saw ok:true and an unmoving player, which reads as a broken
+// game rather than a typo.
+bool tcp_action(const std::string& name, int arg) {
+    // Compass aliases: navigation and the playtest harness think in compass
+    // directions, the pad in up/down/left/right. Both are accepted.
+    static const struct {
+        const char* name;
+        Action action;
+    } kAliases[] = {
+        {"north", Action::Up},   {"south", Action::Down},
+        {"west", Action::Left},  {"east", Action::Right},
+        {"a", Action::Confirm},  {"b", Action::Cancel},
+    };
+    for (const auto& alias : kAliases) {
+        if (name == alias.name) {
+            push_action(alias.action, arg);
+            return true;
+        }
+    }
     for (int i = 1; i <= static_cast<int>(Action::StateMenu); ++i) {
         const Action action = static_cast<Action>(i);
         if (name == action_name(action)) {
             push_action(action, arg);
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 }  // namespace
@@ -1665,7 +2026,12 @@ int tcp_command(const char* request, void (*write)(void*, const char*, std::size
         return 1;
     }
     if (cmd == "emerald_a11y_action") {
-        tcp_action(req.str("action"), static_cast<int>(req.integer("index", 0)));
+        const std::string name = req.str("action");
+        if (!tcp_action(name, static_cast<int>(req.integer("index", 0)))) {
+            out = gbarecomp::json::error_reply("unknown action: " + name);
+            emit();
+            return 1;
+        }
         out = "{\"ok\":true}";
         emit();
         return 1;

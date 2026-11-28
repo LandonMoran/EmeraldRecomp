@@ -1,0 +1,326 @@
+# artifacts/playtest/reports/catch-pokeball.txt - appended by each pad session
+# --- new pad session ---
+[session] Oldale Mart counter -> Route 101 grass -> Poke Ball catch
+[at] map (2, 4) tile (3, 3)
+[counter] (3,3) -> (3, 3): 0 steps
+[talk f465098] Name: IIII
+[talk f465180] Name: IIIII
+[talk f465262] Name: IIIIII
+[talk f465344] Name: IIIIIII
+[talk f465426] Name: IIIIIIII
+[talk f465508] Name: IIIIIIIII
+[talk f465590] Name: IIIIIIIIII
+[talk f465607] OK
+[talk f465720] Battle.
+[talk f465774] Overworld.
+[talk f466031] Blocked north.
+[talk f466231] Blocked east.
+[talk f466641] Blocked north.
+[talk f468028] Battle.
+[talk f468283] Wild POOCHYENA appeared!
+[talk f469525] Go! TORCHIC!
+[talk f469724] Fight, top left.
+[talk f469734] Pokémon, bottom left.
+[talk f469799] Run, bottom right.
+[talk f469874] Got away safely!
+[talk f470098] Overworld.
+[talk f470989] New area. Oldale Town.
+[talk f474531] New area. Route 101.
+[talk f474726] BAG, A
+[talk f474727] SAVE, OPTION
+[talk f474728] EXIT, 1 of 5.
+[talk f474783] Option 5 of 5.
+[talk f474833] Option 4 of 5.
+[talk f474883] Option 3 of 5.
+[talk f474933] Option 2 of 5.
+[talk f474983] EXIT, 1 of 5.
+[talk f475033] Option 5 of 5.
+[talk f475250] Blocked east.
+[talk f475447] New area. Oldale Town.
+[talk f476453] Something to read here. Press A.
+[talk f476961] Door two steps north-east. Press A to exit.
+[talk f477167] Door here. Press A to exit.
+[talk f477269] A warp arrow. Step on it.
+[talk f477269] New area. Oldale Town Mart.
+[talk f477876] Blocked west.
+[talk f477888] Welcome! How may I serve you?
+[talk f478056] BUY, 1 of 3.
+[talk f478150] 32940
+[talk f478151] 300 POTION 100 ANTIDOTE 200
+[talk f478152] PARLYZ HEAL 250 AWAKENING, CANCEL
+[talk f478153] Restores the HP of a POKéMON by 20 points.
+[talk f478177] POTION, 1 of 5.
+[talk f478178] Shop.
+[talk f478215] ANTIDOTE, 2 of 5.
+[talk f478216] Heals a poisoned POKéMON.
+[talk f478217] ANTIDOTE, 2 of 5.
+[talk f478285] PARLYZ HEAL, 3 of 5.
+[talk f478286] Heals a paralyzed POKéMON.
+[talk f478287] PARLYZ HEAL, 3 of 5.
+[talk f478355] AWAKENING, 4 of 5.
+[talk f478356] Awakens a sleeping POKéMON.
+[talk f478357] AWAKENING, 4 of 5.
+[talk f478425] CANCEL, 5 of 5.
+[talk f478426] Quit shopping.
+[talk f478832] Overworld.
+[talk f478833] Is there anything else I can help you with?
+[talk f478998] BUY, 1 of 3.
+[talk f479031] Please come again!
+[talk f479912] Welcome! How may I serve you?
+[talk] Welcome! How may I serve you?
+[menu] Welcome! How may I serve you?
+[sel0 f480088] BUY, 1 of 3.
+[sel0 f480175] 32940
+[sel0 f480176] 300 POTION 100 ANTIDOTE 200
+[sel0 f480177] PARLYZ HEAL 250 AWAKENING, CANCEL Restores the HP of a POKéMON by 20 points.
+[sel0 f480201] POTION, 1 of 5.
+[sel0 f480202] Shop.
+[sel1 f480240] ANTIDOTE, 2 of 5.
+[sel1 f480241] Heals a poisoned POKéMON.
+[sel1 f480242] ANTIDOTE, 2 of 5.
+[sel2 f480305] PARLYZ HEAL, 3 of 5.
+[sel2 f480306] Heals a paralyzed POKéMON.
+[sel2 f480307] PARLYZ HEAL, 3 of 5.
+[sel3 f480370] AWAKENING, 4 of 5.
+[sel3 f480371] Awakens a sleeping POKéMON.
+[sel3 f480372] AWAKENING, 4 of 5.
+[sel4 f480435] CANCEL, 5 of 5.
+[sel4 f480436] Quit shopping.
+[stock] Quit shopping.
+[qty f481077] Overworld.
+[qty f481078] Is there anything else I can help you with?
+[quantity] Is there anything else I can help you with?
+[total] Is there anything else I can help you with?
+[buy0 f481243] BUY, 1 of 3.
+[buy0] BUY, 1 of 3.
+[buy1 f481303] 32940
+[buy1 f481304] 300 POTION 100 ANTIDOTE 200
+[buy1 f481305] PARLYZ HEAL 250 AWAKENING, CANCEL
+[buy1 f481306] Restores the HP of a POKéMON by 20 points.
+[buy1 f481330] POTION, 1 of 5.
+[buy1 f481331] Shop.
+[buy1] Shop.
+[buy2 f481359] POTION? Certainly. How many would you like?
+[buy2] POTION? Certainly. How many would you like?
+[leave1 f481530] IN BAG: 0 300 01
+[leave1 f481533] POTION, 1 of 5.
+[leave2 f481620] ANTIDOTE, 2 of 5.
+[leave2 f481621] Heals a poisoned POKéMON.
+[leave2 f481622] ANTIDOTE, 2 of 5.
+[leave2 f481685] PARLYZ HEAL, 3 of 5.
+[leave2 f481686] Heals a paralyzed POKéMON.
+[leave2 f481687] PARLYZ HEAL, 3 of 5.
+[leave2 f481750] AWAKENING, 4 of 5.
+[leave2 f481751] Awakens a sleeping POKéMON.
+[leave2 f481752] AWAKENING, 4 of 5.
+[leave2 f481815] CANCEL, 5 of 5.
+[leave2 f481816] Quit shopping.
+[leave2 f481938] Overworld.
+[leave2 f481939] Is there anything else I can help you with?
+[shop_done] scene shop
+[todoor] (3,3) -> (3, 7): 4 steps
+[todoor f482102] BUY, 1 of 3.
+[todoor f482155] 32940
+[todoor f482156] 300 POTION 100 ANTIDOTE
+[todoor f482157] 200 PARLYZ HEAL 250 AWAKENING, CANCEL
+[todoor f482158] Restores the HP of a POKéMON by 20 points.
+[todoor f482182] POTION, 1 of 5.
+[todoor f482183] Shop.
+[todoor f482233] POTION? Certainly. How many would you like?
+[todoor f482398] IN BAG: 0 300 01
+[todoor f482441] POTION? And you wanted 1? That will be 300.
+[todoor f482610] YES.
+[todoor f482649] Here you go! Thank you very much.
+[todoor f482781] 32640
+[todoor f482805] POTION, 1 of 5.
+[todoor f482857] POTION? Certainly. How many would you like?
+[todoor f483022] IN BAG: 1 300 01
+[todoor f483065] POTION? And you wanted 1? That will be 300.
+[todoor f483234] YES.
+[todoor f483300] NO.
+[todoor] (10,10) south blocked
+[todoor] (10,10) south blocked
+[todoor] (10,10) south blocked
+[todoor] (10,10) south blocked
+[out] (10,10) south blocked
+[oldale] map (2, 4) tile (3, 3)
+[tosouth] (3,3) -> (10, 19): 23 steps
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) south blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) east blocked
+[tosouth] (10,10) east blocked
+[out] (10,10) south blocked
+[route101] map (2, 4) tile (3, 3)
+[encounter] NO.
+[no_battle] scene shop after 0 steps
+# --- new pad session ---
+[clean0 f479031] Please come again!
+[clean0 f479912] Welcome! How may I serve you?
+[clean0 f480088] BUY, 1 of 3.
+[clean0 f480175] 32940
+[clean0 f480176] 300 POTION 100 ANTIDOTE 200
+[clean0 f480177] PARLYZ HEAL 250 AWAKENING, CANCEL Restores the HP of a POKéMON by 20 points.
+[clean0 f480201] POTION, 1 of 5.
+[clean0 f480202] Shop.
+[clean0 f480240] ANTIDOTE, 2 of 5.
+[clean0 f480241] Heals a poisoned POKéMON.
+[clean0 f480242] ANTIDOTE, 2 of 5.
+[clean0 f480305] PARLYZ HEAL, 3 of 5.
+[clean0 f480306] Heals a paralyzed POKéMON.
+[clean0 f480307] PARLYZ HEAL, 3 of 5.
+[clean0 f480370] AWAKENING, 4 of 5.
+[clean0 f480371] Awakens a sleeping POKéMON.
+[clean0 f480372] AWAKENING, 4 of 5.
+[clean0 f480435] CANCEL, 5 of 5.
+[clean0 f480436] Quit shopping.
+[clean0 f481077] Overworld.
+[clean0 f481078] Is there anything else I can help you with?
+[clean0 f481243] BUY, 1 of 3.
+[clean0 f481303] 32940
+[clean0 f481304] 300 POTION 100 ANTIDOTE 200
+[clean0 f481305] PARLYZ HEAL 250 AWAKENING, CANCEL
+[clean0 f481306] Restores the HP of a POKéMON by 20 points.
+[clean0 f481330] POTION, 1 of 5.
+[clean0 f481331] Shop.
+[clean0 f481359] POTION? Certainly. How many would you like?
+[clean0 f481530] IN BAG: 0 300 01
+[clean0 f481533] POTION, 1 of 5.
+[clean0 f481620] ANTIDOTE, 2 of 5.
+[clean0 f481621] Heals a poisoned POKéMON.
+[clean0 f481622] ANTIDOTE, 2 of 5.
+[clean0 f481685] PARLYZ HEAL, 3 of 5.
+[clean0 f481686] Heals a paralyzed POKéMON.
+[clean0 f481687] PARLYZ HEAL, 3 of 5.
+[clean0 f481750] AWAKENING, 4 of 5.
+[clean0 f481751] Awakens a sleeping POKéMON.
+[clean0 f481752] AWAKENING, 4 of 5.
+[clean0 f481815] CANCEL, 5 of 5.
+[clean0 f481816] Quit shopping.
+[clean0 f481938] Overworld.
+[clean0 f481939] Is there anything else I can help you with?
+[clean0 f482102] BUY, 1 of 3.
+[clean0 f482155] 32940
+[clean0 f482156] 300 POTION 100 ANTIDOTE
+[clean0 f482157] 200 PARLYZ HEAL 250 AWAKENING, CANCEL
+[clean0 f482158] Restores the HP of a POKéMON by 20 points.
+[clean0 f482182] POTION, 1 of 5.
+[clean0 f482183] Shop.
+[clean0 f482233] POTION? Certainly. How many would you like?
+[clean0 f482398] IN BAG: 0 300 01
+[clean0 f482441] POTION? And you wanted 1? That will be 300.
+[clean0 f482610] YES.
+[clean0 f482649] Here you go! Thank you very much.
+[clean0 f482781] 32640
+[clean0 f482805] POTION, 1 of 5.
+[clean0 f482857] POTION? Certainly. How many would you like?
+[clean0 f483022] IN BAG: 1 300 01
+[clean0 f483065] POTION? And you wanted 1? That will be 300.
+[clean0 f483234] YES.
+[clean0 f483300] NO.
+[clean0 f486583] POTION, 1 of 5.
+[clean1 f486719] Overworld.
+[clean1 f486720] Is there anything else I can help you with?
+[clean4 f486880] BUY, 1 of 3.
+[clean5 f486930] Please come again!
+# --- new pad session ---
+[leg2] re-entry: Oldale Mart, buy a POKe BALL, walk south, catch
+[scaffold] force_map -> [3, 7] at (10,12)
+[mart f480177] PARLYZ HEAL 250 AWAKENING, CANCEL Restores the HP of a POKéMON by 20 points.
+[mart f480201] POTION, 1 of 5.
+[mart f480202] Shop.
+[mart f480240] ANTIDOTE, 2 of 5.
+[mart f480241] Heals a poisoned POKéMON.
+[mart f480242] ANTIDOTE, 2 of 5.
+[mart f480305] PARLYZ HEAL, 3 of 5.
+[mart f480306] Heals a paralyzed POKéMON.
+[mart f480307] PARLYZ HEAL, 3 of 5.
+[mart f480370] AWAKENING, 4 of 5.
+[mart f480371] Awakens a sleeping POKéMON.
+[mart f480372] AWAKENING, 4 of 5.
+[mart f480435] CANCEL, 5 of 5.
+[mart f480436] Quit shopping.
+[mart f481077] Overworld.
+[mart f481078] Is there anything else I can help you with?
+[mart f481243] BUY, 1 of 3.
+[mart f481303] 32940
+[mart f481304] 300 POTION 100 ANTIDOTE 200
+[mart f481305] PARLYZ HEAL 250 AWAKENING, CANCEL
+[mart f481306] Restores the HP of a POKéMON by 20 points.
+[mart f481330] POTION, 1 of 5.
+[mart f481331] Shop.
+[mart f481359] POTION? Certainly. How many would you like?
+[mart f481530] IN BAG: 0 300 01
+[mart f481533] POTION, 1 of 5.
+[mart f481620] ANTIDOTE, 2 of 5.
+[mart f481621] Heals a poisoned POKéMON.
+[mart f481622] ANTIDOTE, 2 of 5.
+[mart f481685] PARLYZ HEAL, 3 of 5.
+[mart f481686] Heals a paralyzed POKéMON.
+[mart f481687] PARLYZ HEAL, 3 of 5.
+[mart f481750] AWAKENING, 4 of 5.
+[mart f481751] Awakens a sleeping POKéMON.
+[mart f481752] AWAKENING, 4 of 5.
+[mart f481815] CANCEL, 5 of 5.
+[mart f481816] Quit shopping.
+[mart f481938] Overworld.
+[mart f481939] Is there anything else I can help you with?
+[mart f482102] BUY, 1 of 3.
+[mart f482155] 32940
+[mart f482156] 300 POTION 100 ANTIDOTE
+[mart f482157] 200 PARLYZ HEAL 250 AWAKENING, CANCEL
+[mart f482158] Restores the HP of a POKéMON by 20 points.
+[mart f482182] POTION, 1 of 5.
+[mart f482183] Shop.
+[mart f482233] POTION? Certainly. How many would you like?
+[mart f482398] IN BAG: 0 300 01
+[mart f482441] POTION? And you wanted 1? That will be 300.
+[mart f482610] YES.
+[mart f482649] Here you go! Thank you very much.
+[mart f482781] 32640
+[mart f482805] POTION, 1 of 5.
+[mart f482857] POTION? Certainly. How many would you like?
+[mart f483022] IN BAG: 1 300 01
+[mart f483065] POTION? And you wanted 1? That will be 300.
+[mart f483234] YES.
+[mart f483300] NO.
+[mart f486583] POTION, 1 of 5.
+[mart f486719] Overworld.
+[mart f486720] Is there anything else I can help you with?
+[mart f486880] BUY, 1 of 3.
+[mart f486930] Please come again!
+[mart f487076] New area.
+[counter] (3,5) -> (3, 3): 2 steps
+[counter f487550] Pit two steps north-west.
+[counter] (10,12) -north-> (10,11)
+[counter] (10,11) -north-> (10,10)
+[talk f487718] A pit. Step on it and the floor drops you to the basement.
+[talk f487746] Pit underfoot.
+[talk f487822] A steam vent. Step on it and it throws you back up.
+[talk f487822] Vent underfoot.
+[talk f487822] New area. Lavaridge Town Gym B.
+[talk] New area. Lavaridge Town Gym B.
+[menu] New area. Lavaridge Town Gym B.
+# Party after the Route 101 catch (read from gPlayerParty)
+party count 3
+  [0] level  72  hp 136/166  atk 233 def  89 spd 234  spa 233 spd  88  pid 17D78400
+  [1] level  72  hp 65511/177  atk 244 def 101 spd 221  spa 268 spd 100  pid 5A17C0DE
+  [2] level   3  hp  15/ 15  atk   8 def   7 spd   7  spa   7 spd   6  pid 1CFF4273

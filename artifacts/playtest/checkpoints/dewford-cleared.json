@@ -1,0 +1,83 @@
+{
+ "name": "dewford-cleared",
+ "note": "Brawly beaten; KNUCKLE BADGE + TM08 (BULK UP)",
+ "saved_at": "2026-11-28T07:27:15Z",
+ "map": [
+  3,
+  3
+ ],
+ "pos": [
+  4,
+  4
+ ],
+ "location": {
+  "map": [
+   3,
+   3
+  ],
+  "x": 5,
+  "y": 26,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 11,
+  "y": 11,
+  "map": [
+   3,
+   3
+  ],
+  "facing": "north",
+  "elevation": 0
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   3,
+   3
+  ],
+  "x": 4,
+  "y": 4,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 0,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": false,
+  "open": {
+   "n": true,
+   "e": false,
+   "s": true,
+   "w": true
+  },
+  "grid": [
+   33,
+   42,
+   33760024
+  ],
+  "blocks": [
+   556,
+   1589,
+   528,
+   563
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 3,
+  "var:VAR_PETALBURG_GYM_STATE": 3,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": true,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": true,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": true,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": true
+ }
+}

@@ -18,7 +18,7 @@ Its Gen3 siblings live in
 [`FireRedLeafGreenRecomp`](https://github.com/mstan/FireRedLeafGreenRecomp) (FireRed + LeafGreen) and
 [`RubySapphireRecomp`](https://github.com/mstan/RubySapphireRecomp) (Ruby + Sapphire).
 
-> ### Status — playable bring-up (v0.0.1), and self-improving
+> ### Status — playable bring-up, self-improving, and playable by ear
 >
 > This is a **static-recompilation base + runner**, not a finished port. Emerald
 > **boots through the BIOS intro to the title screen and into gameplay**. It is
@@ -32,16 +32,26 @@ Its Gen3 siblings live in
 > disk** — so the next launch runs it natively from the start. Interpreted once,
 > native ever after; coverage grows toward fully-native as the game is played. See
 > [How it self-improves](#how-it-self-improves).
+>
+> The build also carries a **spoken interface** for blind players and a
+> playtest harness that drives it over TCP, and both are audited rather than
+> asserted: every claim in [the playability audit](docs/PLAYABILITY_AUDIT.md)
+> names the line the game spoke and the transcript it came from, and those
+> transcripts live in [the playtest evidence directory](artifacts/playtest/README.md).
+> As of this build all eight Hoenn gyms have been cleared by ear, travel names
+> the road before you commit to it ("Route 116 east."), and catching a Pokémon
+> is proven end to end, party and ball-count decrement included. What is still
+> open is listed in the same audit.
 
 ---
 
 ## Screenshots
 
-| Pokémon Emerald — title screen | Pokémon Emerald — a wild encounter |
-|---|---|
-| ![Pokémon Emerald — title screen, native recompiled build](docs/screenshots/emerald-title.png) | ![Pokémon Emerald — a wild encounter, running natively](docs/screenshots/emerald-gameplay.png) |
-
-*Native recompiled builds (no emulator), captured running the original ROM.*
+Captured stills of the native build (no emulator) are on the store page:
+[EmeraldRecomp on RecompLauncher](https://recomplauncher.com/game/emeraldrecomp).
+The two images this section used to embed were never committed to the repo, so
+they are linked rather than embedded - a relative path that resolves beats a
+picture that does not load.
 
 ---
 
@@ -71,7 +81,7 @@ The runtime **refuses to launch on an unrecognized ROM** — the SHA-1 must matc
 ## Quick start
 
 1. Download the latest `EmeraldRecomp-windows-x64` zip from
-   [Releases](../../releases) and extract it (or build from source — see below).
+   [Releases](https://github.com/mstan/EmeraldRecomp/releases) and extract it (or build from source — see below).
 2. Run `EmeraldRecomp`.
 3. Supply your own **legally-obtained** Pokémon Emerald (USA) ROM when prompted.
    The path is cached next to the exe for future launches.
@@ -177,7 +187,18 @@ the engine's ROM/BIOS import screen, so it is narrated and its status changes
 are announced before the game exists, and TalkBack's live regions are kept
 current for the same screen. See
 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for what is spoken, the mod
-options and the TCP test commands.
+options and the TCP test commands, and
+[docs/PLAYABILITY_AUDIT.md](docs/PLAYABILITY_AUDIT.md) for how much of the game
+has actually been played that way - the audit names the spoken line behind every
+claim and is blunt about the parts that are still missing. All eight of Hoenn's
+gyms have now been cleared by ear, each with the leader's badge read back out of
+the save block (see the audit's gym table). Travel names the road before you
+walk it, doors say what they lead to, and catching a Pokémon is proven from the
+purchase through the party listing with the ball pocket decrement read out of
+the save block. What is still open is listed in the same audit, including
+Mossdeep's statue-rotation search, which is modelled and exercised but not yet
+solved end to end. The runs behind every row are indexed in
+[the playtest evidence directory](artifacts/playtest/README.md).
 
 ## How it self-improves
 
@@ -240,6 +261,15 @@ cmake --build build --target EmeraldRecomp
 (`gba_recompile` is built from the `gbarecomp` checkout; see that repo's README.)
 The recompiled translation unit is large — expect a multi-minute compile.
 
+The BIOS recompilation output is build-local too, so the `gbarecomp` checkout is
+never left with modified files:
+
+```
+./build/gbarecomp_build/gba_recompile --bios gbarecomp/bios/gba_bios.bin \
+    --config gbarecomp/bios/gba_bios.toml --out build/generated_bios
+cmake -S . -B build -DGBARECOMP_GENERATED_BIOS_DIR=$PWD/build/generated_bios
+```
+
 ## License
 
 For this project's code covered by the [PolyForm Noncommercial License](LICENSE),
@@ -254,6 +284,44 @@ components and code explicitly licensed under other terms retain those terms.
 
 PolyForm Noncommercial 1.0.0 — see [`LICENSE`](LICENSE). Third-party
 components retain their own licenses.
+
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | The spoken interface: what is spoken, the pad commands, settings, name entry, save states without sight |
+| [docs/PLAYABILITY_AUDIT.md](docs/PLAYABILITY_AUDIT.md) | What has actually been proven playable by ear, row by row, with the spoken lines quoted and the transcripts named - and what is still missing before release |
+| [docs/PUZZLE_PLAYTEST.md](docs/PUZZLE_PLAYTEST.md) | The gym and environment puzzle test log behind the audit: each room, what the mod said, what it turned on |
+| [docs/PLAYTEST.md](docs/PLAYTEST.md) | The test harness: how runs are driven over TCP, what is automated, what still needs a device |
+| [docs/a11y-sfx.md](docs/a11y-sfx.md) | The audio cue design alongside the speech |
+| [docs/NETPLAY.md](docs/NETPLAY.md) | Wireless/netplay validation and its limits |
+| [docs/ANDROID_APK_CI.md](docs/ANDROID_APK_CI.md) | The Android build and its CI |
+| [docs/WIDESCREEN_EXPERIMENT.md](docs/WIDESCREEN_EXPERIMENT.md) | The optional widescreen mod |
+| [artifacts/playtest/README.md](artifacts/playtest/README.md) | The playtest evidence directory: every committed transcript, what it proves, and the drivers that produced it |
+| [artifacts/puzzles/INVENTORY.md](artifacts/puzzles/INVENTORY.md) | The puzzle inventory generated from the decompilation: which maps carry triggers and map-script hooks |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | What a contribution has to be licensed under |
+| [PERMISSIONS.md](PERMISSIONS.md) | The standing additional permissions on the PolyForm-covered code |
+| [CLAUDE.md](CLAUDE.md) | The execution contract this repo builds and verifies under |
+| [tools/linux/README.md](tools/linux/README.md) | The Linux AppImage package readme |
+| [tools/android-licenses/README.md](tools/android-licenses/README.md) | The NDK notice staged into the Android package |
+| [variants/emerald/generated/README.md](variants/emerald/generated/README.md) | Why the recompiler's C output is generated locally and never committed |
+| [the bundled widescreen package](mods/preloaded/packages/pokemon-emerald.enhancement.widescreen/0.2.0/README.md) | What the preloaded mod package requires and changes |
+
+## Repository map
+
+| Path | What is there |
+| --- | --- |
+| `src/` | The game-specific mod: accessibility speech, navigation, puzzles, cues, touch input, dev tools |
+| `variants/emerald/` | ROM config, the imported symbol metadata, and the generated recompilation output (local only) |
+| `mods/preloaded/` | The mod packages shipped inside the build |
+| `tools/` | Release packaging, Android licensing notices, the decompilation symbol importer |
+| [`docs/`](docs/) | Everything long-form: the accessibility reference, the playtest harness, the puzzle log, the audit, netplay, Android CI, widescreen |
+| [`artifacts/playtest/`](artifacts/playtest/README.md) | The harness and the committed transcripts every audit claim points at |
+| [`artifacts/puzzles/`](artifacts/puzzles/INVENTORY.md) | The generated puzzle inventory and the plans derived from it |
+
+The engine is not in this repo: the build links against a sibling
+[`gbarecomp`](https://github.com/mstan/gbarecomp) checkout, which owns the
+recompiler, the GBA hardware models and its own documentation.
 
 ## Legal
 

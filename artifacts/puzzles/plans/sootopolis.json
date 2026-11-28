@@ -1,0 +1,69 @@
+{
+ "puzzle": "sootopolis",
+ "map": "SootopolisCity_Gym_1F",
+ "map_group": 15,
+ "map_num": 0,
+ "layout": "LAYOUT_SOOTOPOLIS_CITY_GYM_1F",
+ "size": [
+  17,
+  26
+ ],
+ "start": {
+  "from_map": "SootopolisCity",
+  "from_xy": [
+   31,
+   32
+  ],
+  "map": "SootopolisCity_Gym_1F",
+  "map_group": 15,
+  "map_num": 0,
+  "x": 8,
+  "y": 25,
+  "elevation": 0
+ },
+ "triggers": [],
+ "warps": [
+  {
+   "x": 8,
+   "y": 25,
+   "elevation": 0,
+   "dest_map": "MAP_SOOTOPOLIS_CITY",
+   "dest_warp_id": "2"
+  },
+  {
+   "x": 9,
+   "y": 25,
+   "elevation": 0,
+   "dest_map": "MAP_SOOTOPOLIS_CITY",
+   "dest_warp_id": "2"
+  },
+  {
+   "x": 11,
+   "y": 22,
+   "elevation": 3,
+   "dest_map": "MAP_SOOTOPOLIS_CITY_GYM_B1F",
+   "dest_warp_id": "0"
+  }
+ ],
+ "script_hooks": [
+  [
+   "MAP_SCRIPT_ON_FRAME_TABLE",
+   "SootopolisCity_Gym_1F_OnFrame"
+  ],
+  [
+   "MAP_SCRIPT_ON_RESUME",
+   "SootopolisCity_Gym_1F_OnResume"
+  ],
+  [
+   "MAP_SCRIPT_ON_LOAD",
+   "SootopolisCity_Gym_1F_OnLoad"
+  ],
+  [
+   "MAP_SCRIPT_ON_TRANSITION",
+   "SootopolisCity_Gym_1F_OnTransition"
+  ]
+ ],
+ "facing": null,
+ "steps": [],
+ "status": "NOT TESTED"
+}

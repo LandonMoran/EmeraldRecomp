@@ -1,0 +1,103 @@
+[step0-JODY-00 f191130] A warp arrow. Step on it.
+[step0-JODY-00 f191700] Trainer here. Press A to talk.
+[step0-JODY-00 f191731] This is the CONFUSION ROOM. Let me see how well bonded you are with your POKéMON!
+[step0-JODY-00 f193665] Battle.
+[step0-JODY-00 f193842] COOLTRAINER PARKER would like to battle!
+[step0-JODY-00 f194004] COOLTRAINER PARKER sent out SPINDA!
+[step0-JODY-00 f194222] Go! TORCHIC!
+[step0-JODY-00 f194420] Fight, top left.
+[step0-JODY-00 f194466] SCRATCH, NORMAL, PP 12 of 35. 1 of 4
+[step0-JODY-00 f194514] TORCHIC is paralyzed! It can’t move!
+[step0-JODY-00 f194757] Foe SPINDA used TEETER DANCE!
+[step0-JODY-00 f195154] TORCHIC became confused!
+[step0-JODY-00 f195331] Fight, top left.
+[step0-JODY-00 f195342] SCRATCH, NORMAL, PP 12 of 35. 1 of 4
+[step0-JODY-00 f195390] TORCHIC is confused!
+[step0-JODY-00 f195635] It hurt itself in its confusion!
+[step0-JODY-00 f195902] Foe SPINDA used TEETER DANCE!
+[step0-JODY-00 f196053] TORCHIC is already confused!
+[step0-JODY-00 f196245] Fight, top left.
+[step0-JODY-00 f196266] SCRATCH, NORMAL, PP 12 of 35. 1 of 4
+[step0-JODY-00 f196438] Foe SPINDA is tightening its focus!
+[step0-JODY-00 f196638] TORCHIC is confused!
+[step0-JODY-00 f196882] It hurt itself in its confusion!
+[step0-JODY-00 f197144] Foe SPINDA used FOCUS PUNCH!
+[step0-JODY-00 f197460] It’s super effective!
+[step0-JODY-00 f197616] Fight, top left.
+[step0-JODY-00 f197640] SCRATCH, NORMAL, PP 12 of 35. 1 of 4
+[step0-JODY-00 f197688] TORCHIC snapped out of confusion!
+[step0-JODY-00 f197875] TORCHIC used SCRATCH!
+[step0-JODY-00 f198200] Foe SPINDA fainted!
+[step0-JODY-00 f198328] TORCHIC gained 472 EXP. Points!
+[step0-JODY-00 f198529] Player defeated COOLTRAINER PARKER!
+[step0-JODY-00 f198747] I couldn’t confuse your team enough… You share a strong bond together.
+[step0-JODY-00 f201479] A got 1248 for winning!
+[step0-JODY-00 f201741] Overworld.
+[step0-JODY-00 f201745] The room changed north-east.
+[step0-JODY-00 f201774] The next room is the STRENGTH ROOM. Can you withstand brute force?
+[step0-JODY-00 f204441] Trainer here. Press A to talk.
+[step0-JODY-00 f205133] Trainer west. Press A to talk.
+[step0-JODY-00 f205909] Trainer north. Press A to talk.
+[step0-JODY-00 f206639] Trainer west. Press A to talk.
+[step0-JODY-00 f206815] A gym door.
+[step0-JODY-00 f206815] Something to read here. Press A.
+[step0-JODY-00 f206838] Blocked north.
+[step0-JODY-00 f206850] “STRENGTH ROOM,” the sign says. Do you want to go through?
+[step0-JODY-00 f207111] YES.
+[step0-JODY-00 f207206] A gym door.
+[step0-JODY-00 f207279] A warp arrow. Step on it.
+[step0-JODY-00 f207878] Trainer here. Press A to talk.
+[step0-JODY-00 f207909] Our GYM LEADER told us to go all out and beat you. Even if you happen to be the LEADER’s kid!
+[step0-JODY-00 f208481] Battle.
+[step0-JODY-00 f208658] COOLTRAINER JODY would like to battle!
+[step0-JODY-00 f208814] COOLTRAINER JODY sent out ZANGOOSE!
+[step0-JODY-00 f209124] Go! TORCHIC!
+[step0-JODY-00 f209322] Fight, top left.
+[step0-JODY-00 f209364] SCRATCH, NORMAL, PP 11 of 35. 1 of 4
+[step0-JODY-00 f209413] TORCHIC used SCRATCH!
+[step0-JODY-00 f209753] Foe ZANGOOSE fainted!
+[step0-JODY-00 f209854] TORCHIC gained 918 EXP. Points!
+[step0-JODY-00 f210058] Player defeated COOLTRAINER JODY!
+[step0-JODY-00 f210273] But… I went all out!
+[step0-JODY-00 f210392] A got 1248 for winning!
+[step0-JODY-00 f210654] Overworld.
+[step0-JODY-00 f210658] The room changed north-east.
+[step0-JODY-talk0 f211203] Trainer here. Press A to talk.
+[step0-JODY-talk0 f211234] The way you use your POKéMON… It’s like your father’s style. Go on through! The GYM LEADER, your father, is waiting!
+[step0-JODY-01 f211811] Trainer west. Press A to talk.
+[step0-JODY-01 f212503] Trainer north. Press A to talk.
+[step0-approach-01 f213149] Trainer west. Press A to talk.
+[step0-press0 f213325] A gym door.
+[step0-press0 f213325] Something to read here. Press A.
+[step0-press0 f213348] Blocked north.
+[step0-press0 f213360] “GYM LEADER’S ROOM. “See for yourself what POKéMON await you!” the sign says. Do you want to go through?
+[to-norman-drain0 f213809] YES.
+[to-norman-drain2 f213899] A gym door.
+[to-norman-00 f213973] A warp arrow. Step on it.
+[to-norman-07 f214303] Person north. Press A to talk.
+[tab0-talk0 f214341] Object here. Press A.
+[tab0-talk0 f214376] DAD: Hm… So, you did get four GYM BADGES. Fine, as I promised, we will have a POKéMON battle. A…. I’m so happy that I can have a real battle with my own child. But, a battle is a battle! I will do everything in my power as a GYM LEADER to win. A, you’d better give it your best shot, too!
+
+# Norman's room, captured from the mod's log after the battle
+[say f219118] Foe VIGOROTH used FACADE!
+[say f219368] Fight, top left.
+[say f219411] SCRATCH, NORMAL, PP 8 of 35. 1 of 4
+[say f219460] TORCHIC used SCRATCH!
+[say f219804] Foe VIGOROTH fainted!
+[say f219931] TORCHIC gained 729 EXP. Points!
+[say f220238] LEADER NORMAN sent out LINOONE!
+[say f220505] Fight, top left.
+[say f220539] SCRATCH, NORMAL, PP 7 of 35. 1 of 4
+[say f220588] TORCHIC used SCRATCH!
+[say f220937] Foe LINOONE fainted!
+[say f221059] TORCHIC gained 795 EXP. Points!
+[say f221263] Player defeated LEADER NORMAN!
+[say f221436] …. I… I can’t…. I can’t believe it. A…. I lost to A? But, rules are rules! Here, take this.
+[say f224356] A got 3100 for winning!
+[say f224632] Overworld.
+[say f224634] A received the BALANCE BADGE from DAD!
+[say f225118] DAD: With that BADGE, the DEFENSE of all your POKéMON will increase. POKéMON that know the HM move SURF will be able to travel over water. This is my gift to you. A, I’m sure you can use it correctly.
+[say f228350] The room changed south-east.
+[say f228352] Obtained the TM42!
+[say f228574] A put away the TM42 in the TMs HMs POCKET.
+[say f228765] DAD: TM42 contains FACADE. It doubles the power of moves if the POKéMON is poisoned, paralyzed, or burned. It might be able to turn a bad situation into an advantage.

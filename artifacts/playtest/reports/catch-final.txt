@@ -1,0 +1,434 @@
+# artifacts/playtest/reports/catch-final.txt - appended by each pad session
+# --- new pad session ---
+[session] one session, no restart: Rustboro gym -> Mart -> buy a ball -> Route 116 grass -> throw from the bag -> capture
+[start] map (11, 3) tile (5, 3)
+[count_before] ball pocket: key 0x488f first 16 bytes 00008f4800008f4800008f4800008f48 -> empty (carrying 0)
+[gym_out] warp (0, 3): approach (5, 18) (23 steps), step south
+[gym_out] from (5,3) to (5, 18)
+[gym_out f139701] New area. Rustboro City Gym.
+[gym_out f139725] Overworld.
+[gym_out] (12,10) -south-> (12,11)
+[gym_out] (12,11) -south-> (12,12)
+[gym_out] (12,12) -west-> (11,12)
+[gym_out] (11,12) -west-> (10,12)
+[gym_out] (10,12) -west-> (9,12)
+[gym_out] (9,12) -south-> (9,13)
+[gym_out] (9,13) -south-> (9,14)
+[gym_out f140693] Trainer here. Press A to talk.
+[gym_out] (9,14) -south-> (9,15)
+[gym_out] (9,15) south blocked
+[gym_out] (2,8) refuses south to (2, 9); routing around it
+[gym_out] (9,15) -east-> (10,15)
+[gym_out] (10,15) -east-> (11,15)
+[gym_out] (11,15) -east-> (12,15)
+[gym_out] (12,15) -south-> (12,16)
+[gym_out] (12,16) -south-> (12,17)
+[gym_out] (12,17) -south-> (12,18)
+[gym_out] (12,18) -south-> (12,19)
+[gym_out] (12,19) -west-> (11,19)
+[gym_out] (11,19) -south-> (11,20)
+[gym_out f141925] Trainer east. Press A to talk.
+[gym_out] (11,20) -south-> (11,21)
+[gym_out] (11,21) east blocked
+[gym_out] (4,14) refuses east to (5, 14); routing around it
+[gym_out] (11,21) -north-> (11,20)
+[gym_out] (11,20) -north-> (11,19)
+[gym_out] (11,19) -west-> (10,19)
+[gym_out] (10,19) -west-> (9,19)
+[gym_out] (9,19) -west-> (8,19)
+[gym_out] (8,19) -south-> (8,20)
+[gym_out] (8,20) -south-> (8,21)
+[gym_out] (8,21) -south-> (8,22)
+[gym_out] (8,22) -south-> (8,23)
+[gym_out] (8,23) -south-> (8,24)
+[gym_out] (8,24) -east-> (9,24)
+[gym_out f143381] Person south. Press A to talk.
+[gym_out] (9,24) -east-> (10,24)
+[gym_out] (10,24) -east-> (11,24)
+[gym_out f143613] Door two steps south-east. Press A to exit.
+[gym_out] (11,24) -south-> (11,25)
+[gym_out] (11,25) -east-> (12,25)
+[gym_out0 f143829] A warp arrow. Step on it.
+[gym_out0 f143829] Door here. Press A to exit.
+[gym_out0 f143837] A warp arrow. Step on it.
+[gym_out0] (12,25) -south-> (12,26)
+[gym_out1] (12,26) south blocked
+[gym_outok1 f144285] New area. Rustboro City.
+[gym_out] warped (11, 3) -> (0, 3) at (27, 20)
+[map] out of the gym: (0, 3) at (27, 20)
+[mart_door] warp (11, 7): approach (16, 46) (37 steps), step north
+[mart_door] from (27,20) to (16, 46)
+[mart_door] (34,27) -south-> (34,28)
+[mart_door] (34,28) -south-> (34,29)
+[mart_door] (34,29) -south-> (34,30)
+[mart_door] (34,30) -south-> (34,31)
+[mart_door f144845] Person north. Press A to talk.
+[mart_door] (34,31) -west-> (33,31)
+[mart_door] (33,31) -west-> (32,31)
+[mart_door] (32,31) -west-> (31,31)
+[mart_door f145192] Get out! Out of the way!
+[mart_door] (31,31) -west-> (30,31)
+[mart_doorpad1 f145647] Wait! Pleeeaaase! Don’t take my GOODS!
+[mart_door] waited out a scene that owned the pad
+[mart_door] (30,31) -south-> (30,32)
+[mart_door] (30,32) -south-> (30,33)
+[mart_door] (30,33) -south-> (30,34)
+[mart_door] (30,34) -south-> (30,35)
+[mart_door] (30,35) -south-> (30,36)
+[mart_door] (30,36) -south-> (30,37)
+[mart_door] (30,37) -south-> (30,38)
+[mart_door] (30,38) -south-> (30,39)
+[mart_door] (30,39) -south-> (30,40)
+[mart_door f147335] Person west. Press A to talk.
+[mart_door] (30,40) -south-> (30,41)
+[mart_door] (30,41) -south-> (30,42)
+[mart_door] (30,42) -south-> (30,43)
+[mart_door] (30,43) -south-> (30,44)
+[mart_door] (30,44) -south-> (30,45)
+[mart_door] (30,45) -south-> (30,46)
+[mart_door] (30,46) -south-> (30,47)
+[mart_door] (30,47) -south-> (30,48)
+[mart_door] (30,48) -south-> (30,49)
+[mart_door] (30,49) -south-> (30,50)
+[mart_door] (30,50) -south-> (30,51)
+[mart_door] (30,51) -west-> (29,51)
+[mart_door] (29,51) -west-> (28,51)
+[mart_door f148845] Object here. Press A.
+[mart_door] (28,51) -south-> (28,52)
+[mart_door] (28,52) -west-> (27,52)
+[mart_door] (27,52) -south-> (27,53)
+[mart_door f149131] Person east. Press A to talk.
+[mart_door] (27,53) -west-> (26,53)
+[mart_door] (26,53) -west-> (25,53)
+[mart_door f149369] Door two steps north-west. Press A to exit.
+[mart_door] (25,53) -west-> (24,53)
+[mart_door] (24,53) -west-> (23,53)
+[mart_door0 f149593] Door here. Press A to exit.
+[mart_door0] (23,53) -north-> (23,52)
+[mart_door] warped (0, 3) -> (11, 7) at (3, 7)
+[map] in the Mart: (11, 7) at (3, 7)
+[buy] pocket before purchase 1: empty (carrying 0) bytes 00008084000080840000808400008084
+[buy1walk] from (3,7) to (3, 3)
+[buy1walk f149695] A warp arrow. Step on it.
+[buy1walk f149695] New area. Rustboro City Mart.
+[buy1walk] (10,14) -north-> (10,13)
+[buy1walk f149871] Person west. Press A to talk.
+[buy1walk] (10,13) -north-> (10,12)
+[buy1walk] (10,12) -north-> (10,11)
+[buy1walk] (10,11) -north-> (10,10)
+[buy1greet f150216] Blocked west.
+[buy1greet f150228] Welcome! How may I serve you?
+[buy1greet] Welcome! How may I serve you?
+[buy1menu] Welcome! How may I serve you?
+[buy1stock f150395] BUY, 1 of 3.
+[buy1stock] BUY, 1 of 3.
+[buy1qty f150640] 10296
+[buy1qty f150641] 200 POKé BALL 300 POTION
+[buy1qty f150642] 700 SUPER POTION 100 ANTIDOTE 200 PARLYZ HEAL
+[buy1qty f150643] 550 ESCAPE ROPE 350 REPEL 350
+[buy1qty f150644] X SPEED A tool used for catching wild POKéMON.
+[buy1qty f150668] POKé BALL, 1 of 11.
+[buy1qty f150669] Shop.
+[buy1qty] Shop.
+[buy1total f150706] POKé BALL? Certainly. How many would you like?
+[buy1total] POKé BALL? Certainly. How many would you like?
+[buy1shop0] POKé BALL? Certainly. How many would you like?
+[buy1shop1 f150880] IN BAG: 0 200 01
+[buy1shop1] IN BAG: 0 200 01
+[buy1shop2 f150962] POKé BALL? And you wanted 1? That will be 200.
+[buy1shop2] POKé BALL? And you wanted 1? That will be 200.
+[buy1shop3] POKé BALL? And you wanted 1? That will be 200.
+[buy1shop4 f151145] YES.
+[buy1shop4] YES.
+[buy1shop5 f151223] Here you go! Thank you very much.
+[buy1shop5] Here you go! Thank you very much.
+[buy1shop6 f151355] 10096
+[buy1shop6] 10096
+[buy1shop7 f151397] POKé BALL, 1 of 11.
+[buy1shop7] POKé BALL, 1 of 11.
+[buy1shop8 f151541] Overworld.
+[buy1shop8 f151542] Is there anything else I can help you with?
+[buy1shop8] Is there anything else I can help you with?
+[buy1shop] sale heard=True scene=overworld
+[buy] pocket before purchase 2: [(0, 4, 1)] (carrying 1) bytes 04003fe900003ee900003ee900003ee9
+[buy2open] Is there anything else I can help you with?
+[buy2stock f151712] BUY, 1 of 3.
+[buy2stock f151769] 10096
+[buy2stock f151770] 200 POKé BALL 300 POTION
+[buy2stock f151771] 700 SUPER POTION 100 ANTIDOTE 200 PARLYZ HEAL
+[buy2stock f151772] 550 ESCAPE ROPE 350 REPEL 350
+[buy2stock f151773] X SPEED A tool used for catching wild POKéMON.
+[buy2stock f151797] POKé BALL, 1 of 11.
+[buy2stock f151798] Shop.
+[buy2stock] Shop.
+[buy2qty f151835] POKé BALL? Certainly. How many would you like?
+[buy2qty] POKé BALL? Certainly. How many would you like?
+[buy2total] POKé BALL? Certainly. How many would you like?
+[buy2shop0 f152019] IN BAG: 1 200 01
+[buy2shop0] IN BAG: 1 200 01
+[buy2shop1 f152106] POKé BALL? And you wanted 1? That will be 200.
+[buy2shop1] POKé BALL? And you wanted 1? That will be 200.
+[buy2shop2] POKé BALL? And you wanted 1? That will be 200.
+[buy2shop3 f152289] YES.
+[buy2shop3] YES.
+[buy2shop4 f152367] Here you go! Thank you very much.
+[buy2shop4] Here you go! Thank you very much.
+[buy2shop5 f152499] 9896
+[buy2shop5] 9896
+[buy2shop6 f152541] POKé BALL, 1 of 11.
+[buy2shop6] POKé BALL, 1 of 11.
+[buy2shop7 f152684] Overworld.
+[buy2shop7 f152685] Is there anything else I can help you with?
+[buy2shop7] Is there anything else I can help you with?
+[buy2shop] sale heard=True scene=overworld
+[buy] pocket before purchase 3: [(0, 4, 2)] (carrying 2) bytes 040090c9000092c9000092c9000092c9
+[buy3open] Is there anything else I can help you with?
+[buy3stock f152852] BUY, 1 of 3.
+[buy3stock f152913] 9896
+[buy3stock f152914] 200 POKé BALL 300 POTION
+[buy3stock f152915] 700 SUPER POTION 100 ANTIDOTE 200
+[buy3stock f152916] PARLYZ HEAL 550 ESCAPE ROPE 350 REPEL
+[buy3stock f152917] 350 X SPEED A tool used for catching wild POKéMON.
+[buy3stock f152941] POKé BALL, 1 of 11.
+[buy3stock f152942] Shop.
+[buy3stock] Shop.
+[buy3qty f152979] POKé BALL? Certainly. How many would you like?
+[buy3qty] POKé BALL? Certainly. How many would you like?
+[buy3total] POKé BALL? Certainly. How many would you like?
+[buy3shop0 f153163] IN BAG: 2 200 01
+[buy3shop0] IN BAG: 2 200 01
+[buy3shop1 f153250] POKé BALL? And you wanted 1? That will be 200.
+[buy3shop1] POKé BALL? And you wanted 1? That will be 200.
+[buy3shop2] POKé BALL? And you wanted 1? That will be 200.
+[buy3shop3 f153433] YES.
+[buy3shop3] YES.
+[buy3shop4 f153511] Here you go! Thank you very much.
+[buy3shop4] Here you go! Thank you very much.
+[buy3shop5 f153643] 9696
+[buy3shop5] 9696
+[buy3shop6 f153685] POKé BALL, 1 of 11.
+[buy3shop6] POKé BALL, 1 of 11.
+[buy3shop7 f153829] Overworld.
+[buy3shop7 f153830] Is there anything else I can help you with?
+[buy3shop7] Is there anything else I can help you with?
+[buy3shop] sale heard=True scene=overworld
+[buy] pocket before purchase 4: [(0, 4, 3)] (carrying 3) bytes 04001d3a00001e3a00001e3a00001e3a
+[buy4open] Is there anything else I can help you with?
+[buy4stock f154000] BUY, 1 of 3.
+[buy4stock f154057] 9696
+[buy4stock f154058] 200 POKé BALL 300 POTION
+[buy4stock f154059] 700 SUPER POTION 100 ANTIDOTE 200 PARLYZ HEAL
+[buy4stock f154060] 550 ESCAPE ROPE 350 REPEL 350
+[buy4stock f154061] X SPEED A tool used for catching wild POKéMON.
+[buy4stock f154085] POKé BALL, 1 of 11.
+[buy4stock f154086] Shop.
+[buy4stock] Shop.
+[buy4qty f154123] POKé BALL? Certainly. How many would you like?
+[buy4qty] POKé BALL? Certainly. How many would you like?
+[buy4total] POKé BALL? Certainly. How many would you like?
+[buy4shop0 f154307] IN BAG: 3 200 01
+[buy4shop0] IN BAG: 3 200 01
+[buy4shop1 f154394] POKé BALL? And you wanted 1? That will be 200.
+[buy4shop1] POKé BALL? And you wanted 1? That will be 200.
+[buy4shop2] POKé BALL? And you wanted 1? That will be 200.
+[buy4shop3 f154577] YES.
+[buy4shop3] YES.
+[buy4shop4 f154655] Here you go! Thank you very much.
+[buy4shop4] Here you go! Thank you very much.
+[buy4shop5 f154787] 9496
+[buy4shop5] 9496
+[buy4shop6 f154829] POKé BALL, 1 of 11.
+[buy4shop6] POKé BALL, 1 of 11.
+[buy4shop7 f154972] Overworld.
+[buy4shop7 f154973] Is there anything else I can help you with?
+[buy4shop7] Is there anything else I can help you with?
+[buy4shop] sale heard=True scene=overworld
+[buy] pocket before purchase 5: [(0, 4, 4)] (carrying 4) bytes 0400c90f0000cd0f0000cd0f0000cd0f
+[buy5open] Is there anything else I can help you with?
+[buy5stock f155140] BUY, 1 of 3.
+[buy5stock f155201] 9496
+[buy5stock f155202] 200 POKé BALL 300 POTION
+[buy5stock f155203] 700 SUPER POTION 100 ANTIDOTE 200 PARLYZ HEAL
+[buy5stock f155204] 550 ESCAPE ROPE 350 REPEL 350
+[buy5stock f155205] X SPEED A tool used for catching wild POKéMON.
+[buy5stock f155229] POKé BALL, 1 of 11.
+[buy5stock f155230] Shop.
+[buy5stock] Shop.
+[buy5qty f155267] POKé BALL? Certainly. How many would you like?
+[buy5qty] POKé BALL? Certainly. How many would you like?
+[buy5total] POKé BALL? Certainly. How many would you like?
+[buy5shop0 f155451] IN BAG: 4 200 01
+[buy5shop0] IN BAG: 4 200 01
+[buy5shop1 f155538] POKé BALL? And you wanted 1? That will be 200.
+[buy5shop1] POKé BALL? And you wanted 1? That will be 200.
+[buy5shop2] POKé BALL? And you wanted 1? That will be 200.
+[buy5shop3 f155721] YES.
+[buy5shop3] YES.
+[buy5shop4 f155799] Here you go! Thank you very much.
+[buy5shop4] Here you go! Thank you very much.
+[buy5shop5 f155931] 9296
+[buy5shop5] 9296
+[buy5shop6 f155973] POKé BALL, 1 of 11.
+[buy5shop6] POKé BALL, 1 of 11.
+[buy5shop7 f156116] Overworld.
+[buy5shop7 f156117] Is there anything else I can help you with?
+[buy5shop7] Is there anything else I can help you with?
+[buy5shop] sale heard=True scene=overworld
+[count_after_buy] ball pocket: key 0x1e04 first 16 bytes 0400011e0000041e0000041e0000041e -> [(0, 4, 5)] (carrying 5)
+[bought] pocket holds 5 balls after shopping
+[counterb0] Is there anything else I can help you with?
+[counterb1 f156282] BUY, 1 of 3.
+[counterb1] BUY, 1 of 3.
+[counterb2 f156420] Please come again!
+[counterb2] Please come again!
+[counterb3] Please come again!
+[counter] pad free: locked=0 box=0
+[counterstep1 f156839] Door two steps south. Press A to exit.
+[counterstep2 f156976] A warp arrow. Step on it.
+[counterstep4 f157326] New area. Rustboro City.
+[counter] map (0, 3) tile (16, 46)
+[map] back on the city map: (0, 3) at (16, 46)
+[to_route116] edge ('x', 1): (39, 12) (57 steps)
+[to_route116] (23,53) -east-> (24,53)
+[to_route116] (24,53) -east-> (25,53)
+[to_route116] (25,53) -east-> (26,53)
+[to_route116] (26,53) -east-> (27,53)
+[to_route116 f157843] Person east. Press A to talk.
+[to_route116] (27,53) -north-> (27,52)
+[to_route116] (27,52) -north-> (27,51)
+[to_route116] (27,51) -north-> (27,50)
+[to_route116] (27,50) -north-> (27,49)
+[to_route116] (27,49) -north-> (27,48)
+[to_route116] (27,48) -north-> (27,47)
+[to_route116] (27,47) -north-> (27,46)
+[to_route116] (27,46) -north-> (27,45)
+[to_route116] (27,45) -north-> (27,44)
+[to_route116] (27,44) -north-> (27,43)
+[to_route116] (27,43) -north-> (27,42)
+[to_route116] (27,42) -north-> (27,41)
+[to_route116] (27,41) -north-> (27,40)
+[to_route116] (27,40) -north-> (27,39)
+[to_route116] (27,39) -north-> (27,38)
+[to_route116] (27,38) -north-> (27,37)
+[to_route116] (27,37) -north-> (27,36)
+[to_route116] (27,36) -north-> (27,35)
+[to_route116 f159599] Person west. Press A to talk.
+[to_route116] (27,35) -north-> (27,34)
+[to_route116] (27,34) -north-> (27,33)
+[to_route116] (27,33) -north-> (27,32)
+[to_route116] (27,32) -north-> (27,31)
+[to_route116] (27,31) -north-> (27,30)
+[to_route116] (27,30) -north-> (27,29)
+[to_route116] (27,29) -north-> (27,28)
+[to_route116] (27,28) -north-> (27,27)
+[to_route116] (27,27) -north-> (27,26)
+[to_route116] (27,26) -north-> (27,25)
+[to_route116] (27,25) -north-> (27,24)
+[to_route116] (27,24) -north-> (27,23)
+[to_route116] (27,23) -north-> (27,22)
+[to_route116] (27,22) -north-> (27,21)
+[to_route116] (27,21) -north-> (27,20)
+[to_route116] (27,20) -north-> (27,19)
+[to_route116] (27,19) -east-> (28,19)
+[to_route116] (28,19) -east-> (29,19)
+[to_route116] (29,19) -east-> (30,19)
+[to_route116] (30,19) -east-> (31,19)
+[to_route116] (31,19) -east-> (32,19)
+[to_route116] (32,19) -east-> (33,19)
+[to_route116] (33,19) -east-> (34,19)
+[to_route116] (34,19) -east-> (35,19)
+[to_route116] (35,19) -east-> (36,19)
+[to_route116] (36,19) -east-> (37,19)
+[to_route116pad0 f162126] Person north. Press A to talk.
+[to_route116pad0 f162144] Object here. Press A.
+[to_route116pad0 f162151] Oh, it’s you! You’re that fantastic TRAINER who helped me in PETALBURG WOODS! Help me! I was robbed by TEAM AQUA! I have to get the DEVON GOODS back! If I don’t… I’m going to be in serious trouble.
+[to_route116] waited out a scene that owned the pad
+[to_route116] (37,19) -east-> (38,19)
+[to_route116] (38,19) -east-> (39,19)
+[to_route116] (39,19) -east-> (40,19)
+[to_route116] (40,19) -east-> (41,19)
+[to_route116] (41,19) -east-> (42,19)
+[to_route116] (42,19) -east-> (43,19)
+[to_route116] (43,19) -east-> (44,19)
+[to_route116] (44,19) -east-> (45,19)
+[to_route116] (45,19) -east-> (46,19)
+[to_route1160 f164301] New area. Route 116.
+[to_route1160] (46,19) -east-> (7,19)
+[to_route116] warped (0, 3) -> (0, 31) at (0, 12)
+[map] on Route 116: (0, 31) tile (0, 12)
+[grass] no way to grass from ((5, 12))
+[grass] grass=False at (5, 12) scene=battle
+[grass] stopped after 90 steps, scene battle
+[enc f164770] Blocked east.
+[enc f164829] Something to read here. Press A.
+[enc f164910] Blocked east.
+[enc f164976] Blocked north.
+[enc f165108] Blocked east.
+[enc f165159] Something to read here. Press A.
+[enc f165240] Blocked east.
+[enc f165306] Blocked north.
+[enc f165438] Blocked east.
+[enc f165489] Something to read here. Press A.
+[enc f165570] Blocked east.
+[enc f165636] Blocked north.
+[enc f165868] Battle.
+[encounter] Battle.
+[grass] grass=False at (5, 12) scene=battle
+[grass] stopped after 90 steps, scene battle
+[huntenc1] Battle.
+[huntselect f166123] Wild POOCHYENA appeared!
+[huntselect f166237] Go! TORCHIC!
+[huntselect] Go! TORCHIC!
+[hunt] throw 1
+[hunt f166436] Fight, top left.
+[huntpocket f167687] Bag, top right.
+[huntpocket f167803] ITEMS
+[huntpocket f167804] CLOSE BAG Return to the battle.
+[huntpocket f167806] Items. Empty.
+[huntpocket f167829] Empty.
+[huntpocket f167830] Bag.
+[huntpocket f167869] Items. Empty.
+[huntpocket f167870] ITEMS POKé BALLS
+[huntpocket f167887] Poké balls. POKé BALL, 1 of 1, 5 in the bag.
+[huntpocket f167888] 5 POKé BALL CLOSE BAG A tool used for catching wild POKéMON.
+[huntpocket f167890] POKé BALL, 1 of 1, 5 in the bag.
+[huntselect f167960] POKé BALL is selected. USE, CANCEL
+[huntselect f167960] Poké balls. POKé BALL, 1 of 1, 5 in the bag.
+[huntselect f167969] Option 1 of 2.
+[huntselect] Option 1 of 2.
+[hunt] throw 2
+[hunt f168056] Poké balls. POKé BALL, 1 of 1, 4 in the bag.
+[hunt f168106] 70 400/ 400 TORCHIC
+[hunt f168108] 8 POOCHYENAfemale
+[hunt f168135] Battle.
+[hunt f168138] A used POKé BALL!
+[hunt f168658] Gotcha! POOCHYENA was caught!
+[hunt] captured after throw 2
+[hunt] round 1: thrown=2 caught=True pokedex=False balls left=4
+[grass] grass=False at (5, 12) scene=battle
+[grass] stopped after 90 steps, scene battle
+[huntenc2] Gotcha! POOCHYENA was caught!
+[hunt] round 2: POOCHYENA already owns a Pokedex entry, running
+[huntflee2 f169865] POOCHYENA’s data was added to the POKéDEX.
+[huntflee2 f170224] POKéDEX registration completed. 010
+[huntflee2 f170225] POOCHYENA BITE POKéMON HT, WT 1’08”
+[huntflee2 f170226] 30.0 lbs. It savagely threatens foes with bared fangs. It chases after fleeing targets tenaciously. It turns tail and runs, however, if the foe strikes back.
+[huntflee2 f170574] Give a nickname to the captured POOCHYENA?
+[huntflee2 f170898] Upper case letters. A, row 1 of 4, column 1 of 8. Select changes the page, B deletes, Start finishes.
+[huntflee2 f170922] Name entry.
+[grass] grass=False at (5, 12) scene=naming
+[grass] stopped after 90 steps, scene naming
+[huntenc3] Name entry.
+[huntselect f171049] B
+[huntselect f171134] Name: B
+[huntselect f171231] Name: BB
+[huntselect] Name: BB
+[hunt] throw 1
+[hunt f171328] Name: BBB
+[hunt] captured after throw 1
+[hunt] round 3: thrown=1 caught=True pokedex=True balls left=4
+[caught] a Pokemon was caught this session: True
+[count_after_throw] ball pocket: key 0xdef5 first 16 bytes 0400f1de0000f5de0000f5de0000f5de -> [(0, 4, 4)] (carrying 4)
+[party] {'index': 0, 'address': 33703148, 'personality': 400000000, 'ot_id': 2171514063, 'status': 64, 'level': 70, 'hp': 400, 'max_hp': 400, 'attack': 300, 'defense': 300, 'speed': 300, 'sp_attack': 300, 'sp_defense': 300}
+[decrement] after purchase 5 -> after throw 4, difference 1
+[final] scene naming map (0, 31) at (5, 12)

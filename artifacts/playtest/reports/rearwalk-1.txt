@@ -1,0 +1,64 @@
+[walk00-left f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[walk00-left f95382] A warp arrow. Step on it.
+[walk00-left f95382] Door here. Press A to exit.
+[walk00-left f95406] Overworld.
+[walk00-left f95423] Ledge two steps south. Jump south to cross it.
+[walk00-left f95423] New area. Lavaridge Town Gym B.
+[walk00-left f95656] A ledge. Jump south to cross it.
+[walk00-left f95656] Door two steps west. Press A to exit.
+[walk00-left f95676] Vent two steps west.
+[walk00-left f95708] A ledge. Jump south to cross it.
+[walk00-left f95382] A warp arrow. Step on it.
+[walk00-left f95382] New area. Lavaridge Town Gym.
+[walk01-left f95436] Door two steps south-west. Press A to exit.
+[walk01-left f95456] Pit two steps south-west.
+[walk02-up f95496] Person east. Press A to talk.
+[walk07-up f95768] Ledge two steps east. It only jumps south. You are on the far side.
+[walk10-up f95904] Door two steps north-west. Press A to exit.
+[walk10-up f95924] Pit two steps north-west.
+[walk12-left f96008] A pit. Step on it and the floor drops you to the basement.
+[walk12-left f96036] Pit underfoot.
+[walk13-down f96112] A steam vent. Step on it and it throws you back up.
+[walk13-down f96112] Vent underfoot.
+[walk13-down f96112] New area. Lavaridge Town Gym B.
+[walk13-down f96208] Ledge two steps east. It only jumps south. You are on the far side.
+[walk14-down f96260] Ledge two steps west. It only jumps south. You are on the far side.
+[walk18-down f96468] Ledge two steps east. It only jumps south. You are on the far side.
+[walk23-left f96708] Door two steps south-west. Press A to exit.
+[walk23-left f96728] Vent two steps north-west.
+[walk24-left f96760] Trainer south. Press A to talk.
+[fight24-0 f96875] A steam vent. Step on it and it throws you back up.
+[fight24-0 f96879] Come on, get with it! Let’s go before my feelings cool!
+[fight24-0 f97275] Battle.
+[fight24-0 f97450] KINDLER JACE would like to battle!
+[fight24-0 f97584] KINDLER JACE sent out SLUGMA!
+[fight24-0 f97781] Go! TORCHIC!
+[fight24-0 f97979] Fight, top left.
+[fight24-0 f98000] SCRATCH, NORMAL, PP 24 of 35. 1 of 4
+[fight24-0 f98039] TORCHIC used SCRATCH!
+[fight24-6 f98345] Foe SLUGMA fainted!
+[fight24-8 f98472] TORCHIC gained 384 EXP. Points!
+[fight24-13 f98673] Player defeated KINDLER JACE!
+[fight24-17 f98849] It’s so hot, and yet my heart is clutched by ice…
+[fight24-22 f99052] A got 736 for winning!
+[fight24-28 f99313] Overworld.
+[fight24-29 f99410] A steam vent. Step on it and it throws you back up.
+[fight24-29 f99410] Trainer here. Press A to talk.
+[fight24-29 f99414] As much as I love mountains, I especially love volcanoes.
+[fight24-35 f99815] Battle.
+[fight24-38 f99992] HIKER ELI would like to battle!
+[fight24-42 f100130] HIKER ELI sent out NUMEL!
+[fight24-47 f100374] Go! TORCHIC!
+[fight24-52 f100570] Fight, top left.
+[fight24-53 f100592] SCRATCH, NORMAL, PP 23 of 35. 1 of 4
+[fight24-54 f100641] TORCHIC used SCRATCH!
+[fight24-61 f100960] Foe NUMEL fainted!
+[fight24-63 f101082] TORCHIC gained 433 EXP. Points!
+[fight24-68 f101284] Player defeated HIKER ELI!
+[fight24-72 f101459] Well, it seems to me I lost without ever being in control.
+[fight24-78 f101704] A got 920 for winning!
+[fight24-83 f101942] Door one step south. Press A to exit.
+[fight24-84 f101966] Overworld.
+[walk26-up f102097] Trainer east. Press A to talk.
+[walk27-up f102141] Door here. Press A to exit.
+[walk28-up f102213] Vent two steps west.

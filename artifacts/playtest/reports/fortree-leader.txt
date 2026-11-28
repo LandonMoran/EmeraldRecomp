@@ -1,0 +1,84 @@
+[cont0-0 f275452] Ledge two steps south. Jump south to cross it.
+[cont0-0 f229280] Person north. Press A to talk.
+[cont0-0 f229653] Object here. Press A.
+[cont0-0 f229814] I am WINONA. I am the LEADER of the FORTREE POKéMON GYM. I have become one with BIRD POKéMON and have soared the skies…. However grueling the battle, we have triumphed with grace…. Witness the elegant choreography of BIRD POKéMON and I!
+[cont0-0 f230923] Battle.
+[cont0-0 f231124] LEADER WINONA would like to battle!
+[cont0-0 f231275] LEADER WINONA sent out SWABLU!
+[cont0-0 f231496] Go! TORCHIC!
+[cont0-0 f231695] Fight, top left.
+[cont0-0 f231737] SCRATCH, NORMAL, PP 6 of 35. 1 of 4
+[cont0-0 f231786] TORCHIC used SCRATCH!
+[cont0-0 f232112] Foe SWABLU fainted!
+[cont0-0 f232227] TORCHIC gained 459 EXP. Points!
+[cont0-0 f232431] TORCHIC grew to LV. 71!
+[cont0-0 f232791] LEADER WINONA sent out TROPIUS!
+[cont0-0 f233058] Fight, top left.
+[cont0-0 f233099] SCRATCH, NORMAL, PP 5 of 35. 1 of 4
+[cont0-0 f233148] TORCHIC used SCRATCH!
+[cont0-0 f233509] Foe TROPIUS fainted!
+[cont0-0 f233619] TORCHIC gained 1050 EXP. Points!
+[cont0-0 f233930] LEADER WINONA sent out PELIPPER!
+[cont0-0 f234228] Fight, top left.
+[cont0-0 f234257] SCRATCH, NORMAL, PP 4 of 35. 1 of 4
+[cont0-0 f234304] Foe PELIPPER used PROTECT!
+[cont0-0 f234532] Foe PELIPPER protected itself!
+[cont0-0 f234722] TORCHIC used SCRATCH!
+[cont0-0 f234841] Foe PELIPPER protected itself!
+[cont0-0 f235024] Fight, top left.
+[cont0-0 f235055] SCRATCH, NORMAL, PP 3 of 35. 1 of 4
+[cont0-0 f235104] TORCHIC used SCRATCH!
+[cont0-0 f235445] Foe PELIPPER fainted!
+[cont0-0 f235545] TORCHIC gained 1053 EXP. Points!
+[cont0-0 f235855] LEADER WINONA sent out SKARMORY!
+[cont0-0 f236137] Fight, top left.
+[cont0-0 f236183] SCRATCH, NORMAL, PP 2 of 35. 1 of 4
+[cont0-0 f236232] TORCHIC used SCRATCH!
+[cont0-0 f236456] It’s not very effective…
+[cont0-0 f236626] Foe SKARMORY used STEEL WING!
+[cont0-0 f237008] Fight, top left.
+[cont0-0 f237029] SCRATCH, NORMAL, PP 1 of 35. 1 of 4
+[cont0-0 f237078] TORCHIC used SCRATCH!
+[cont0-0 f237279] It’s not very effective…
+[cont0-0 f237521] Foe SKARMORY fainted!
+[cont0-0 f237627] TORCHIC gained 1116 EXP. Points!
+[cont0-0 f237937] LEADER WINONA sent out ALTARIA!
+[cont0-0 f238217] Fight, top left.
+[cont0-0 f238227] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[cont0-0 f238267] There’s no PP left for this move!
+[cont0-0 f238416] SCRATCH, NORMAL, PP 0 of 35. 1 of 4
+[cont0-0 f238450] PECK, FLYING, PP 35 of 35. 3 of 4
+[cont0-0 f238484] TORCHIC is paralyzed! It can’t move!
+[cont0-0 f238733] Foe ALTARIA used DRAGON DANCE!
+[cont0-0 f239077] Foe ALTARIA’s ATTACK rose!
+[cont0-0 f239248] Foe ALTARIA’s SPEED rose!
+[cont0-0 f239415] Fight, top left.
+[cont0-0 f239444] PECK, FLYING, PP 35 of 35. 3 of 4
+[cont0-0 f239493] Foe ALTARIA used AERIAL ACE!
+[cont0-0 f239728] TORCHIC used PECK!
+[cont0-0 f240184] Foe ALTARIA’s ORAN BERRY restored health!
+[cont0-0 f240415] Fight, top left.
+[cont0-0 f240452] PECK, FLYING, PP 34 of 35. 3 of 4
+[cont0-0 f240501] Foe ALTARIA used AERIAL ACE!
+[cont0-0 f240737] TORCHIC used PECK!
+[cont0-0 f241006] Foe ALTARIA fainted!
+[cont0-3 f241134] TORCHIC gained 1329 EXP. Points!
+[cont0-8 f241338] Player defeated LEADER WINONA!
+[cont0-12 f241511] Never before have I seen a TRAINER command POKéMON with more grace than I…. In recognition of your prowess, I present to you this GYM BADGE.
+[cont2-0 f246940] A got 3300 for winning!
+[cont2-6 f247202] Overworld.
+[cont2-6 f247204] A received the FEATHER BADGE from WINONA.
+[cont2-13 f247699] With the FEATHER BADGE, all POKéMON up to LV 70, even those received through trades, will obey your every command. You will also be able to use the HM move FLY outside of battle. And this… This is a gift from me.
+[text15 f250983] Obtained the TM40!
+[text19 f251205] A put away the TM40 in the TMs HMs POCKET.
+[text24 f251406] TM40 contains AERIAL ACE. Its speed… No POKéMON should be able to avoid it. … … … … … …
+[text33 f251860] Registered GYM LEADER WINONA in the POKéNAV.
+[prize0 f252116] Though I fell to you, I will remain devoted to BIRD POKéMON.
+
+======================================================================
+Evidence after the fight:
+  badge flag 0x86C (FEATHER BADGE): true
+  party (gPlayerParty): TORCHIC LV 71 / 400 HP
+  checkpoint: fortree-cleared
+  how the leader was reached: gym_graph route + re-anchor on a stuck step,
+  then the developer warp the audit allows for the last stretch

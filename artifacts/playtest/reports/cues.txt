@@ -1,0 +1,19 @@
+# Audio cues observed in this pass (emerald build from 44bffcf+mod)
+
+[emerald:a11y] cue: map_transition (map) + speak: New area. Route 103.
+[emerald:a11y] cue: map_transition (map) + speak: New area. Route 101.
+[emerald:a11y] cue: map_transition (map) + speak: New area. Mossdeep City.
+[emerald:a11y] cue: interact_fail (fail)
+
+# Spoken-alongside lines captured in the same build
+Door here. Press A to exit.
+Door two steps north. Press A to exit.
+Person east. Press A to talk.
+Person north. Press A to talk.
+Person south. Press A to talk.
+Person west. Press A to talk.
+Stairs here. Walk onto them.
+Trainer east. Press A to talk.
+Trainer north. Press A to talk.
+Trainer south. Press A to talk.
+Trainer west. Press A to talk.

@@ -1,0 +1,26 @@
+start at ('1F', 4, 2)
+00 down -> ('1F', 4, 3) ok
+01 left -> ('1F', 3, 3) ok
+02 left -> ('B1F', 2, 3) ok
+03 right -> ('B1F', 3, 3) ok
+04 right -> ('B1F', 4, 3) ok
+05 right -> ('B1F', 5, 3) ok
+06 up -> ('B1F', 5, 2) ok
+07 right -> ('B1F', 6, 2) ok
+08 right -> ('1F', 8, 2) ok
+09 down -> ('1F', 8, 3) ok
+10 down -> ('1F', 8, 4) ok
+11 down -> ('1F', 8, 5) ok
+12 right -> ('1F', 9, 5) ok
+13 down -> ('1F', 9, 6) ok
+14 right -> ('B1F', 10, 6) ok
+15 down -> ('B1F', 10, 7) ok
+16 down -> ('B1F', 10, 8) ok
+17 down -> ('B1F', 10, 9) ok
+18 down -> ('B1F', 10, 11) ok
+19 down -> ('B1F', 10, 12) ok
+20 right -> ('B1F', 11, 12) ok
+21 right -> ('1F', 13, 12) ok
+22 up -> ('1F', 13, 11) ok
+23 up -> ('1F', 13, 10) ok
+reached ('1F', 13, 10), scene overworld

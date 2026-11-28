@@ -1,0 +1,83 @@
+{
+ "name": "torchic-grind",
+ "note": "after 160s of wild battles on Route 101",
+ "saved_at": "2026-11-28T03:33:13Z",
+ "map": [
+  0,
+  9
+ ],
+ "pos": [
+  10,
+  1
+ ],
+ "location": {
+  "map": [
+   0,
+   9
+  ],
+  "x": -1,
+  "y": -1,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 17,
+  "y": 8,
+  "map": [
+   0,
+   16
+  ],
+  "facing": "south",
+  "elevation": 3
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   0,
+   9
+  ],
+  "x": 10,
+  "y": 1,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 9,
+  "trigger_dist": 0,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": false,
+  "open": {
+   "n": true,
+   "e": true,
+   "s": true,
+   "w": false
+  },
+  "grid": [
+   35,
+   34,
+   33760024
+  ],
+  "blocks": [
+   12289,
+   12289,
+   12289,
+   1511
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 0,
+  "var:VAR_PETALBURG_GYM_STATE": 0,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": false,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "puzzle": "mauville",
+ "map": "MauvilleCity_Gym",
+ "map_group": 10,
+ "map_num": 0,
+ "layout": "LAYOUT_MAUVILLE_CITY_GYM",
+ "size": [
+  10,
+  21
+ ],
+ "start": {
+  "from_map": "MauvilleCity",
+  "from_xy": [
+   8,
+   5
+  ],
+  "map": "MauvilleCity_Gym",
+  "map_group": 10,
+  "map_num": 0,
+  "x": 4,
+  "y": 20,
+  "elevation": 0
+ },
+ "triggers": [
+  {
+   "x": 4,
+   "y": 12,
+   "elevation": 3,
+   "var": "VAR_TEMP_0",
+   "var_value": "0",
+   "script": "MauvilleCity_Gym_EventScript_Switch2"
+  },
+  {
+   "x": 3,
+   "y": 9,
+   "elevation": 3,
+   "var": "VAR_TEMP_0",
+   "var_value": "0",
+   "script": "MauvilleCity_Gym_EventScript_Switch3"
+  },
+  {
+   "x": 0,
+   "y": 15,
+   "elevation": 3,
+   "var": "VAR_TEMP_0",
+   "var_value": "0",
+   "script": "MauvilleCity_Gym_EventScript_Switch1"
+  },
+  {
+   "x": 8,
+   "y": 9,
+   "elevation": 3,
+   "var": "VAR_TEMP_0",
+   "var_value": "0",
+   "script": "MauvilleCity_Gym_EventScript_Switch4"
+  }
+ ],
+ "warps": [
+  {
+   "x": 4,
+   "y": 20,
+   "elevation": 0,
+   "dest_map": "MAP_MAUVILLE_CITY",
+   "dest_warp_id": "0"
+  },
+  {
+   "x": 5,
+   "y": 20,
+   "elevation": 0,
+   "dest_map": "MAP_MAUVILLE_CITY",
+   "dest_warp_id": "0"
+  }
+ ],
+ "script_hooks": [
+  [
+   "MAP_SCRIPT_ON_LOAD",
+   "MauvilleCity_Gym_OnLoad"
+  ]
+ ],
+ "facing": null,
+ "steps": [],
+ "status": "NOT TESTED"
+}

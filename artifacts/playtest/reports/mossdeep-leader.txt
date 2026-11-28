@@ -1,0 +1,209 @@
+[scaffold] force_map -> [14, 0] at (30,15)
+[walk1 f387317] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f387509] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f387701] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f387893] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f388085] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f388277] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f388469] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f388661] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f388853] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f389045] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f389237] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f389429] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f389621] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f389813] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390005] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390197] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390389] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390581] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390773] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f390965] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f391157] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f391349] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f391541] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f391733] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f391925] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f392117] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f392428] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f392701] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f392977] PECK, FLYING, PP 0 of 35. 3 of 4
+[walk1 f393036] Fight, top left.
+[walk1 f393093] Pokémon, bottom left.
+[walk1 f393154] TORCHIC 32/ /400
+[walk1 f393165] CANCEL Choose a POKéMON.
+[walk1 f393189] Party.
+[walk1 f393226] SHIFT, SUMMARY, CANCEL
+[walk1 f393227] Do what with this ?
+[walk1 f393236] Option 1 of 3.
+[walk1 f393298] is already in battle!
+[walk1 f393465] Choose a POKéMON.
+[walk1 f393625] 71 TORCHIC
+[walk1 f393626] 42 SOLROCK
+[walk1 f393627] 71
+[walk1 f393628] 41 XATUmale
+[walk1 f393651] Pokémon, bottom left.
+[walk1 f393653] Battle.
+[walk1 f393866] TORCHIC 32/
+[walk1 f393877] CANCEL Choose a POKéMON.
+[walk1 f393901] Party.
+[walk1 f393948] SHIFT, SUMMARY, CANCEL
+[walk1 f393949] Do what with this ?
+[walk1 f393958] Option 1 of 3.
+[walk1 f394019] Option 2 of 3.
+[walk1 f394090] 71 /?
+[walk1 f394091] POKéMON INFO POKéMON SKILLS BATTLE MOVES
+[walk1 f394092] C0NTEST MOVES CANCEL
+[walk1 f394093] INFO, SWITCH RENTAL POKéMON TYPE/
+[walk1 f394094] HP, ATTACK, DEFENSE, SP. ATK, SP. DEF, SPEED
+[walk1 f394095] EXP. POINTS, NEXT LV., STATUS, POWER
+[walk1 f394096] ACCURACY, APPEAL, JAM OT/ 44239
+[walk1 f394097] ------- No special ability.
+[walk1 f394098] QUIET nature, obtained in a trade.
+[walk1 f394123] Summary.
+[walk1 f312929] Overworld.
+[walk1 f313387] Object here. Press A.
+[walk] blocked at (30,15) facing 2
+[talk f313548] TATE: Hehehe… Were you surprised? LIZA: Fufufu… Were you surprised? TATE: That there are two GYM LEADERS? LIZA: That there are two GYM LEADERS? TATE: We’re twins! LIZA: We’re twins! TATE: We don’t need to talk because… LIZA: We can each determine what…. TATE: The other is thinking… LIZA: All in our minds! TATE: This combination of ours… LIZA: Can you beat it?
+[text33 f315173] Battle.
+[fight34-4 f315386] LEADER TATELIZA would like to battle!
+[fight34-9 f315568] LEADER TATELIZA sent out CLAYDOL and XATU!
+[fight34-17 f315922] Go! TORCHIC and
+[fight34-23 f316191] Fight, top left.
+[fight34-25 f316240] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[fight34-26 f316278] CLAYDOL, foe. 2 of 4.
+[fight34-27 f316325] Fight, top left.
+[fight34-28 f316366] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[fight34-29 f316404] CLAYDOL, foe. 2 of 4.
+[fight34-30 f316456] Foe XATU used CONFUSE RAY!
+[fight34-37 f316939] became confused!
+[fight34-40 f317107] TORCHIC used SCRATCH!
+[fight34-47 f317391] is confused!
+[fight34-52 f317626] It hurt itself in its confusion!
+[fight34-58 f317884] Foe CLAYDOL used EARTHQUAKE!
+[fight34-65 f318371] It doesn’t affect Foe XATU…
+[fight34-68 f318558] Fight, top left.
+[fight34-70 f318610] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[fight34-71 f318648] CLAYDOL, foe. 2 of 4.
+[fight34-72 f318695] Fight, top left.
+[fight34-73 f318736] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[fight34-74 f318774] CLAYDOL, foe. 2 of 4.
+[fight34-76 f318875] LEADER TATELIZA used HYPER POTION!
+[fight34-83 f319173] Foe CLAYDOL’s HYPER POTION restored health!
+[fight34-88 f319400] Foe XATU used PSYCHIC!
+[fight34-95 f319712] is confused!
+[fight34-100 f319946] It hurt itself in its confusion!
+[fight34-106 f320206] TORCHIC is paralyzed! It can’t move!
+[fight34-112 f320461] Fight, top left.
+[fight34-113 f320479] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[fight34-114 f320514] CLAYDOL, foe. 2 of 4.
+[fight34-115 f320561] Fight, top left.
+[fight34-116 f320602] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[fight34-117 f320640] CLAYDOL, foe. 2 of 4.
+[fight34-118 f320696] Foe XATU used PSYCHIC!
+[fight34-125 f321005] TORCHIC used SCRATCH!
+[fight34-131 f321289] is confused!
+[fight34-136 f321527] used SCRATCH!
+[fight34-142 f321785] Foe CLAYDOL fainted!
+[fight34-144 f321878] TORCHIC gained a boosted 1243 EXP. Points!
+[fight34-148 f322041] gained a boosted 1243 EXP. Points!
+[fight34-155 f322331] LEADER TATELIZA sent out LUNATONE!
+[fight34-161 f322642] Fight, top left.
+[fight34-162 f322659] SCRATCH, NORMAL, PP 33 of 35. 1 of 4
+[fight34-163 f322692] LUNATONE, foe. 2 of 4.
+[fight34-164 f322739] Fight, top left.
+[fight34-165 f322780] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[fight34-166 f322818] LUNATONE, foe. 2 of 4.
+[fight34-167 f322870] Foe XATU used CALM MIND!
+[fight34-174 f323157] Foe XATU’s SP. ATK rose!
+[fight34-177 f323317] Foe XATU’s SP. DEF rose!
+[fight34-181 f323489] TORCHIC used SCRATCH!
+[fight34-187 f323735] It’s not very effective…
+[fight34-191 f323902] is confused!
+[fight34-196 f324143] It hurt itself in its confusion!
+[fight34-203 f324407] Foe LUNATONE used CALM MIND!
+[fight34-209 f324711] Foe LUNATONE’s SP. ATK rose!
+[fight34-213 f324885] Foe LUNATONE’s SP. DEF rose!
+[fight34-220 f325284] Foe LUNATONE’s SITRUS BERRY restored health!
+[fight34-225 f325544] Fight, top left.
+[fight34-226 f325554] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[fight34-227 f325590] LUNATONE, foe. 2 of 4.
+[fight34-228 f325636] Fight, top left.
+[fight34-229 f325678] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[fight34-230 f325716] LUNATONE, foe. 2 of 4.
+[fight34-231 f325768] Foe XATU used CALM MIND!
+[fight34-238 f326055] Foe XATU’s SP. ATK rose!
+[fight34-241 f326215] Foe XATU’s SP. DEF rose!
+[fight34-245 f326386] snapped out of confusion!
+[fight34-249 f326571] used SCRATCH!
+[fight34-255 f326798] It’s not very effective…
+[fight34-259 f326965] TORCHIC used SCRATCH!
+[fight34-263 f327146] It’s not very effective…
+[fight34-269 f327386] Foe LUNATONE fainted!
+[fight34-271 f327482] TORCHIC gained a boosted 1012 EXP. Points!
+[fight34-275 f327645] gained a boosted 1012 EXP. Points!
+[fight34-282 f327934] LEADER TATELIZA sent out SOLROCK!
+[fight34-288 f328269] Fight, top left.
+[fight34-289 f328293] SCRATCH, NORMAL, PP 31 of 35. 1 of 4
+[fight34-290 f328326] SOLROCK, foe. 2 of 4.
+[fight34-291 f328373] Fight, top left.
+[fight34-292 f328414] SCRATCH, NORMAL, PP 33 of 35. 1 of 4
+[fight34-293 f328452] SOLROCK, foe. 2 of 4.
+[fight34-294 f328504] Foe XATU used CALM MIND!
+[fight34-301 f328791] Foe XATU’s SP. ATK rose!
+[fight34-304 f328951] Foe XATU’s SP. DEF rose!
+[fight34-308 f329123] used SCRATCH!
+[fight34-313 f329343] It’s not very effective…
+[fight34-317 f329511] TORCHIC used SCRATCH!
+[fight34-322 f329739] It’s not very effective…
+[fight34-329 f330033] Foe SOLROCK took in sunlight!
+[fight34-335 f330430] Foe SOLROCK’s SITRUS BERRY restored health!
+[fight34-340 f330691] Fight, top left.
+[fight34-341 f330712] SCRATCH, NORMAL, PP 30 of 35. 1 of 4
+[fight34-342 f330750] SOLROCK, foe. 2 of 4.
+[fight34-343 f330796] Fight, top left.
+[fight34-344 f330838] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[fight34-345 f330876] SOLROCK, foe. 2 of 4.
+[fight34-346 f330928] Foe XATU used CONFUSE RAY!
+[fight34-353 f331411] became confused!
+[fight34-356 f331579] TORCHIC used SCRATCH!
+[fight34-361 f331780] It’s not very effective…
+[fight34-367 f332022] Foe SOLROCK fainted!
+[fight34-370 f332150] TORCHIC gained a boosted 1012 EXP. Points!
+[fight34-374 f332313] gained a boosted 1012 EXP. Points!
+[fight34-378 f332503] is confused!
+[fight34-384 f332744] It hurt itself in its confusion!
+[fight34-391 f333023] Fight, top left.
+[fight34-391 f333052] SCRATCH, NORMAL, PP 29 of 35. 1 of 4
+[fight34-392 f333090] XATU, foe. 4 of 4.
+[fight34-393 f333136] Fight, top left.
+[fight34-394 f333178] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[fight34-395 f333216] XATU, foe. 4 of 4.
+[fight34-396 f333272] Foe XATU used PSYCHIC!
+[fight34-403 f333605] is confused!
+[fight34-408 f333846] is paralyzed! It can’t move!
+[fight34-414 f334088] TORCHIC is paralyzed! It can’t move!
+[fight34-420 f334341] Fight, top left.
+[fight34-421 f334372] SCRATCH, NORMAL, PP 29 of 35. 1 of 4
+[fight34-422 f334410] XATU, foe. 4 of 4.
+[fight34-423 f334457] Fight, top left.
+[fight34-424 f334498] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[fight34-425 f334536] XATU, foe. 4 of 4.
+[fight34-426 f334592] Foe XATU used PSYCHIC!
+[fight34-433 f334923] TORCHIC used SCRATCH!
+[fight34-439 f335291] Foe XATU fainted!
+[fight34-441 f335402] TORCHIC gained a boosted 1125 EXP. Points!
+[fight34-445 f335588] TORCHIC grew to LV. 72!
+[fight34-450 f335779] gained a boosted 1125 EXP. Points!
+[fight34-454 f335966] grew to LV. 72!
+[fight34-459 f336177] Player defeated LEADER TATELIZA!
+[fight34-464 f336367] TATE: What?! Our combination… LIZA: Was shattered! TATE: It can’t be helped. You’ve won… LIZA: So, in recognition, take this.
+[fight35-0 f339099] A got 8400 for winning!
+[fight35-6 f339360] Overworld.
+[fight35-6 f339362] A received the MIND BADGE from TATE and LIZA.
+[fight35-13 f339875] TATE: The MIND BADGE enhances the SP. ATK and SP. DEF of POKéMON. LIZA: It also lets you use the HM move DIVE outside of battle. TATE: You should also take this, too.
+[prize5 f343001] Obtained the TM04!
+[prize9 f343223] A put away the TM04 in the TMs HMs POCKET.
+[prize14 f343424] TATE: That TM04 contains… LIZA: CALM MIND! TATE: It raises SP. ATK and… LIZA: It raises SP. DEF! TATE: It’s a move that’s perfect… LIZA: For PSYCHIC POKéMON! … … … … … …
+[prize30 f344207] Registered GYM LEADERS TATE LIZA in the POKéNAV.
+[prize36 f344463] TATE: Looks like the bond between you and your POKéMON is far stronger than the bond that we share as twins. LIZA: You will become even stronger! We’ve battled you, so we know.

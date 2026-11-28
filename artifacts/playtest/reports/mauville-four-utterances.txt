@@ -1,0 +1,67 @@
+Mauville Gym four-plate run - mod utterances, frames 70000+
+(from emerald_a11y_log; switch presses are the 'Paths swapped' pairs)
+
+f73044   Paths swapped north-east.
+f73046   Plate underfoot.
+f73098   Step plate one step south.
+f73130   Trainer east. Press A to talk.
+f73202   Step plate one step west.
+f73260   Paths swapped south-east.
+f73262   Plate underfoot.
+f73314   Step plate one step west.
+f73410   Step plate two steps east.
+f73523   Trainer here. Press A to talk.
+f73527   I love shiny things!
+f73795   Battle.
+f73975   BUG MANIAC ANGELO would like to battle!
+f74128   BUG MANIAC ANGELO sent out ILLUMISE!
+f74401   Go! TORCHIC!
+f74599   Fight, top left.
+f74632   SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+f74681   TORCHIC used SCRATCH!
+f74988   Foe ILLUMISE fainted!
+f75104   TORCHIC gained 531 EXP. Points!
+f75411   BUG MANIAC ANGELO sent out VOLBEAT!
+f75695   Fight, top left.
+f75724   SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+f75773   TORCHIC used SCRATCH!
+f76080   Foe VOLBEAT fainted!
+f76196   TORCHIC gained 531 EXP. Points!
+f76398   Player defeated BUG MANIAC ANGELO!
+f76615   Oh… My eyes are frazzled…
+f76734   A got 1020 for winning!
+f76996   Overworld.
+f77063   Trainer here. Press A to talk.
+f77067   I trained under WATTSON! There ain’t no way I’ll lose easily!
+f77491   Battle.
+f77670   GUITARIST SHAWN would like to battle!
+f77824   GUITARIST SHAWN sent out VOLTORB!
+f78061   Go! TORCHIC!
+f78260   Fight, top left.
+f78286   SCRATCH, NORMAL, PP 33 of 35. 1 of 4
+f78335   TORCHIC used SCRATCH!
+f78637   Foe VOLTORB fainted!
+f78758   TORCHIC gained 375 EXP. Points!
+f79065   GUITARIST SHAWN sent out MAGNEMITE!
+f79415   Fight, top left.
+f79462   SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+f79511   TORCHIC used SCRATCH!
+f79728   It’s not very effective…
+f79966   Foe MAGNEMITE fainted!
+f80102   TORCHIC gained 324 EXP. Points!
+f80302   Player defeated GUITARIST SHAWN!
+f80479   Unplugged and turned off…
+f80598   A got 544 for winning!
+f80860   Overworld.
+f80912   Paths swapped south-west.
+f80914   Plate underfoot.
+f80966   Step plate one step east.
+f81005   Blocked west.
+f81322   Step plate one step west.
+f81421   Blocked north.
+f80946   Trainer west. Press A to talk.
+f81166   Step plate two steps west.
+f81258   Trainer here. Press A to talk.
+f81473   Blocked west.
+f81562   Trainer here. Press A to talk.
+f81897   Blocked east.

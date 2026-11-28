@@ -1,0 +1,95 @@
+[menu-open f385317] Overworld.
+[menu-open f385325] Option 4 of 5.
+[menu-open f385406] Object here. Press A.
+[menu-open f385429] Blocked north.
+[menu-open f385613] TATE: Looks like the bond between you and your POKéMON is far stronger than the bond that we share as twins. LIZA: You will become even stronger! We’ve battled you, so we know.
+[menu-open f386151] New area. Mossdeep City Mart.
+[menu-open f386413] Person east. Press A to talk.
+[menu-open f386575] OPTION, 4 of 5.
+[menu-open f386652] OPTION
+[menu-open f386654] TEXT SPEED, BATTLE SCENE
+[menu-open f386655] BATTLE STYLE, SOUND, BUTTON MODE
+[menu-open f386656] FRAME, CANCEL
+[menu-open f386657] SLOW, MID, FAST, ON, OFF, SHIFT
+[menu-open f386658] SET, MONO, STEREO, NORMAL, LR, LA
+[menu-open f386659] TYPE 1
+[menu-open f386683] Options.
+[menu-open f386979] TYPE 2
+[menu-open f387029] TYPE 3
+[menu-open f387079] TYPE 4
+[menu-open f387168] BAG, A
+[menu-open f387169] SAVE, OPTION
+[menu-open f387170] EXIT
+[menu-open f387195] Overworld.
+[menu-open f387203] Option 4 of 5.
+[menu-open f387387] Blocked north.
+[menu-open f387555] The shelves brim with all sorts of POKéMON merchandise.
+[menu-open f388222] OPTION, 4 of 5.
+[menu-open f388278] SAVE, 3 of 5.
+[menu-open f388328] A, 2 of 5.
+[menu-open f388378] BAG, 1 of 5.
+[menu-open f388461] ITEMS, CLOSE BAG Return to the field.
+[menu-open f388463] Items. Empty.
+[menu-open f388486] Empty.
+[menu-open f388487] Bag.
+[menu-open f388875] Items. Empty.
+[menu-open f388876] ITEMS POKé BALLS
+[menu-open f388893] Poké balls. Empty.
+[menu-open f388894] CLOSE BAG Return to the field.
+[menu-open f388895] Empty.
+[menu-open f388940] Poké balls. Empty.
+[menu-open f388941] POKé BALLS TMs HMs
+[menu-open f388958] TMs and HMs. TM03, 1 of 7, 1 in the bag.
+[menu-open f388959] 1 03WATER PULSE 1 04CALM MIND
+[menu-open f388960] 1 08BULK UP 1 34SHOCK WAVE 1
+[menu-open f388961] 39ROCK TOMB 1 40AERIAL ACE 1 42FACADE
+[menu-open f388962] CLOSE BAG Generates an ultrasonic wave that may confuse.
+[menu-open f388964] TM03, 1 of 7, 1 in the bag.
+[menu-open f389005] TMs and HMs. TM03, 1 of 7, 1 in the bag.
+[menu-open f389006] TMs HMs BERRIES
+[menu-open f389023] Berries. Empty.
+[menu-open f389024] CLOSE BAG Return to the field.
+[menu-open f389025] Empty.
+[menu-open f389070] Berries. Empty.
+[menu-open f389071] BERRIES, KEY ITEMS
+[menu-open f389088] Key items. Empty.
+[menu-open f389089] CLOSE BAG Return to the field.
+[menu-open f389090] Empty.
+[menu-open f389301] Key items. Empty.
+[menu-open f389339] BAG, A
+[menu-open f389340] SAVE, OPTION
+[menu-open f389341] EXIT
+[menu-open f389366] Overworld.
+[menu-open f389374] Option 1 of 5.
+[menu-open f389641] BAG, 1 of 5.
+[bag f389730] KEY ITEMS
+[bag f389731] CLOSE BAG Return to the field.
+[bag f389732] Key items. Empty.
+[bag f389755] Empty.
+[bag f389756] Bag.
+[p1 f389790] Key items. Empty.
+[p1 f389791] KEY ITEMS, ITEMS
+[p1 f389808] Items. Empty.
+[p1 f389809] CLOSE BAG Return to the field.
+[p1 f389810] Empty.
+[p2 f389860] Items. Empty.
+[p2 f389861] ITEMS POKé BALLS
+[p2 f389878] Poké balls. Empty.
+[p2 f389879] CLOSE BAG Return to the field.
+[p2 f389880] Empty.
+[p3 f389930] Poké balls. Empty.
+[p3 f389931] POKé BALLS TMs HMs
+[p3 f389948] TMs and HMs. TM03, 1 of 7, 1 in the bag.
+[p3 f389949] 1 03WATER PULSE 1 04CALM MIND
+[p3 f389950] 1 08BULK UP 1 34SHOCK WAVE
+[p3 f389951] 1 39ROCK TOMB 1 40AERIAL ACE 1
+[p3 f389952] 42FACADE CLOSE BAG Generates an ultrasonic wave that may confuse.
+[p3 f389954] TM03, 1 of 7, 1 in the bag.
+[d f390001] Raises SP. ATK and SP. DEF by focusing the mind.
+[d f390001] TMs and HMs. TM04, 2 of 7, 1 in the bag.
+[d f390002] TM04, 2 of 7, 1 in the bag.
+[a f390061] --- --- 20 USE, GIVE
+[a f390061] TMs and HMs. TM04, 2 of 7, 1 in the bag.
+[a f390062] CANCEL
+[c f390203] Raises SP. ATK and SP. DEF by focusing the mind.
+[c f390205] TM04, 2 of 7, 1 in the bag.

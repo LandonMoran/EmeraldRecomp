@@ -1,0 +1,83 @@
+{
+ "name": "mauville-real-mon",
+ "note": "level-40 TORCHIC built from game data",
+ "saved_at": "2026-11-28T04:23:26Z",
+ "map": [
+  10,
+  0
+ ],
+ "pos": [
+  4,
+  19
+ ],
+ "location": {
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 19,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 11,
+  "y": 26,
+  "map": [
+   10,
+   0
+  ],
+  "facing": "south",
+  "elevation": 0
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   10,
+   0
+  ],
+  "x": 4,
+  "y": 19,
+  "underfoot": "plain",
+  "facing": "arrow_warp",
+  "triggers": 4,
+  "trigger_dist": 7,
+  "trigger_dx": 0,
+  "trigger_dy": -7,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": true,
+  "open": {
+   "n": true,
+   "e": true,
+   "s": true,
+   "w": true
+  },
+  "grid": [
+   25,
+   35,
+   33760024
+  ],
+  "blocks": [
+   521,
+   522,
+   6,
+   591
+  ]
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 0,
+  "var:VAR_PETALBURG_GYM_STATE": 0,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": false,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

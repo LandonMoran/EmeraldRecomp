@@ -1,0 +1,64 @@
+[face f110435] A pit. Step on it and the floor drops you to the basement.
+[face f110455] Pit one step west.
+[face f110479] A pit. Step on it and the floor drops you to the basement.
+[face f110499] Pit underfoot.
+[face f110575] A steam vent. Step on it and it throws you back up.
+[face f110575] Vent underfoot.
+[face f110575] New area. Lavaridge Town Gym B.
+[face f110699] Vent two steps north.
+[face f110731] A steam vent. Step on it and it throws you back up.
+[face f110803] Vent underfoot.
+[face f110864] A pit. Step on it and the floor drops you to the basement.
+[face f110864] Pit underfoot.
+[face f110864] New area. Lavaridge Town Gym.
+[face f111003] Pit two steps north-east.
+[face f111211] Pit two steps east.
+[face f111243] A pit. Step on it and the floor drops you to the basement.
+[face f111243] Trainer here. Press A to talk.
+[face f111362] Um… Okay, I’ll battle with you.
+[face f111662] Battle.
+[face f111839] BATTLE GIRL DANIELLE would like to battle!
+[face f112003] BATTLE GIRL DANIELLE sent out MEDITITE!
+[face f112275] Go! TORCHIC!
+[face f112470] Fight, top left.
+[face f112483] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[face f112520] Foe MEDITITE used DETECT!
+[face f112737] Foe MEDITITE protected itself!
+[face f112922] TORCHIC used SCRATCH!
+[face f113041] Foe MEDITITE protected itself!
+[face f113235] Fight, top left.
+[face f113251] SCRATCH, NORMAL, PP 18 of 35. 1 of 4
+[face f113300] TORCHIC used SCRATCH!
+[face f113605] Foe MEDITITE fainted!
+[face f113711] TORCHIC gained 448 EXP. Points!
+[face f113912] Player defeated BATTLE GIRL DANIELLE!
+[face f114130] Oh, but you’re too strong.
+[face f114249] A got 552 for winning!
+[face f114511] Overworld.
+[face f114798] A pit. Step on it and the floor drops you to the basement.
+[face f114818] Pit one step west.
+[face f114842] A pit. Step on it and the floor drops you to the basement.
+[face f114862] Pit underfoot.
+[face f114938] A steam vent. Step on it and it throws you back up.
+[face f114938] Vent underfoot.
+[face f114938] New area. Lavaridge Town Gym B.
+[face f115174] Vent two steps east.
+[face f115206] A steam vent. Step on it and it throws you back up.
+[face f115270] Vent underfoot.
+[face f115332] A pit. Step on it and the floor drops you to the basement.
+[face f115332] Pit underfoot.
+[face f115332] New area. Lavaridge Town Gym.
+[face f115470] Pit two steps south.
+[face f115502] A pit. Step on it and the floor drops you to the basement.
+[face f115658] A pit. Step on it and the floor drops you to the basement.
+[face f115686] Pit underfoot.
+[face f115763] New area. Lavaridge Town Gym B.
+[face f115942] Door two steps west. Press A to exit.
+[face f115962] Vent two steps west.
+[face f116066] Vent two steps east.
+[face f116106] A steam vent. Step on it and it throws you back up.
+[face f116170] Vent underfoot.
+[face f116231] A pit. Step on it and the floor drops you to the basement.
+[face f116231] Pit underfoot.
+[face f116231] New area. Lavaridge Town Gym.
+[face f116350] Object here. Press A.

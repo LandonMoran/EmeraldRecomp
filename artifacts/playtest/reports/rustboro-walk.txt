@@ -1,0 +1,106 @@
+[walk00-south f100778] Blocked west.
+[walk00-south f100911] Trainer here. Press A to talk.
+[walk00-south f101142] Blocked east.
+[walk00-south f101223] Trainer here. Press A to talk.
+[walk00-south f101366] You haven’t seen anything of the ROCK type’s terrifying power!
+[walk00-south f102372] Trainer east. Press A to talk.
+[walk00-south f102393] If you can’t beat me, you won’t stand a chance against ROXANNE!
+[walk00-south f102807] Battle.
+[walk00-south f102985] YOUNGSTER TOMMY would like to battle!
+[walk00-south f103148] YOUNGSTER TOMMY sent out GEODUDE!
+[walk00-south f103405] Go! TORCHIC!
+[walk00-south f103603] Fight, top left.
+[walk00-south f103610] SCRATCH, NORMAL, PP 23 of 35. 1 of 4
+[walk00-south f103659] TORCHIC used SCRATCH!
+[walk00-south f103876] It’s not very effective…
+[walk00-south f104114] Foe GEODUDE fainted!
+[walk00-south f104208] TORCHIC gained 147 EXP. Points!
+[walk00-south f104513] YOUNGSTER TOMMY sent out GEODUDE!
+[walk00-south f104800] Fight, top left.
+[walk00-south f104816] SCRATCH, NORMAL, PP 22 of 35. 1 of 4
+[walk00-south f104864] TORCHIC is paralyzed! It can’t move!
+[walk00-south f105109] Foe GEODUDE used TACKLE!
+[walk00-south f105317] Fight, top left.
+[walk00-south f105362] SCRATCH, NORMAL, PP 22 of 35. 1 of 4
+[walk00-south f105411] TORCHIC used SCRATCH!
+[walk00-south f105628] It’s not very effective…
+[walk00-south f105866] Foe GEODUDE fainted!
+[walk00-south f105960] TORCHIC gained 147 EXP. Points!
+[walk00-south f106160] Player defeated YOUNGSTER TOMMY!
+[walk00-south f106337] Wow! You’ve got some potential!
+[walk00-south f106498] A got 128 for winning!
+[walk00-south f106760] Overworld.
+[walk00-south f106859] Trainer here. Press A to talk.
+[walk00-south f106863] We might be in the middle of town, but so what? My ROCK POKéMON need room to rampage!
+[walk00-south f109748] Battle.
+[walk00-south f109926] HIKER MARC would like to battle!
+[walk00-south f110057] HIKER MARC sent out GEODUDE!
+[walk00-south f110293] Go! TORCHIC!
+[walk00-south f110490] Fight, top left.
+[walk00-south f110525] SCRATCH, NORMAL, PP 21 of 35. 1 of 4
+[walk00-south f110563] TORCHIC is paralyzed! It can’t move!
+[walk00-south f110812] Foe GEODUDE used DEFENSE CURL!
+[walk00-south f111109] Foe GEODUDE’s DEFENSE rose!
+[walk00-south f111287] Fight, top left.
+[walk00-south f111313] SCRATCH, NORMAL, PP 21 of 35. 1 of 4
+[walk00-south f111362] TORCHIC used SCRATCH!
+[walk00-south f111577] A critical hit!
+[walk00-south f111703] It’s not very effective…
+[walk00-south f111943] Foe GEODUDE fainted!
+[walk00-south f112037] TORCHIC gained 147 EXP. Points!
+[walk00-south f112342] HIKER MARC sent out GEODUDE!
+[walk00-south f112609] Fight, top left.
+[walk00-south f112645] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[walk00-south f112694] TORCHIC used SCRATCH!
+[walk00-south f112911] It’s not very effective…
+[walk00-south f113149] Foe GEODUDE fainted!
+[walk00-south f113243] TORCHIC gained 147 EXP. Points!
+[walk00-south f113443] Player defeated HIKER MARC!
+[walk00-south f113620] Oh, man oh man! Our challenger is one feisty customer!
+[walk00-south f113823] A got 320 for winning!
+[walk00-south f114085] Overworld.
+[walk00-south f114364] Trainer here. Press A to talk.
+[walk00-south f114624] Trainer here. Press A to talk.
+[walk00-south f114663] I have to hand it to our LEADER. It took smarts and sense for her to pick the ROCK type at her young age.
+[walk01-east f117477] Trainer north. Press A to talk.
+[walk13-east f118101] Person north. Press A to talk.
+[talk0 f118145] Object here. Press A.
+[talk0 f118184] Hello, I am ROXANNE, the RUSTBORO POKéMON GYM LEADER. I became a GYM LEADER so that I might apply what I learned at the POKéMON TRAINER’S SCHOOL in battle. Would you kindly demonstrate how you battle, and with which POKéMON?
+[leader1-5 f121449] Battle.
+[leader1-9 f121630] LEADER ROXANNE would like to battle!
+[leader1-13 f121782] LEADER ROXANNE sent out GEODUDE!
+[leader1-19 f122038] Go! TORCHIC!
+[leader1-23 f122237] Fight, top left.
+[leader1-25 f122286] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[leader1-26 f122335] TORCHIC used SCRATCH!
+[leader1-31 f122551] It’s not very effective…
+[leader1-37 f122790] Foe GEODUDE fainted!
+[leader1-39 f122884] TORCHIC gained 220 EXP. Points!
+[leader1-46 f123190] LEADER ROXANNE sent out GEODUDE!
+[leader1-52 f123473] Fight, top left.
+[leader1-53 f123492] SCRATCH, NORMAL, PP 18 of 35. 1 of 4
+[leader1-54 f123541] TORCHIC used SCRATCH!
+[leader1-59 f123757] It’s not very effective…
+[leader1-65 f123996] Foe GEODUDE fainted!
+[leader1-67 f124090] TORCHIC gained 220 EXP. Points!
+[leader1-74 f124395] LEADER ROXANNE sent out NOSEPASS!
+[leader1-80 f124762] Fight, top left.
+[leader1-81 f124788] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[leader1-82 f124836] TORCHIC is paralyzed! It can’t move!
+[leader1-88 f125081] Foe NOSEPASS used HARDEN!
+[leader1-94 f125369] Foe NOSEPASS’s DEFENSE rose!
+[leader1-99 f125553] Fight, top left.
+[leader1-100 f125586] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[leader1-101 f125635] TORCHIC used SCRATCH!
+[leader1-106 f125852] It’s not very effective…
+[leader1-112 f126092] Foe NOSEPASS fainted!
+[leader1-115 f126226] TORCHIC gained 346 EXP. Points!
+[leader1-120 f126427] Player defeated LEADER ROXANNE!
+[leader1-124 f126603] So… I lost…. It seems that I still have much more to learn…. I understand. The POKéMON LEAGUE’s rules state that TRAINERS are to be given this if they defeat a GYM LEADER. Please accept the official POKéMON LEAGUE STONE BADGE.
+[prize2-0 f132368] A got 1500 for winning!
+[prize2-6 f132628] Overworld.
+[prize2-6 f132630] A received the STONE BADGE from ROXANNE.
+[leader3-6 f133122] The STONE BADGE heightens the ATTACK power of your POKéMON. It also enables them to use the HM move CUT outside of battle. Please take this with you, too.
+[prize3-3 f135955] Obtained the TM39!
+[leader4-0 f136177] A put away the TM39 in the TMs HMs POCKET.
+[leader4-5 f136375] That TECHNICAL MACHINE, TM39, contains ROCK TOMB. It not only inflicts damage by dropping rocks, it also lowers SPEED. If you use a TM, it instantly teaches the move to a POKéMON. Remember, a TM can be used only once, so think before you use it.

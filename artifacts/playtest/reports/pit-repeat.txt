@@ -1,0 +1,51 @@
+[scaffold] force_map -> [4, 1] at (18,25)
+[away1 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[away1 f95382] A warp arrow. Step on it.
+[away1 f95382] Door here. Press A to exit.
+[away1 f95406] Overworld.
+[away1 f95423] A pit. Step on it and the floor drops you to the basement.
+[away1 f95423] Pit one step south.
+[away1 f95423] Stairs up here. Walk onto them.
+[away1 f95656] A pit. Step on it and the floor drops you to the basement.
+[away1 f95656] Stairs here. Walk onto them.
+[away1 f95676] Pit underfoot.
+[away1 f95753] A steam vent. Step on it and it throws you back up.
+[away1 f95753] Vent underfoot.
+[away1 f95753] New area. Lavaridge Town Gym B.
+[away1 f95879] Blocked west.
+[away1 f95936] Ledge two steps north. It only jumps south. You are on the far side.
+[away1 f95960] A steam vent. Step on it and it throws you back up.
+[away1 f95960] Door here. Press A to exit.
+[away1 f96050] A pit. Step on it and the floor drops you to the basement.
+[away1 f96050] Pit underfoot.
+[away1 f96050] New area. Lavaridge Town Gym.
+[away1 f96114] Stairs one step west. Walk onto them.
+[away1 f96348] A pit. Step on it and the floor drops you to the basement.
+[away1 f96348] Door here. Press A to exit.
+[away1 f96452] A steam vent. Step on it and it throws you back up.
+[away1 f96452] Vent underfoot.
+[away1 f96452] New area. Lavaridge Town Gym B.
+[away1 f96580] A steam vent. Step on it and it throws you back up.
+[away1 f96580] Door here. Press A to exit.
+[away1 f96670] A pit. Step on it and the floor drops you to the basement.
+[away1 f96670] Pit underfoot.
+[away1 f96670] New area. Lavaridge Town Gym.
+[away1 f96728] A pit. Step on it and the floor drops you to the basement.
+[away1 f96832] A steam vent. Step on it and it throws you back up.
+[away1 f96832] Vent underfoot.
+[away1 f96832] New area. Lavaridge Town Gym B.
+[away1 f96960] A steam vent. Step on it and it throws you back up.
+[away1 f96960] Door here. Press A to exit.
+[away1 f97050] A pit. Step on it and the floor drops you to the basement.
+[away1 f97050] Pit underfoot.
+[away1 f97050] New area. Lavaridge Town Gym.
+[away1 f97114] Stairs one step west. Walk onto them.
+[away1 f97348] A pit. Step on it and the floor drops you to the basement.
+[away1 f97348] Door here. Press A to exit.
+[away2 f97452] A steam vent. Step on it and it throws you back up.
+[away2 f97452] Vent underfoot.
+[away2 f97452] New area. Lavaridge Town Gym B.
+[away3 f97600] Vent two steps north-east.
+[back1 f97640] A steam vent. Step on it and it throws you back up.
+[back1 f97640] Door here. Press A to exit.
+[back1 f97660] Vent one step west.

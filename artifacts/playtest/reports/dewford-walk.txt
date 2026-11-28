@@ -1,0 +1,99 @@
+[scaffold] force_map -> [3, 3] at (12,33)
+[walk00-north f111362] TORCHIC used SCRATCH!
+[walk00-north f111577] A critical hit!
+[walk00-north f111703] It’s not very effective…
+[walk00-north f111943] Foe GEODUDE fainted!
+[walk00-north f112037] TORCHIC gained 147 EXP. Points!
+[walk00-north f112342] HIKER MARC sent out GEODUDE!
+[walk00-north f112609] Fight, top left.
+[walk00-north f112645] SCRATCH, NORMAL, PP 20 of 35. 1 of 4
+[walk00-north f112694] TORCHIC used SCRATCH!
+[walk00-north f112911] It’s not very effective…
+[walk00-north f113149] Foe GEODUDE fainted!
+[walk00-north f113243] TORCHIC gained 147 EXP. Points!
+[walk00-north f113443] Player defeated HIKER MARC!
+[walk00-north f113620] Oh, man oh man! Our challenger is one feisty customer!
+[walk00-north f113823] A got 320 for winning!
+[walk00-north f114085] Overworld.
+[walk00-north f114364] Trainer here. Press A to talk.
+[walk00-north f114624] Trainer here. Press A to talk.
+[walk00-north f114663] I have to hand it to our LEADER. It took smarts and sense for her to pick the ROCK type at her young age.
+[walk00-north f117477] Trainer north. Press A to talk.
+[walk00-north f118101] Person north. Press A to talk.
+[walk00-north f118145] Object here. Press A.
+[walk00-north f118184] Hello, I am ROXANNE, the RUSTBORO POKéMON GYM LEADER. I became a GYM LEADER so that I might apply what I learned at the POKéMON TRAINER’S SCHOOL in battle. Would you kindly demonstrate how you battle, and with which POKéMON?
+[walk00-north f121449] Battle.
+[walk00-north f121630] LEADER ROXANNE would like to battle!
+[walk00-north f121782] LEADER ROXANNE sent out GEODUDE!
+[walk00-north f122038] Go! TORCHIC!
+[walk00-north f122237] Fight, top left.
+[walk00-north f122286] SCRATCH, NORMAL, PP 19 of 35. 1 of 4
+[walk00-north f122335] TORCHIC used SCRATCH!
+[walk00-north f122551] It’s not very effective…
+[walk00-north f122790] Foe GEODUDE fainted!
+[walk00-north f122884] TORCHIC gained 220 EXP. Points!
+[walk00-north f123190] LEADER ROXANNE sent out GEODUDE!
+[walk00-north f123473] Fight, top left.
+[walk00-north f123492] SCRATCH, NORMAL, PP 18 of 35. 1 of 4
+[walk00-north f123541] TORCHIC used SCRATCH!
+[walk00-north f123757] It’s not very effective…
+[walk00-north f123996] Foe GEODUDE fainted!
+[walk00-north f124090] TORCHIC gained 220 EXP. Points!
+[walk00-north f124395] LEADER ROXANNE sent out NOSEPASS!
+[walk00-north f124762] Fight, top left.
+[walk00-north f124788] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[walk00-north f124836] TORCHIC is paralyzed! It can’t move!
+[walk00-north f125081] Foe NOSEPASS used HARDEN!
+[walk00-north f125369] Foe NOSEPASS’s DEFENSE rose!
+[walk00-north f125553] Fight, top left.
+[walk00-north f125586] SCRATCH, NORMAL, PP 17 of 35. 1 of 4
+[walk00-north f125635] TORCHIC used SCRATCH!
+[walk00-north f125852] It’s not very effective…
+[walk00-north f126092] Foe NOSEPASS fainted!
+[walk00-north f126226] TORCHIC gained 346 EXP. Points!
+[walk00-north f126427] Player defeated LEADER ROXANNE!
+[walk00-north f126603] So… I lost…. It seems that I still have much more to learn…. I understand. The POKéMON LEAGUE’s rules state that TRAINERS are to be given this if they defeat a GYM LEADER. Please accept the official POKéMON LEAGUE STONE BADGE.
+[walk00-north f132368] A got 1500 for winning!
+[walk00-north f132628] Overworld.
+[walk00-north f132630] A received the STONE BADGE from ROXANNE.
+[walk00-north f133122] The STONE BADGE heightens the ATTACK power of your POKéMON. It also enables them to use the HM move CUT outside of battle. Please take this with you, too.
+[walk00-north f135955] Obtained the TM39!
+[walk00-north f136177] A put away the TM39 in the TMs HMs POCKET.
+[walk00-north f136375] That TECHNICAL MACHINE, TM39, contains ROCK TOMB. It not only inflicts damage by dropping rocks, it also lowers SPEED. If you use a TM, it instantly teaches the move to a POKéMON. Remember, a TM can be used only once, so think before you use it.
+[walk00-north f139709] A warp arrow. Step on it.
+[walk00-north f139709] New area. Dewford Town Gym.
+[walk00-north f139943] Door one step south. Press A to exit.
+[walk02-north f140055] Person west. Press A to talk.
+[walk36-north f141823] Object here. Press A.
+[talk0 f141898] I’m BRAWLY! DEWFORD’s GYM LEADER! I’ve been churned in the rough waves of these parts, and I’ve grown tough in the pitch-black cave! So you wanted to challenge me? Let me see what you’re made of!
+[leader1-4 f145143] Battle.
+[leader1-8 f145328] LEADER BRAWLY would like to battle!
+[leader1-12 f145462] LEADER BRAWLY sent out MACHOP!
+[leader1-18 f145721] Go! TORCHIC!
+[leader1-23 f145920] Fight, top left.
+[leader1-24 f145966] SCRATCH, NORMAL, PP 16 of 35. 1 of 4
+[leader1-25 f146015] TORCHIC used SCRATCH!
+[leader1-32 f146321] Foe MACHOP fainted!
+[leader1-34 f146426] TORCHIC gained 301 EXP. Points!
+[leader1-41 f146730] LEADER BRAWLY sent out MEDITITE!
+[leader1-47 f147013] Fight, top left.
+[leader1-48 f147034] SCRATCH, NORMAL, PP 15 of 35. 1 of 4
+[leader1-52 f147206] Foe MEDITITE is tightening its focus!
+[leader1-57 f147415] TORCHIC used SCRATCH!
+[leader1-64 f147720] Foe MEDITITE fainted!
+[leader1-66 f147830] TORCHIC gained 312 EXP. Points!
+[leader1-73 f148135] LEADER BRAWLY sent out MAKUHITA!
+[leader1-79 f148432] Fight, top left.
+[leader1-80 f148468] SCRATCH, NORMAL, PP 14 of 35. 1 of 4
+[leader1-81 f148517] TORCHIC used SCRATCH!
+[leader1-88 f148833] Foe MAKUHITA fainted!
+[leader1-90 f148958] TORCHIC gained 354 EXP. Points!
+[leader1-95 f149158] Player defeated LEADER BRAWLY!
+[leader1-99 f149335] Whoah, wow! You made a much bigger splash than I expected! You swamped me! Okay, you’ve got me. Take this GYM BADGE!
+[prize1-4 f152235] A got 1900 for winning!
+[leader2-2 f152496] Overworld.
+[leader2-6 f152853] A received the KNUCKLE BADGE from BRAWLY.
+[leader2-12 f153343] The KNUCKLE BADGE makes all POKéMON up to Level 30, even those you get in trades, obey without question. And, you’ll be able to use the HM move FLASH outside of battle. If you’d like, use this TECHNICAL MACHINE, too.
+[prize3-0 f159083] Obtained the TM08!
+[prize3-5 f159305] A put away the TM08 in the TMs HMs POCKET.
+[leader4-2 f159503] That TM08 contains BULK UP. It’s a move that raises both ATTACK and DEFENSE stats. … … … … … …

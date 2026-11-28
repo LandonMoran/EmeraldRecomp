@@ -1,0 +1,13 @@
+Sootopolis gym leader run (Juan) - spoken lines from the running build
+======================================================================
+
+
+======================================================================
+Evidence after the fight:
+  badge flag 0x86E (RAIN BADGE): true
+  party (gPlayerParty): TORCHIC LV 71 / 400 HP
+  position after: (8, 3) on 15,0 facing north, leader at (8, 2)
+  checkpoint: sootopolis-cleared
+  how the leader was reached: developer warp to (8,3), the tester's hands
+  how the fight was fought: emerald_a11y_action presses, move list walked
+  when the advance was refused (no PP): Down then A, never B

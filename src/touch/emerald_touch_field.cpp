@@ -367,6 +367,16 @@ struct Exec {
 };
 Exec g_exec;
 
+// A destination armed over TCP: the harness cannot tap, but it can ask the
+// same planner the taps use for a route to a map tile. Consumed on the next
+// overworld frame so it runs inside the game loop rather than mid-command.
+struct PendingWalk {
+    bool armed = false;
+    bool cancel = false;
+    Tile tile;
+};
+PendingWalk g_pending_walk;
+
 // Drawing state.
 struct Stroke {
     bool active = false;
@@ -714,7 +724,29 @@ bool field_drag(Core& c, const SceneState& s, const k::Gesture& g) {
     return true;
 }
 
+void field_walk_to(int x, int y) {
+    g_pending_walk.armed = true;
+    g_pending_walk.cancel = false;
+    g_pending_walk.tile = Tile{x, y};
+}
+
+void field_walk_cancel() {
+    g_pending_walk.armed = false;
+    g_pending_walk.cancel = true;
+}
+
 void field_frame(Core& c, FrameCtx& ctx) {
+    if (g_pending_walk.cancel) {
+        g_pending_walk.cancel = false;
+        if (g_exec.active) stop(c, "tcp-cancel");
+    }
+    if (g_pending_walk.armed && !g_exec.active && ctx.scene.field.overworld) {
+        const Tile t = g_pending_walk.tile;
+        g_pending_walk.armed = false;
+        if (!start_to(c, ctx.mem, t, {}))
+            record_action(c.frame, "path", "overworld", "tcp-no-route",
+                          static_cast<float>(t.x), static_cast<float>(t.y), 0);
+    }
     if (!g_exec.active) return;
     const SceneState& s = ctx.scene;
     if (!s.field.overworld) {

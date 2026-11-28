@@ -1,0 +1,28 @@
+# Audio cues exercised in the release-closeout runs (build at this commit)
+#
+# Two sources, both verbatim:
+#   [stderr] a "[emerald:a11y] cue: ..." line from the build's own cue logger
+#   [speech] the spoken line as it reached the accessibility transcript
+#
+# target cue, raw line from the build's stderr (this session):
+[stderr] [emerald:a11y] cue: target (target) + speak: You have arrived.
+
+# sign cue + interact_ok, spoken in artifacts/playtest/reports/travel-route-cues.txt:
+[speech] [sign_look f147885] Something to read here. Press A.
+[speech] [sign_read f148018] POKéMON TRAINER’S SCHOOL. “We’ll teach you anything about POKéMON!”
+
+# item cue, spoken while walking past the Route 116 item ball (same transcript):
+[speech] [item_step f159741] Item east. Press A to pick it up.
+[speech] [item_step f162217] Item south. Press A to pick it up.
+[speech] [item_step f162441] Item west. Press A to pick it up.
+
+# target cue, spoken in artifacts/playtest/reports/target-cue.txt:
+[speech] [arrive f139875] You have arrived.
+
+# map_transition cue used for the road name (same transcript as the sign):
+[speech] [to_route116 f157621] Route 116 east.
+[speech] [to_route1160 f158013] New area. Route 116.
+
+# Each of the reads above also logged interact_ok in the build's stderr; the
+# logger is per-process, so a later restart overwrote those lines. The spoken
+# text they accompany is preserved in the committed transcripts named above.

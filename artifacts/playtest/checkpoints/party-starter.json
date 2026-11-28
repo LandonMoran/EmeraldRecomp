@@ -1,0 +1,66 @@
+{
+ "name": "party-starter",
+ "note": "Torchic from the Route 101 rescue, untouched",
+ "saved_at": "2026-11-27T17:24:24Z",
+ "map": [
+  1,
+  4
+ ],
+ "pos": [
+  6,
+  5
+ ],
+ "location": {
+  "map": [
+   1,
+   4
+  ],
+  "x": 6,
+  "y": 5,
+  "warp_id": 255
+ },
+ "object": {
+  "x": 13,
+  "y": 12,
+  "map": [
+   1,
+   4
+  ],
+  "facing": "north",
+  "elevation": 3
+ },
+ "puzzle": {
+  "ok": true,
+  "map": [
+   1,
+   4
+  ],
+  "x": 6,
+  "y": 5,
+  "underfoot": "plain",
+  "facing": "plain",
+  "triggers": 0,
+  "trigger_dist": -1,
+  "trigger_dx": 0,
+  "trigger_dy": 0,
+  "changed": 0,
+  "opened": 0,
+  "closed": 0,
+  "changes": 0,
+  "last_move": 0,
+  "puzzle_map": false
+ },
+ "state": {
+  "var:VAR_MAUVILLE_GYM_STATE": 0,
+  "var:VAR_PETALBURG_GYM_STATE": 0,
+  "flag:FLAG_MAUVILLE_GYM_BARRIERS_STATE": false,
+  "flag:FLAG_DEFEATED_MAUVILLE_GYM": false,
+  "flag:FLAG_DEFEATED_PETALBURG_GYM": false,
+  "flag:FLAG_DEFEATED_FORTREE_GYM": false,
+  "flag:FLAG_DEFEATED_MOSSDEEP_GYM": false,
+  "flag:FLAG_DEFEATED_SOOTOPOLIS_GYM": false,
+  "flag:FLAG_DEFEATED_LAVARIDGE_GYM": false,
+  "flag:FLAG_DEFEATED_DEWFORD_GYM": false,
+  "flag:FLAG_DEFEATED_RUSTBORO_GYM": false
+ }
+}

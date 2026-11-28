@@ -1,0 +1,11 @@
+[scaffold] force_map -> [4, 2] at (17,16)
+[arrive f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[arrive f95382] A warp arrow. Step on it.
+[arrive f95382] Door here. Press A to exit.
+[arrive f95406] Overworld.
+[arrive f95423] A ledge. Jump south to cross it.
+[arrive f95423] Ledge one step south. Jump south to cross it.
+[arrive f95423] Vent two steps west.
+[arrive f95423] New area. Lavaridge Town Gym B.
+[read f95694] Overworld. Puzzle. Open north and east. Blocked west. Ledge south.
+[jump f95748] A ledge. Jump south to cross it.

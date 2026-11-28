@@ -66,6 +66,21 @@ field box's text after every battle message).
 | Repeated announcements | removed: a thing is described when it becomes what you face or stand next to, and nothing repeats on a timer |
 | Off-screen objects | no longer announced as people (`invisible`/`offScreen` bits both filtered) |
 
+### Walking to a tile from the harness
+
+`emerald_touch_walk` with `x`/`y` arms the same planner the touch overlay uses,
+so a script can route on the game's own step model — live collision, metatile
+behaviour, ledges, people — instead of a static collision bitmap:
+
+```
+{"cmd":"emerald_touch_walk","x":5,"y":18}
+```
+
+`emerald_touch_field` then reports `active`, `destination`, `remaining` and the
+step ring (`steps`/`mismatches`), which is what a harness polls to know the
+route finished. Routes are planned inside one map region, so a gym whose floor
+is split by puzzle warps still needs the puzzle itself walked.
+
 ## Input model: one pad direction is one tile
 
 The runtime re-latches `KEYINPUT` every frame from the mod's own per-frame hook
@@ -311,3 +326,92 @@ gba_recompile --rom roms/emerald_usa.gba \
 The log reports `mod function hooks: 9 declared, 9 matched`; a matched hook is
 what puts `if (gba_mod_function_entry(0x0800467Cu, 1u, &g_cpu)) return;` at the
 top of the generated body. Rebuild after regenerating (all 64 shards recompile).
+
+## Developer puzzle playtests
+
+Reaching a gym by playing the game is not a test loop. A developer build can
+jump to any puzzle, keep a state before touching it, and replay that state after
+a fix:
+
+```sh
+cmake -S . -B build -DEMERALD_DEVTOOLS=ON ...     # options are OFF by default
+python3 artifacts/playtest/boot_field.py --spawn   # once: to a normal field
+python3 artifacts/playtest/puzzle_runner.py --puzzle mauville --start
+python3 artifacts/playtest/puzzle_runner.py --puzzle mauville \
+    --checkpoint mauville-start --steps "up*4, left*4" --report "Mauville plate"
+```
+
+`EMERALD_DEVTOOLS` adds `src/dev/emerald_devtools.cpp` and nothing else: the
+TCP commands `emerald_dev_warp`, `emerald_dev_state`, `emerald_dev_var` and
+`emerald_dev_flag` exist only in that build, and a normal build links the inert
+stubs. The player-facing experience is unchanged.
+
+`emerald_dev_warp` writes the SaveBlock warp record the game's own
+`SetWarpDestination`/`ApplyCurrentWarp` produce and then hands control to
+`CB2_LoadMap`, so the map loads through `CB2_DoChangeMap` →
+`LoadMapFromWarp`, runs `MAP_SCRIPT_ON_TRANSITION` / `ON_LOAD`, spawns object
+events and returns to `CB1_Overworld`. It refuses to run while a message box is
+open or a scripted walk owns the player: loading a map out of a cutscene carries
+the cutscene's player state onto the new map and the field then ignores the
+D-pad. That refusal is what keeps a teleport from producing an invalid state.
+
+A checkpoint is the engine's own `savestate_save` blob plus a JSON sidecar
+(map, tile, facing, terrain, nearest trigger, gym `VAR_*`/`FLAG_*` values) in
+`artifacts/playtest/checkpoints/`. The player's `.sav` and the nine state slots
+are never touched. State blobs are build-specific and are not committed; the
+sidecars are.
+
+The puzzle results, what the mod says during each one, and the status rule live
+in [PUZZLE_PLAYTEST.md](PUZZLE_PLAYTEST.md).
+
+### A party for the gyms
+
+A checkpoint from a fresh save has no party, and every gym puts trainers between
+the door and the puzzle. The team is obtained by playing the game, not by
+writing a Pokémon structure:
+
+```sh
+python3 artifacts/playtest/get_party.py --save party-starter
+python3 artifacts/playtest/party.py --dump
+python3 artifacts/playtest/party.py --boost
+```
+
+`get_party.py` warps to Route 101 at (10,18), arms the rescue the way Littleroot's
+gate script does (`VAR_ROUTE101_STATE = 1`), steps south onto the coord event at
+(10,19), takes the starter from Birch's bag at (7,14) and wins the Zigzagoon
+battle with the pad. Walking out of Littleroot is not attempted: the north exit
+is a coord event that blocks while `VAR_LITTLEROOT_TOWN_STATE` is 0, which is
+exactly the message a party-less script gets stuck on.
+
+`party.py` is harness scaffolding, like the bag writes in the battle transcripts.
+It reads `gPlayerParty` (6 × 0x64 at 0x020244EC, count at 0x020244E9) and can set
+a test stat block so a checkpoint can survive a gym's trainers while the puzzle
+is what gets measured. The party layout is the pinned decompilation's
+`struct Pokemon`; PP lives inside the encrypted Moves substruct, so a boosted
+checkpoint keeps the moves and PP the game gave it. A boosted checkpoint is
+labelled as such wherever it is reported.
+
+**The level byte is never written.** Writing a level without also writing the
+matching experience value (which lives encrypted inside the data substructs)
+leaves the two disagreeing, and the post-battle EXP bar computes
+`exp - gExperienceTables[level]` in u32: it underflows, the bar never finishes,
+and the game never leaves the battle. The probe table and the two-party
+proof are in
+[the Mauville section of PUZZLE_PLAYTEST.md](PUZZLE_PLAYTEST.md#why-a-won-battle-once-hung).
+A level-up recalculates stats from IVs anyway, so a fight that levels the test
+Pokémon up throws the block away; `gym_walk.fight_if_needed` re-applies it before
+each press while a battle runs.
+
+`gym_run.py` is the runner for a whole gym rather than one mechanic: it loads a
+checkpoint, finishes any dialogue the checkpoint was saved inside, warps to the
+entrance, walks a direction route, and presses A through any battle the route
+starts, recording what the mod said the whole way.
+
+Checkpoints that exist: `party-starter` (level 5, untouched, saved inside the
+rescue battle), `party-fight` (level 5 with the test stat block, idle field in
+Birch's lab) — use this one.
+
+`party-ready` and `party-lab` were made before the level rule and still carry a
+forged level 50 over level-5 experience. **Do not use them for anything that
+fights**: a won trainer battle in those states hangs in `Cmd_getexp` by design of
+the mismatch, which is what the hang report describes.

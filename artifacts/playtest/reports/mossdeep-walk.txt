@@ -1,0 +1,115 @@
+[walk1 f398095] Step plate one step north.
+[walk1 f398547] Step plate one step south.
+[walk1 f398987] Door here. Press A to exit.
+[walk1 f399007] Step plate one step north.
+[walk1 f399455] Door here. Press A to exit.
+[walk1 f399475] Step plate one step north.
+[walk1 f399915] Door here. Press A to exit.
+[walk1 f399935] Step plate one step north.
+[walk1 f400387] Step plate one step south.
+[walk1 f400827] Door here. Press A to exit.
+[walk1 f400847] Step plate one step north.
+[walk1 f401295] Door here. Press A to exit.
+[walk1 f401315] Step plate one step north.
+[walk1 f401755] Door here. Press A to exit.
+[walk1 f401775] Step plate one step north.
+[walk1 f402227] Step plate one step south.
+[walk1 f402667] Door here. Press A to exit.
+[walk1 f402687] Step plate one step north.
+[walk1 f403135] Door here. Press A to exit.
+[walk1 f403155] Step plate one step north.
+[walk1 f403595] Door here. Press A to exit.
+[walk1 f403615] Step plate one step north.
+[walk1 f404067] Step plate one step south.
+[walk1 f404507] Door here. Press A to exit.
+[walk1 f404527] Step plate one step north.
+[walk1 f404975] Door here. Press A to exit.
+[walk1 f404995] Step plate one step north.
+[walk1 f405435] Door here. Press A to exit.
+[walk1 f405455] Step plate one step north.
+[walk1 f405907] Step plate one step south.
+[walk1 f406347] Door here. Press A to exit.
+[walk1 f406367] Step plate one step north.
+[walk1 f406815] Door here. Press A to exit.
+[walk1 f406835] Step plate one step north.
+[walk1 f407275] Door here. Press A to exit.
+[walk1 f407295] Step plate one step north.
+[walk1 f407747] Step plate one step south.
+[walk1 f408187] Door here. Press A to exit.
+[walk1 f408207] Step plate one step north.
+[walk1 f408655] Door here. Press A to exit.
+[walk1 f408675] Step plate one step north.
+[walk1 f409115] Door here. Press A to exit.
+[walk1 f409135] Step plate one step north.
+[walk1 f409587] Step plate one step south.
+[walk1 f410027] Door here. Press A to exit.
+[walk1 f410047] Step plate one step north.
+[walk1 f410495] Door here. Press A to exit.
+[walk1 f410515] Step plate one step north.
+[walk1 f410955] Door here. Press A to exit.
+[walk1 f410975] Step plate one step north.
+[walk1 f411427] Step plate one step south.
+[walk1 f411867] Door here. Press A to exit.
+[walk1 f411887] Step plate one step north.
+[walk1 f412335] Door here. Press A to exit.
+[walk1 f412355] Step plate one step north.
+[walk1 f412795] Door here. Press A to exit.
+[walk1 f412815] Step plate one step north.
+[walk1 f413267] Step plate one step south.
+[walk1 f413707] Door here. Press A to exit.
+[walk1 f413727] Step plate one step north.
+[walk1 f414175] Door here. Press A to exit.
+[walk1 f414195] Step plate one step north.
+[walk1 f414671] Door here. Press A to exit.
+[walk1 f414691] Step plate one step north.
+[walk] (15,18) facing 1
+[walk] (15,17) facing 2
+[walk1 f415143] Step plate one step south.
+[walk] (15,16) facing 2
+[walk] (15,17) facing 1
+[walk1 f415583] Door here. Press A to exit.
+[walk1 f415603] Step plate one step north.
+[walk] (15,18) facing 1
+[walk] (15,17) facing 2
+[walk1 f416051] Door here. Press A to exit.
+[walk1 f416071] Step plate one step north.
+[walk] (15,18) facing 1
+[walk] (15,17) facing 2
+[walk1 f416511] Door here. Press A to exit.
+[walk1 f416531] Step plate one step north.
+[walk] (15,18) facing 1
+[walk1 f416741] A warp panel. Step on it.
+[walk1 f416741] Door here. Press A to exit.
+[walk] (14,25) facing 1
+[walk1 f416951] A warp panel. Step on it.
+[walk1 f416951] Door here. Press A to exit.
+[walk] (15,25) facing 4
+[walk1 f417133] A warp panel. Step on it.
+[walk1 f417133] Door here. Press A to exit.
+[walk] (14,25) facing 3
+[011-west-warp-a0 f417190] A warp panel. Step on it.
+[walk] (15,18) facing 2
+[walk1 f417573] A warp panel. Step on it.
+[walk1 f417573] Door here. Press A to exit.
+[walk] (15,19) facing 1
+[013-south-warp-a0 f417630] A warp panel. Step on it.
+[walk1 f417831] A warp panel. Step on it.
+[walk1 f417831] Door here. Press A to exit.
+[walk] (15,25) facing 4
+[walk1 f418013] A warp panel. Step on it.
+[walk1 f418013] Door here. Press A to exit.
+[walk] (14,25) facing 3
+[015-west-warp-a0 f418070] A warp panel. Step on it.
+[walk] (15,18) facing 2
+[walk1 f418453] A warp panel. Step on it.
+[walk1 f418453] Door here. Press A to exit.
+[walk] (15,19) facing 1
+[017-south-warp-a0 f418509] A warp panel. Step on it.
+[walk1 f418711] A warp panel. Step on it.
+[walk1 f418711] Door here. Press A to exit.
+[walk] (15,25) facing 4
+[walk1 f418893] A warp panel. Step on it.
+[walk1 f418893] Door here. Press A to exit.
+[walk] (14,25) facing 3
+[019-west-warp-a0 f418950] A warp panel. Step on it.
+[walk] (15,18) facing 2

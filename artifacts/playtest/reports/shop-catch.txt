@@ -1,0 +1,64 @@
+[s f465016] Name: III
+[s f465098] Name: IIII
+[s f465180] Name: IIIII
+[s f465262] Name: IIIIII
+[s f465344] Name: IIIIIII
+[s f465426] Name: IIIIIIII
+[s f465508] Name: IIIIIIIII
+[s f465590] Name: IIIIIIIIII
+[s f465607] OK
+[s f465720] Battle.
+[s f465774] Overworld.
+[s f466031] Blocked north.
+[s f466231] Blocked east.
+[s f466641] Blocked north.
+[s f468028] Battle.
+[s f468283] Wild POOCHYENA appeared!
+[s f469525] Go! TORCHIC!
+[s f469724] Fight, top left.
+[s f469734] Pokémon, bottom left.
+[s f469799] Run, bottom right.
+[s f469874] Got away safely!
+[s f470098] Overworld.
+[s f470989] New area. Oldale Town.
+[s f474531] New area. Route 101.
+[s f474726] BAG, A
+[s f474727] SAVE, OPTION
+[s f474728] EXIT, 1 of 5.
+[s f474783] Option 5 of 5.
+[s f474833] Option 4 of 5.
+[s f474883] Option 3 of 5.
+[s f474933] Option 2 of 5.
+[s f474983] EXIT, 1 of 5.
+[s f475033] Option 5 of 5.
+[s f475250] Blocked east.
+[s f475447] New area. Oldale Town.
+[s f476453] Something to read here. Press A.
+[s f476961] Door two steps north-east. Press A to exit.
+[s f477167] Door here. Press A to exit.
+[s f477269] A warp arrow. Step on it.
+[s f477269] New area. Oldale Town Mart.
+[s f477876] Blocked west.
+[s f477888] Welcome! How may I serve you?
+[s f478056] BUY, 1 of 3.
+[s f478150] 32940
+[s f478151] 300 POTION 100 ANTIDOTE 200
+[s f478152] PARLYZ HEAL 250 AWAKENING, CANCEL
+[s f478153] Restores the HP of a POKéMON by 20 points.
+[s f478177] POTION, 1 of 5.
+[s f478178] Shop.
+[s f478215] ANTIDOTE, 2 of 5.
+[s f478216] Heals a poisoned POKéMON.
+[s f478217] ANTIDOTE, 2 of 5.
+[s f478285] PARLYZ HEAL, 3 of 5.
+[s f478286] Heals a paralyzed POKéMON.
+[s f478287] PARLYZ HEAL, 3 of 5.
+[s f478355] AWAKENING, 4 of 5.
+[s f478356] Awakens a sleeping POKéMON.
+[s f478357] AWAKENING, 4 of 5.
+[s f478425] CANCEL, 5 of 5.
+[s f478426] Quit shopping.
+[s f478832] Overworld.
+[s f478833] Is there anything else I can help you with?
+[s f478998] BUY, 1 of 3.
+[s f479031] Please come again!

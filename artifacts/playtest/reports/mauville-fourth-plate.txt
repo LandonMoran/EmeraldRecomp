@@ -1,0 +1,64 @@
+[f0 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[f0 f70734] Overworld.
+[f0 f70735] Blocked south.
+[f0 f72191] Blocked north.
+[f0 f72612] Step plate two steps west.
+[f0 f72708] Plate underfoot.
+[f0 f72755] Blocked west.
+[f0 f72872] Step plate one step west.
+[f0 f73075] Blocked north.
+[f0 f70896] Step plate one step north.
+[f0 f71128] Door two steps south. Press A to exit.
+[f0 f71180] A warp arrow. Step on it.
+[f0 f71360] New area. Mauville City.
+[f0 f71411] Blocked north.
+[f0 f71440] Door here. Press A to exit.
+[f0 f71507] Blocked north.
+[f0 f71541] A warp arrow. Step on it.
+[f0 f71541] New area. Mauville City Gym.
+[f0 f71856] Trainer here. Press A to talk.
+[f0 f72391] Blocked north.
+[f0 f70710] Paths swapped north-west.
+[f0 f70740] Step plate two steps west.
+[f0 f70836] Plate underfoot.
+[f0 f70896] Step plate one step north.
+[f0 f71128] Door two steps south. Press A to exit.
+[f0 f71180] A warp arrow. Step on it.
+[f0 f71360] New area. Mauville City.
+[f0 f71411] Blocked north.
+[f0 f71440] Door here. Press A to exit.
+[f0 f71507] Blocked north.
+[f0 f71541] A warp arrow. Step on it.
+[f0 f71541] New area. Mauville City Gym.
+[f0 f71928] Step plate two steps west.
+[f0 f71960] Trainer south. Press A to talk.
+[f0 f72030] Paths swapped north-east.
+[f0 f72032] Plate underfoot.
+[f0 f72092] Step plate one step west.
+[f0 f72300] Step plate two steps north.
+[f0 f72394] Paths swapped north-east.
+[f0 f72396] Plate underfoot.
+[f0 f72448] Step plate one step south.
+[f0 f72480] Trainer east. Press A to talk.
+[f0 f72552] Step plate one step west.
+[f0 f72610] Paths swapped south-east.
+[f0 f72612] Plate underfoot.
+[f0 f72664] Step plate one step west.
+[f0 f72760] Step plate two steps east.
+[f0 f72873] Trainer here. Press A to talk.
+[f0 f72877] I love shiny things!
+[f0 f73331] Battle.
+[f0 f73511] BUG MANIAC ANGELO would like to battle!
+[f0 f73664] BUG MANIAC ANGELO sent out ILLUMISE!
+[f0 f73937] Go! TORCHIC!
+[f5 f74135] Fight, top left.
+[f6 f74168] SCRATCH, NORMAL, PP 28 of 35. 1 of 4
+[f7 f74217] TORCHIC used SCRATCH!
+[f12 f74446] Foe ILLUMISE used SHOCK WAVE!
+[f23 f74882] TORCHIC is hurt by poison!
+[f29 f75141] Fight, top left.
+[f30 f75176] SCRATCH, NORMAL, PP 27 of 35. 1 of 4
+[f31 f75225] TORCHIC used SCRATCH!
+[f37 f75486] Foe ILLUMISE fainted!
+[f40 f75606] TORCHIC gained 531 EXP. Points!
+[f66 f76687] BUG MANIAC ANGELO sent out VOLBEAT!
