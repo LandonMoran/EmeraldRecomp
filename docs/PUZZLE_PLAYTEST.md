@@ -197,9 +197,42 @@ tile and the same line (`The room changed south-east.`), `REPRODUCIBLE: True`.
 `gym_walk.py` reaches the trainers behind the beams: entrance (4,19) → (4,17)
 → (2,17) → (2,16), then A facing Battle Girl Vivian at (1,16). That battle is
 played and **won** with the pad alone, and the game leaves it correctly — the
-earlier "engine fault" reading was wrong, and the true cause (a forged level
-byte over real experience underflowing the EXP bar's u32 arithmetic) is in
-[the hang report](../artifacts/playtest/reports/mauville-trainer-battle-hang.md).
+earlier "engine fault" reading was wrong. The cause is written out below,
+because the same trap catches anyone who builds a test party by hand.
+
+### Why a won battle once hung
+
+**Explained and fixed: the test party, not the engine.** Winning a trainer
+battle left the build sitting in `BattleMainCB2` forever. The probes were
+unambiguous:
+
+| Probe | Value while stuck |
+| --- | --- |
+| `gMain.callback2` | `0x08038420` (`BattleMainCB2`) |
+| `gBattleOutcome` | `0x00`, never set |
+| `gBattleMainFunc` | `0x0803E019`, `RunBattleScriptCommands_PopCallbacksStack` |
+| `gBattlescriptCurrInstr` | `0x082DA7CA`, command byte 35 = `Cmd_getexp` |
+| `gBattleControllerExecFlags` | `0x1` — waiting on battler 0 |
+| `gBattlerControllerFuncs[0]` | `BattleControllerDummy` |
+| `sLockFieldControls` | `1` |
+
+A dummy controller during the EXP update is normal: `PlayerHandleExpUpdate`
+hands off to `Task_GiveExpToMon` → `Task_GiveExpWithExpBar`, which ends by
+calling `PlayerBufferExecCompleted`. That task computes
+`exp -= currLvlExp` in u32. A checkpoint whose party had a forged **level 50
+byte** over the level-5 experience value the game itself wrote made that
+subtraction underflow to ~2^32, the bar was initialised with it, and
+`MoveBattleBar` never reported the end of the animation — 2400+ frames of
+`tExpTask_frames == 13`. Putting the level byte back afterwards cannot help;
+the bar struct already holds the underflowed numbers.
+
+Proof was the same checkpoint, trainer and route with only the party changed:
+level 50 forged over level-5 exp never ended the battle (2 minutes, 220 A
+presses, B, Start, and clearing `sLockFieldControls` by hand); level 5 with
+real exp and **boosted stats only** printed `Foe MEDITITE fainted!`, `gained
+331 EXP. Points!`, grew through LV. 6-9, and the battle ended with
+`CB2_Overworld` restored and `controls_locked == 0`. That is why
+`artifacts/playtest/party.py` boosts stats and never touches the level byte.
 
 Plate 4 at (8,9) is still unreached: a press can seal the pocket at (4,10)
 before the run gets there. `plan_gym.py` plans over the mod's own announcement

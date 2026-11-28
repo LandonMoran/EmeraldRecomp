@@ -395,8 +395,9 @@ labelled as such wherever it is reported.
 matching experience value (which lives encrypted inside the data substructs)
 leaves the two disagreeing, and the post-battle EXP bar computes
 `exp - gExperienceTables[level]` in u32: it underflows, the bar never finishes,
-and the game never leaves the battle. See
-`artifacts/playtest/reports/mauville-trainer-battle-hang.md` for the full trace.
+and the game never leaves the battle. The probe table and the two-party
+proof are in
+[the Mauville section of PUZZLE_PLAYTEST.md](PUZZLE_PLAYTEST.md#why-a-won-battle-once-hung).
 A level-up recalculates stats from IVs anyway, so a fight that levels the test
 Pokémon up throws the block away; `gym_walk.fight_if_needed` re-applies it before
 each press while a battle runs.
