@@ -669,6 +669,15 @@ int tcp_command(const char* request, void (*write)(void*, const char*, std::size
         emit();
         return 1;
     }
+    if (cmd == "emerald_touch_walk") {
+        const int x = static_cast<int>(req.integer("x", 0));
+        const int y = static_cast<int>(req.integer("y", 0));
+        field_walk_to(x, y);
+        out = "{\"ok\":true,\"armed\":true,\"x\":" + std::to_string(x) +
+              ",\"y\":" + std::to_string(y) + "}";
+        emit();
+        return 1;
+    }
     if (cmd == "emerald_touch_field") {
         out = field_json();
         emit();

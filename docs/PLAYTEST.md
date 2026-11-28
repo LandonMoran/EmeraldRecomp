@@ -66,6 +66,21 @@ field box's text after every battle message).
 | Repeated announcements | removed: a thing is described when it becomes what you face or stand next to, and nothing repeats on a timer |
 | Off-screen objects | no longer announced as people (`invisible`/`offScreen` bits both filtered) |
 
+### Walking to a tile from the harness
+
+`emerald_touch_walk` with `x`/`y` arms the same planner the touch overlay uses,
+so a script can route on the game's own step model — live collision, metatile
+behaviour, ledges, people — instead of a static collision bitmap:
+
+```
+{"cmd":"emerald_touch_walk","x":5,"y":18}
+```
+
+`emerald_touch_field` then reports `active`, `destination`, `remaining` and the
+step ring (`steps`/`mismatches`), which is what a harness polls to know the
+route finished. Routes are planned inside one map region, so a gym whose floor
+is split by puzzle warps still needs the puzzle itself walked.
+
 ## Input model: one pad direction is one tile
 
 The runtime re-latches `KEYINPUT` every frame from the mod's own per-frame hook
