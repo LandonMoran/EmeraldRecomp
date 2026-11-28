@@ -14,6 +14,7 @@ exactly one tile. In menus the same action is still a single-frame tap.
 Everything here is harness code. Nothing in this file ships with the mod.
 """
 
+import os
 import struct
 import sys
 import time
@@ -44,7 +45,15 @@ class Pad:
         self.transcript = transcript
         self.lines = []
         if transcript:
-            open(transcript, "w").close()
+            # Append, never truncate: a run is usually several Pad sessions
+            # (inspect, then walk, then fight), and opening with "w" deleted the
+            # lines an earlier session had already captured. That is how the
+            # first catch lost the "Gotcha!" line it was meant to prove.
+            if not os.path.exists(transcript):
+                with open(transcript, "w") as fh:
+                    fh.write(f"# {transcript} - appended by each pad session\n")
+            with open(transcript, "a") as fh:
+                fh.write(f"# --- new pad session ---\n")
 
     # ── transport ────────────────────────────────────────────────────────
     def ask(self, **kw):

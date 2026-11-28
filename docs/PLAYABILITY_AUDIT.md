@@ -885,11 +885,14 @@ vents, warp panels and all three ice classes named.
    the statue moves over several frames and the read catches it mid-turn
    (`mossdeep_solve.py --measure`). So the leaders' tile is still reached with
    the developer warp, and the route that reaches it without one is open work.
-**Catching a Pokémon - PASS.** Proven end to end on foot in one session
-(`artifacts/playtest/reports/shop-catch.txt`). The party walked to the Mossdeep
-Mart door, was read in the door's map tile, and entered it: `New area. Mossdeep
-City Mart.` The counter is served from the east side, not from the shopper's
-tile, and at (3,3) facing west the clerk answers `Welcome! How may I serve you?`
+**Catching a Pokémon - PASS for the mechanic, with one evidence gap named.**
+The run that proved it went like this, and the game's own lines are quoted
+verbatim because the harness ate the transcript that held them (see the note at
+the end of this item): the party walked to the Mossdeep Mart door and entered it
+(`New area. Mossdeep City Mart.`), the counter was reached from its east side,
+and the clerk answered `Welcome! How may I serve you?` The counter is served
+from the east side, not from the shopper's tile, so the approach that stalls is
+the shopper's tile, not the shop.
 The buy flow was driven from the real menus: `BUY, 1 of 3.`, then the stock list
 (`ULTRA BALL, 1 of 10.` ... `CANCEL`), then `ULTRA BALL? Certainly. How many
 would you like?`, `ULTRA BALL? And you wanted 1? That will be 1200.`, and
@@ -907,6 +910,26 @@ the party and the Pokédex. The only wart is the bag screen reading `2 in the
 bag.` where the shop had just said `IN BAG: 1`; that count disagreement is a
 reporting bug in the bag readout, not a failed purchase, and it is the next
 thing to fix in `emerald_nav.cpp`'s bag announcer.
+
+**Evidence gap, stated plainly.** That run spanned several harness sessions and
+`pad.Pad` opened its transcript with `"w"`, so every later session truncated
+the file: the `Gotcha!` line is no longer on disk. The bug is fixed (`Pad` now
+appends and marks each session), but the transcript it destroyed cannot be
+recovered. What does survive is the durable consequence, read straight out of
+`gPlayerParty` after the catch and saved to
+`artifacts/playtest/reports/catch-pokeball.txt`:
+
+```
+party count 3
+  [0] level  72  hp 136/166 ...
+  [1] level  72  hp 65511/177 ...
+  [2] level   3  hp  15/ 15  atk   8 def   7 spd   7 spa   7 spd   6
+```
+
+Three slots, the third a level 3 Poochyena - the Pokémon the game said it caught
+and registered. A re-run with the fixed pad now writes the full narrative in one
+file; until that is filed, this item is a PASS on the capture itself and a
+recorded shortfall on the transcript, not a clean PASS.
 
 **Travel between towns - PASS, both directions.** Route 101 to Oldale Town and
 back, walked with held pad directions and settle-until-equal position reads
