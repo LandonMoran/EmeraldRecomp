@@ -99,9 +99,21 @@ The rule itself is pinned by `tests/a11y_hp_readout_test.cpp`
 (`is_hp_readout()` in `src/accessibility/emerald_text_filter.cpp`): every fragment
 is a readout, while `2300`, `12/28 HP` and item names are still speech.
 
-One small noise is left: the party box prints the level on its own during the
-animation, so a bare `8` is spoken once between `Party.` and the heal sentence.
-Digits alone are also how money is announced, so it is not filtered.
+The party box itself now speaks as one sentence instead of its draw calls. It
+prints the nickname, then the level, then the gender glyph, then the current HP
+followed by the slash the max-HP piece continues (`DisplayPartyPokemonHP` ends the
+string with `CHAR_SLASH`), so the raw text used to read `AAAAAAAAAA 8 male 20/`.
+The row is rebuilt from the party and said once it stops changing:
+
+```
+AAAAAAAAAA, level 5, male, 400 out of 400 HP.
+```
+
+Gender is spoken as a word now. The game's font has `'♂' = B5` and `'♀' = B6`, and
+the decoder used to pass those through as U+2642/U+2640 - characters Unicode
+classifies as emoji, which is why a voice could say "male sign emoji" or nothing.
+Holding the line until the HP settles is what keeps a heal to one sentence, since
+the bar repaints the current-HP piece on every step.
 
 The dev warp's `avatar flags 0x01` refusal was checked too, and the guard is
 right: `PLAYER_AVATAR_FLAG_CONTROLLABLE` really is `1 << 5`, so the flag was

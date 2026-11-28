@@ -93,6 +93,12 @@ std::uint64_t g_frame = 0;
 std::string g_last_spoken;
 std::uint64_t g_last_said_frame = 0;
 std::string g_message;          // latest spoken game text (for repeat/status)
+// The party box is drawn in pieces - "20" then "/", then the max HP - and the
+// current-HP piece is repainted once per step of the bar while HP animates. A
+// line built from it is held here until the number stops moving, so a potion
+// says the result once instead of once per frame.
+std::string g_party_pending;
+std::uint64_t g_party_pending_at = 0;
 
 // ── Diagnostic log (TCP) ─────────────────────────────────────────────────
 
@@ -243,8 +249,11 @@ std::string decode(const Mem& m, std::uint32_t address, std::size_t max_len,
                 case 0xB2: out += "\xE2\x80\x9D"; break;        // ”
                 case 0xB3: out += "\xE2\x80\x98"; break;        // ‘
                 case 0xB4: out += "\xE2\x80\x99"; break;        // ’
-                case 0xB5: out += "\xE2\x99\x82"; break;        // ♂
-                case 0xB6: out += "\xE2\x99\x80"; break;        // ♀
+                // Gender is a font glyph (charmap: '♂' = B5, '♀' = B6). Speech
+                // says the word: U+2642 is treated as emoji by several engines,
+                // so "male sign" or nothing at all came out of it.
+                case 0xB5: out += "male"; break;
+                case 0xB6: out += "female"; break;
                 case 0xB8: out += ','; break;
                 case 0xBA: out += '/'; break;
                 case 0x1B: out += "\xC3\xA9"; break;            // é
@@ -629,7 +638,7 @@ std::string party_field_speech(const Mem& m) {
         std::string name = decode(m, mon + 0x08, 10);
         if (name.empty()) name = "Pok\xC3\xA9mon";
         char part[128];
-        std::snprintf(part, sizeof(part), "%s%s level %d, %d of %d HP%s.",
+        std::snprintf(part, sizeof(part), "%s%s level %d, %d out of %d HP%s.",
                       out.empty() ? "" : " ", name.c_str(), level, hp, max_hp,
                       hp == 0 ? ", fainted" : "");
         out += part;
@@ -1042,6 +1051,35 @@ void add_label(std::uint32_t window, const std::string& text) {
         g_labels.labels.erase(g_labels.labels.begin());
 }
 
+// The party screen prints its rows as separate pieces: nickname, level, gender
+// glyph and the current HP followed by the slash that the max-HP piece continues
+// (party_menu.c: DisplayPartyPokemonHP ends the string with CHAR_SLASH). Said as
+// printed that is "AAAAAAAAAA 8 male 20/", which stops mid-thought. The row is
+// rebuilt into one whole sentence from the party itself, so the player hears
+// "AAAAAAAAAA, level 8, male, 20 out of 26 HP."
+std::string party_box_line(const Mem& m, const std::string& text) {
+    std::string gender;
+    if (text.find("female") != std::string::npos) gender = "female";
+    else if (text.find("male") != std::string::npos) gender = "male";
+    if (gender.empty()) return {};   // not a party row (a prompt, a menu block)
+    const int count = std::min<int>(6, m.u8(addr::gPlayerPartyCount));
+    for (int i = 0; i < count; ++i) {
+        const std::uint32_t mon = addr::gPlayerParty + static_cast<std::uint32_t>(i) * 0x64;
+        const std::string name = decode(m, mon + 0x08, 10);
+        if (name.empty() || text.rfind(name, 0) != 0) continue;
+        const int level = m.u8(mon + 0x54);
+        const int hp = m.u16(mon + 0x56);
+        const int max_hp = m.u16(mon + 0x58);
+        if (max_hp <= 0) continue;
+        char line[160];
+        std::snprintf(line, sizeof(line), "%s, level %d, %s, %d out of %d HP%s.",
+                      name.c_str(), level, gender.c_str(), hp, max_hp,
+                      hp == 0 ? ", fainted" : "");
+        return line;
+    }
+    return {};
+}
+
 void consume_prints(const SceneState& s, const Mem& m) {
     if (g_prints.empty()) return;
     // The naming screen draws its keyboard through the same printer. Those rows
@@ -1109,6 +1147,18 @@ void consume_prints(const SceneState& s, const Mem& m) {
     }
     g_prints.swap(later);
     if (message.empty()) return;
+    // A party row is spoken as one sentence once its HP stops moving (see
+    // party_box_line and the settle check in watch()). This is matched on the row
+    // itself, not on the scene: the box prints on the frame the screen opens,
+    // before the classifier has had the frames it needs to call it a party menu.
+    {
+        std::string row = party_box_line(m, message);
+        if (!row.empty()) {
+            g_party_pending = row;
+            g_party_pending_at = g_frame;
+            return;
+        }
+    }
     // A health box repaints its numbers through this printer while the bar
     // animates, so healing prints "23/", "/24" ... "28/" and each fragment was
     // spoken as its own sentence. Digits and slashes are a readout: the game
@@ -1390,6 +1440,16 @@ void watch(const SceneState& s, const Mem& m) {
 
     consume_prints(s, m);
     poll_message_text(s, m);
+
+    // Speak a held party row only after the HP stops changing, so the animated
+    // bar produces one sentence rather than one per step.
+    if (!g_party_pending.empty() && g_frame - g_party_pending_at >= 12) {
+        if (g_party_pending != g_message) {
+            g_message = g_party_pending;
+            say(g_party_pending, false);
+        }
+        g_party_pending.clear();
+    }
 
     // A battle starting is announced by the game itself — the encounter
     // effect and the battle music — so the layer adds nothing there, exactly as
