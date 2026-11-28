@@ -61,6 +61,10 @@ target_include_directories(emerald_settings_test PRIVATE src)
 # check that every option id and value the pad writes is a real choice.
 add_test(NAME emerald_settings_test COMMAND emerald_settings_test
          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+add_executable(emerald_hp_readout_test
+    tests/a11y_hp_readout_test.cpp src/accessibility/emerald_text_filter.cpp)
+target_include_directories(emerald_hp_readout_test PRIVATE src)
+add_test(NAME emerald_hp_readout_test COMMAND emerald_hp_readout_test)
 add_executable(emerald_state_slots_test tests/state_slots_test.cpp)
 target_include_directories(emerald_state_slots_test PRIVATE src)
 add_test(NAME emerald_state_slots_test COMMAND emerald_state_slots_test)
@@ -96,6 +100,7 @@ function(add_gba_variant TARGET NAME PORT WIN_TITLE GAME_NAME ROM_SHA1 ROM_CRC32
             src/emerald_ui_view.cpp
             src/mods/emerald_absolute_rtc_plugin.cpp
             src/accessibility/emerald_a11y.cpp
+            src/accessibility/emerald_text_filter.cpp
             src/accessibility/emerald_cues.cpp
             src/accessibility/emerald_map_names.cpp
             src/accessibility/emerald_nav.cpp

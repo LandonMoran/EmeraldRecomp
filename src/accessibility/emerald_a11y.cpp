@@ -17,6 +17,7 @@
 
 #include "emerald_a11y.h"
 
+#include "emerald_text_filter.h"  // readouts (health box) vs speech
 #include "emerald_cues.h"    // audio cues + interaction outcomes
 #include "emerald_hotkeys.h"  // pad commands, chord decoding
 #include "emerald_nav.h"     // exits, stairs, adjacent people/items
@@ -1070,9 +1071,7 @@ void consume_prints(const SceneState& s, const Mem& m) {
                 // the healed total is spoken by the party line and by the game's
                 // own "HP was restored" sentence. Money is all digits with no
                 // slash and is left alone.
-                const bool hp_fragment = line.find('/') != std::string::npos &&
-                    line.find_first_not_of("0123456789/ ") == std::string::npos;
-                if (!hp_fragment) add_label(p.window, line);
+                if (!emerald::accessibility::is_hp_readout(line)) add_label(p.window, line);
             }
             continue;
         }
@@ -1115,13 +1114,7 @@ void consume_prints(const SceneState& s, const Mem& m) {
     // spoken as its own sentence. Digits and slashes are a readout: the game
     // says "HP was restored by N points" itself and the party line gives the
     // total. Money is digits with no slash and is left alone.
-    if (message.find('/') != std::string::npos) {
-        bool letters = false;
-        for (char c : message) {
-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { letters = true; break; }
-        }
-        if (!letters) return;
-    }
+    if (emerald::accessibility::is_hp_readout(message)) return;
     if (message == g_message) return;
     g_message = message;
     say(message, false);
