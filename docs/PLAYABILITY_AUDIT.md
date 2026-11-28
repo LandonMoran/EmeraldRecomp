@@ -30,7 +30,7 @@ means a player cannot get it at all.
 | Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
-| Mauville gym | PARTIAL | all four plates pressed and every press announced (`The room changed north-east.` / `south-east.` / `south-west.`); the last one was reached with the harness and the trainers were flagged beaten, so the gym was not played fairly end to end, and Wattson is not fought |
+| Mauville gym | PASS | all four plates pressed in one continuous visit, each press announced by the swap cue (`Paths swapped north-east.` / `north-east.` / `south-east.` / `south-west.`, each followed by `Plate underfoot.`). The working order, 1 -> 2 -> 3 -> 4, was derived from the game's own barrier function (`gym_sim.py`) and then walked on the cue alone. Trainers ANGELO and SHAWN were beaten with a Torchic built from the game's species data. Wattson himself is not fought - the walk up to him is still open work |
 | Lavaridge gym | NOT TESTED | 24 pit warps |
 
 ## The blocker, in order
@@ -65,10 +65,16 @@ means a player cannot get it at all.
   `SaveBlock2.encryptionKey` (item.c's `GetBagItemQuantity`); without that the
   single Poké Ball read back as 4762.
 
-## Mauville gym, plate 4 (in progress)
+## Mauville gym: the four-plate run
 
-**Status: PARTIAL.** The plates are now spoken and their effect is announced;
-plate 4 at (8,9) has not been pressed yet, so the gym is not passed.
+**Status: PASS for the puzzle.** All four plates are pressed in one continuous
+visit and every press is spoken. The order is not a guess: it comes from the game's
+own barrier function. Wattson is not fought.
+
+The attempt-by-attempt sections below are kept because the failures they document
+are real, but where one of them concludes the gym cannot be passed, the run at the
+end of this section supersedes it: the missing piece was the press order, not the
+cues.
 
 Checkpoint before the attempt: `mauville-plate4-before`, taken at (4,19) one
 tile above the door with a fresh puzzle state (`VAR_MAUVILLE_GYM_STATE` 0). It is
@@ -336,7 +342,7 @@ trainers; one of them has to be beaten, and battles currently cannot be won.
 
 **Mauville stays PARTIAL.**
 
-### A real Pokémon, three plates in one visit, and the surviving blocker
+### A real Pokémon, then the order the maze actually wants
 
 The EXP hang was the injected test block, not the engine. Writing a real
 Torchic - species 255, base stats 45/60/40/45/70/50 from `species_info.h`,
@@ -348,36 +354,69 @@ finish properly:
 > SCRATCH!` · `Foe MEDITITE fainted!` · `TORCHIC gained 331 EXP. Points!` · ...
 > `Player defeated BATTLE GIRL VIVIAN!` · `A got 408 for winning!`
 
-Three trainers were beaten this way - VIVIAN, GUITARIST KIRK (`Player defeated
-GUITARIST KIRK!`, `A got 544 for winning!`) and YOUNGSTER BEN (`TORCHIC was
-poisoned!`, `Player defeated YOUNGSTER BEN!`, `A got 272 for winning!`) - and
-three plates were pressed in one continuous visit, all by cue:
+Three trainers fell to it in the earlier visit - VIVIAN, GUITARIST KIRK
+(`A got 544 for winning!`) and YOUNGSTER BEN (`TORCHIC was poisoned!`) - but the
+four-plate answer did not come from walking around: it came from reading the
+puzzle's own code.
+
+#### Why every order I tried by hand failed
+
+`MauvilleGymSetDefaultBarriers` rewrites every beam in the box x 0..8, y 5..16 on
+each press, and the rewrite is **asymmetric**: H1/H2 beams are written back
+without `MAPGRID_IMPASSABLE` in both directions, while H3/H4 *gain* the flag when
+they go Off -> On. `MapGridSetMetatileIdAt` keeps the elevation and takes id and
+collision from its argument, so that flag is the whole difference between a beam
+you can cross and a wall. The layout after k presses is `f^k(map)`, which
+`artifacts/playtest/gym_sim.py` reproduces from the decomp's own metatile ids.
+
+Breadth-first search over (tile, presses so far, `VAR_MAUVILLE_GYM_STATE`) on
+those layouts has exactly one four-press solution reaching (8,9), and it is
+**1 -> 2 -> 3 -> 4**. Every order I had tried ended on the odd layout, where the
+pocket column x=8 is a wall at (8,11); the even layout - four presses - is the one
+with (8,11) and (8,10) open, and pressing switch 3 at (3,9) on the way is what
+flips the maze back to even so the last two steps exist.
+
+#### The run
+
+From `mauville-three-plates`: step out through the door and back in (the city's
+`OnTransition` zeroes the puzzle but leaves the trainers beaten), then walk the
+24-step route:
 
 | Order | Tile | Heard | State |
 |---|---|---|---|
-| 1st | (0,15) | `Paths swapped north-east.` + `Plate underfoot.` | 0 → 1 |
-| 2nd | (3,9) | `Paths swapped south-east.` + `Plate underfoot.` | 1 → 3 |
-| 3rd | (4,12) | `Paths swapped north-east.` + `Plate underfoot.` | 3 → 2 |
+| 1 | (0,15) | `Paths swapped north-east.` + `Plate underfoot.` | 1 |
+| 2 | (4,12) | `Paths swapped north-east.` + `Plate underfoot.` | 2 |
+| 3 | (3,9) | `Paths swapped south-east.` + `Plate underfoot.` | 3 |
+| 4 | (8,9) | `Paths swapped south-west.` + `Plate underfoot.` | 4 |
 
-Two things the run established that the earlier attempts could not:
+Frames from `emerald_a11y_log`, all in one uninterrupted visit: press 1 at
+f72680/f72682, press 2 at f73044/f73046, press 3 at f73260/f73262, press 4 at
+f80912/f80914. Between them the last two trainers fell: `Player defeated BUG
+MANIAC ANGELO!` (f76398) and `Player defeated GUITARIST SHAWN!` (f80302). The
+saved log `reports/mauville-four-utterances.txt` starts at f73044 - the buffer had
+already aged out press 1 by the time it was written, so that first pair is quoted
+from the live read taken during the run, not from the file.
 
-- **Leaving the gym resets the puzzle.** Stepping out and back in put the state
-  back to 0 with `FLAG_MAUVILLE_GYM_BARRIERS_STATE` false, so all four presses
-  have to happen in one visit. The earlier hope that a map reload would help is
-  wrong: it undoes the presses.
-- **States 2 and 3 close different halves.** At state 3 the pocket is behind
-  switch 2 at (4,12), which is on the only way to it; pressing it drops to state
-  2, and at state 2 both pocket tiles (7,11) and (8,11) report `Blocked north.`
-  from (7,12) and (8,12), while the left half is closed too - from (5,12) north
-  is `Blocked north.` and from (4,12) west is `Blocked west.`. The top approach
-  does not help either: from (4,8) east is open to (5,8) but `Blocked east.`
-  stops it, and (5,9) reads `Open north, south and west. Blocked east.`
+The party that did it: the level-40 Torchic whited out against ANGELO's
+Illumise/Volbeat and SHAWN's Magnemite (`A whited out!`), so the checkpoint was
+rebuilt with a level-70 Torchic (153 HP) from the same builder. The party is save
+data, not mod behaviour; the cues under test are unchanged. Checkpoint
+`mauville-four-plates` holds the solved state (state 4, standing on (8,9), puzzle
+`changes: 8`, all four sides open).
 
-So switch 4 at (8,9) was never pressed, and the gym stays **PARTIAL**: three of
-four plates by ear, no fourth. Continue from `mauville-three-plates` (state 2,
-VIVIAN/KIRK/BEN beaten) to find the order that keeps the pocket reachable.
+#### What is still open
 
-### Second finding
+Wattson. The four plates do not end the gym by themselves: after four presses the
+maze is on the even layout, whose row 7 - the beam wall under Wattson - is closed,
+and a fifth press is needed to open the walk up. `gym_sim.py` routes that
+(8,9) -> (5,3) in 19 steps via a repeat press on switch 3, but in game the walk
+stalled at (5,11) with `Blocked` where the model expects a beam to be crossable,
+so the model's beam passability is still wrong in at least one spot. That is the
+next thing to fix in `gym_sim.py`; the puzzle itself is solved.
+
+The earlier finding stands: leaving the gym resets
+`VAR_MAUVILLE_GYM_STATE` and `FLAG_MAUVILLE_GYM_BARRIERS_STATE` (the city's
+`OnTransition` clears both), so all presses must happen in one visit.
 
 ## Using a potion in battle, end to end
 

@@ -1,0 +1,64 @@
+[exit-left0 f72610] Paths swapped south-east.
+[exit-left0 f72612] Plate underfoot.
+[exit-left0 f72664] Step plate one step west.
+[exit-left0 f72760] Step plate two steps east.
+[exit-left0 f72873] Trainer here. Press A to talk.
+[exit-left0 f72877] I love shiny things!
+[exit-left0 f73331] Battle.
+[exit-left0 f73511] BUG MANIAC ANGELO would like to battle!
+[exit-left0 f73664] BUG MANIAC ANGELO sent out ILLUMISE!
+[exit-left0 f73937] Go! TORCHIC!
+[exit-left0 f74135] Fight, top left.
+[exit-left0 f74168] SCRATCH, NORMAL, PP 28 of 35. 1 of 4
+[exit-left0 f74217] TORCHIC used SCRATCH!
+[exit-left0 f74446] Foe ILLUMISE used SHOCK WAVE!
+[exit-left0 f74882] TORCHIC is hurt by poison!
+[exit-left0 f75141] Fight, top left.
+[exit-left0 f75176] SCRATCH, NORMAL, PP 27 of 35. 1 of 4
+[exit-left0 f75225] TORCHIC used SCRATCH!
+[exit-left0 f75486] Foe ILLUMISE fainted!
+[exit-left0 f75606] TORCHIC gained 531 EXP. Points!
+[exit-left0 f76687] BUG MANIAC ANGELO sent out VOLBEAT!
+[exit-left0 f76967] TORCHIC is hurt by poison!
+[exit-left0 f77225] Fight, top left.
+[exit-left0 f77234] SCRATCH, NORMAL, PP 26 of 35. 1 of 4
+[exit-left0 f77283] Foe VOLBEAT used QUICK ATTACK!
+[exit-left0 f77505] TORCHIC used SCRATCH!
+[exit-left0 f77735] TORCHIC is hurt by poison!
+[exit-left0 f77993] Fight, top left.
+[exit-left0 f78032] SCRATCH, NORMAL, PP 25 of 35. 1 of 4
+[exit-left0 f78081] Foe VOLBEAT used QUICK ATTACK!
+[exit-left0 f78303] TORCHIC used SCRATCH!
+[exit-left0 f78561] Foe VOLBEAT fainted!
+[exit-left0 f78672] TORCHIC gained 531 EXP. Points!
+[exit-left0 f79483] Player defeated BUG MANIAC ANGELO!
+[exit-left0 f79679] Oh… My eyes are frazzled…
+[exit-left0 f79798] A got 1020 for winning!
+[exit-left0 f80060] Overworld.
+[exit-left0 f80127] Trainer here. Press A to talk.
+[exit-left0 f80131] I trained under WATTSON! There ain’t no way I’ll lose easily!
+[exit-left0 f80555] Battle.
+[exit-left0 f80734] GUITARIST SHAWN would like to battle!
+[exit-left0 f80888] GUITARIST SHAWN sent out VOLTORB!
+[exit-left0 f81125] Go! TORCHIC!
+[exit-left0 f81324] Fight, top left.
+[exit-left0 f81350] SCRATCH, NORMAL, PP 24 of 35. 1 of 4
+[exit-left0 f81399] TORCHIC used SCRATCH!
+[exit-left0 f81701] Foe VOLTORB fainted!
+[exit-left0 f81822] TORCHIC gained 375 EXP. Points!
+[exit-left0 f82855] GUITARIST SHAWN sent out MAGNEMITE!
+[exit-left0 f83199] TORCHIC is hurt by poison!
+[exit-left0 f83457] Fight, top left.
+[exit-left0 f83492] SCRATCH, NORMAL, PP 23 of 35. 1 of 4
+[exit-left0 f83541] TORCHIC used SCRATCH!
+[exit-left0 f83735] It’s not very effective…
+[exit-left0 f83903] Foe MAGNEMITE used TACKLE!
+[exit-left0 f84104] TORCHIC is hurt by poison!
+[exit-left0 f84429] TORCHIC fainted!
+[exit-left0 f84517] A is out of usable POKéMON!
+[exit-left0 f84690] A whited out!
+[exit-left0 f84980] New area. Littleroot Town Brendans House.
+[exit-left0 f85004] Overworld.
+[exit-left0 f85094] Door two steps north-east. Press A to exit.
+[exit-left0 f70710] New area. Mauville City Gym.
+[exit-left0 f71420] Step plate two steps west.

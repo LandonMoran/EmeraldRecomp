@@ -1,0 +1,64 @@
+[r01 f72610] Trainer south. Press A to talk.
+[r01 f72680] Paths swapped north-east.
+[r01 f72682] Plate underfoot.
+[r01 f72742] Step plate one step west.
+[r01 f72950] Step plate two steps north.
+[r01 f73044] Paths swapped north-east.
+[r01 f73046] Plate underfoot.
+[r01 f73098] Step plate one step south.
+[r01 f73130] Trainer east. Press A to talk.
+[r01 f73202] Step plate one step west.
+[r01 f73260] Paths swapped south-east.
+[r01 f73262] Plate underfoot.
+[r01 f73314] Step plate one step west.
+[r01 f73410] Step plate two steps east.
+[r01 f73523] Trainer here. Press A to talk.
+[r01 f73527] I love shiny things!
+[r01 f73795] Battle.
+[r01 f73975] BUG MANIAC ANGELO would like to battle!
+[r01 f74128] BUG MANIAC ANGELO sent out ILLUMISE!
+[r01 f74401] Go! TORCHIC!
+[r01 f74599] Fight, top left.
+[r01 f74632] SCRATCH, NORMAL, PP 35 of 35. 1 of 4
+[r01 f74681] TORCHIC used SCRATCH!
+[r01 f74988] Foe ILLUMISE fainted!
+[r01 f75104] TORCHIC gained 531 EXP. Points!
+[r01 f75411] BUG MANIAC ANGELO sent out VOLBEAT!
+[r01 f75695] Fight, top left.
+[r01 f75724] SCRATCH, NORMAL, PP 34 of 35. 1 of 4
+[r01 f75773] TORCHIC used SCRATCH!
+[r01 f76080] Foe VOLBEAT fainted!
+[r01 f76196] TORCHIC gained 531 EXP. Points!
+[r01 f76398] Player defeated BUG MANIAC ANGELO!
+[r01 f76615] Oh… My eyes are frazzled…
+[r01 f76734] A got 1020 for winning!
+[r01 f76996] Overworld.
+[r01 f77063] Trainer here. Press A to talk.
+[r01 f77067] I trained under WATTSON! There ain’t no way I’ll lose easily!
+[r01 f77491] Battle.
+[r01 f77670] GUITARIST SHAWN would like to battle!
+[r01 f77824] GUITARIST SHAWN sent out VOLTORB!
+[r01 f78061] Go! TORCHIC!
+[r01 f78260] Fight, top left.
+[r01 f78286] SCRATCH, NORMAL, PP 33 of 35. 1 of 4
+[r01 f78335] TORCHIC used SCRATCH!
+[r01 f78637] Foe VOLTORB fainted!
+[r01 f78758] TORCHIC gained 375 EXP. Points!
+[r01 f79065] GUITARIST SHAWN sent out MAGNEMITE!
+[r01 f79415] Fight, top left.
+[r01 f79462] SCRATCH, NORMAL, PP 32 of 35. 1 of 4
+[r01 f79511] TORCHIC used SCRATCH!
+[r01 f79728] It’s not very effective…
+[r01 f79966] Foe MAGNEMITE fainted!
+[r01 f80102] TORCHIC gained 324 EXP. Points!
+[r01 f80302] Player defeated GUITARIST SHAWN!
+[r01 f80479] Unplugged and turned off…
+[r01 f80598] A got 544 for winning!
+[r01 f80860] Overworld.
+[r01 f80912] Paths swapped south-west.
+[r01 f80914] Plate underfoot.
+[r01 f80966] Step plate one step east.
+[r01 f81005] Blocked west.
+[r01 f81322] Step plate one step west.
+[r01 f81421] Blocked north.
+[r01 f80946] Trainer west. Press A to talk.
