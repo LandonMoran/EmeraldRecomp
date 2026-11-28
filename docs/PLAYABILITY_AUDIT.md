@@ -941,6 +941,20 @@ bought. Reading that line as "1 in the bag" was the mistake; the bag announcer's
 balls. No announcer fix is needed, and the decrement proof must be read from the
 pocket, not from the shop line.
 
+**Two harness bugs, now fixed and verified in the emulator.** (1) Leaving the
+Mart counter: at the end of a sale the clerk still holds the pad - 
+`controls_locked` is 1 while the text reads `Is there anything else I can help
+you with?` - so direction presses are dropped. It takes two B presses to get
+out: the first answers the question (`Please come again!`), the second releases
+the pad; A is wrong in both places because it answers yes and reopens the buy
+menu. The run now reaches `pad free: locked=0 box=0` and `map (0, 3)` - back on
+the city map - before walking on. (2) The ball pocket read now settles
+`gSaveBlock1Ptr`/`gSaveBlock2Ptr` across two equal reads and decodes
+`u16 itemId, u16 quantity ^ key` at SaveBlock1+0x650; one purchase reads
+`count_before ... empty (carrying 0)` then `count_after_buy ... first 16 bytes
+04005403 ... [(0, 4, 1)] (carrying 1)`, i.e. item 4 (POKé BALL) with quantity
+`0x0354 ^ 0x0355 = 1`, corroborated against the bytes rather than inferred.
+
 **The single-session re-run, this pass.** With the pad appending again the run
 was retried as one unbroken session from every checkpoint on disk, walking the
 whole way with held pad directions and, for the routes it could plan, the
