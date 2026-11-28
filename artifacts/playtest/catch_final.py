@@ -300,7 +300,7 @@ def wander_to_battle(p, tag="grass", limit=90):
 
 def main():
     p = Pad(transcript=TRANSCRIPT)
-    p.say("session", "Littleroot save -> Oldale Mart on foot -> buy a ball -> Route 101 grass -> catch")
+    p.say("session", "Rustboro save -> out of the gym -> Mart on foot -> buy a ball -> Route 116 grass -> catch")
     from checkpoints import Checkpoints
 
     class S:
@@ -310,36 +310,24 @@ def main():
         def ask(self, **kw):
             return self.pad.ask(**kw)
 
-    Checkpoints(conn=S(p)).load("torchic-grind")
+    Checkpoints(conn=S(p)).load("rustboro-cleared")
     p.frames(150)
     unlock(p)
     p.say("start", f"map {curmap(p)} tile {obj_to_map(*navwalk.settled(p))}")
     say_count(p, "count_before")
 
-    # out of Littleroot into Route 101
-    lg = Grid('LAYOUT_LITTLEROOT_TOWN')
-    if curmap(p) == (0, 9):
-        walk(p, lg, (10, 1), "littleroot_exit", blocked=npc_tiles('LittlerootTown'))
-        step_onto(p, "north", (0, 16), "littleroot_out")
-
-    p.say("map", f"left Littleroot: {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
-    if curmap(p) != (0, 16):
-        p.say("abort", "did not reach Route 101")
+    gg = Grid('LAYOUT_RUSTBORO_CITY_GYM')
+    go_to_warp(p, gg, [(5, 19), (6, 19)], (0, 3), "gym_out",
+               people=npc_tiles('RustboroCity_Gym'))
+    p.say("map", f"out of the gym: {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
+    if curmap(p) != (0, 3):
+        p.say("abort", "did not leave the gym")
         return
 
-    # north up Route 101 into Oldale Town
-    rg = Grid('LAYOUT_ROUTE101')
-    walk(p, rg, (10, 1), "route101_north", blocked=npc_tiles('Route101'))
-    step_onto(p, "north", (0, 10), "to_oldale")
-    p.say("map", f"in Oldale: {curmap(p)} at {obj_to_map(*navwalk.settled(p))}")
-    if curmap(p) != (0, 10):
-        p.say("abort", "did not reach Oldale")
-        return
-
-    tw = Grid('LAYOUT_OLDALE_TOWN')
-    go_to_warp(p, tw, [(14, 6)], (3, 7), "mart_door", people=npc_tiles('OldaleTown'))
+    tw = Grid('LAYOUT_RUSTBORO_CITY')
+    go_to_warp(p, tw, [(16, 45)], (11, 4), "mart_door", people=npc_tiles('RustboroCity'))
     p.say("map", f"in the Mart: {curmap(p)}")
-    if curmap(p) != (3, 7):
+    if curmap(p) != (11, 4):
         p.say("abort", "did not reach the Mart")
         return
 
@@ -347,14 +335,14 @@ def main():
     say_count(p, "count_after_buy")
 
     mg = Grid('LAYOUT_MART')
-    go_to_warp(p, mg, [(3, 7), (4, 7)], (0, 10), "mart_out")
-    p.say("map", f"back in Oldale: {curmap(p)}")
+    go_to_warp(p, mg, [(6, 7), (7, 7)], (0, 3), "mart_out")
+    p.say("map", f"back in Rustboro: {curmap(p)}")
 
-    walk(p, tw, (10, 19), "oldale_south", blocked=npc_tiles('OldaleTown'))
-    step_onto(p, "south", (0, 16), "to_route101")
-    p.say("map", f"on Route 101: {curmap(p)} tile {obj_to_map(*navwalk.settled(p))}")
-    if curmap(p) != (0, 16):
-        p.say("abort", "did not get back to Route 101")
+    walk(p, tw, (10, 40), "rustboro_east", blocked=npc_tiles('RustboroCity'))
+    step_onto(p, "east", (11, 40), "to_route116")
+    p.say("map", f"on Route 116: {curmap(p)} tile {obj_to_map(*navwalk.settled(p))}")
+    if curmap(p) != (11, 40):
+        p.say("abort", "did not reach Route 116")
         return
 
     if not wander_to_battle(p):
