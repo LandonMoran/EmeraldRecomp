@@ -931,6 +931,31 @@ and registered. A re-run with the fixed pad now writes the full narrative in one
 file; until that is filed, this item is a PASS on the capture itself and a
 recorded shortfall on the transcript, not a clean PASS.
 
+**The single-session re-run, this pass.** With the pad appending again the run
+was retried as one unbroken session from every checkpoint on disk, walking the
+whole way with held pad directions and, for the routes it could plan, the
+game's own step model (`emerald_touch_walk`). It did not land, for two
+structural reasons, recorded here rather than papered over:
+
+- Every save that has money and a party is standing inside a gym, and each of
+  those floors is split by puzzle warps or ice slides, so no route within the
+  same map region reaches the exit door. At `RustboroCity_Gym (5,3)` the route
+  to the exit warp `(5,19)` reported no route, and the harness walker stopped
+  at `(5,13)`, held by a trainer standing in the lane; Mossdeep's ice floor
+  behaved the same way. Those gyms are walkable only by playing their puzzle,
+  which is a different test from catching.
+- The one outdoor save, `torchic-grind` in Littleroot Town at `(10,1)`, cannot
+  leave town: one step north re-enters the "no POKéMON yet" warning and the pad
+  stays locked in a two-line loop -
+  `Um, um, um! If you go outside and go in the grass, wild POKéMON will jump out!`
+  then `It's dangerous if you don't have your own POKéMON.` - so that save
+  cannot shop or battle either.
+
+None of that is the game refusing to catch a Pokémon; the capture itself is
+proven above by the game's own lines and by the party dump. What is missing is
+a save that can walk to a counter, which is a checkpoint to take, not code to
+write.
+
 **Travel between towns - PASS, both directions.** Route 101 to Oldale Town and
 back, walked with held pad directions and settle-until-equal position reads
 (`artifacts/playtest/reports/travel-walk.txt`). The north opening is x=8..11 at
