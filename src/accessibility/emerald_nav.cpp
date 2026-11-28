@@ -48,6 +48,19 @@ constexpr std::uint32_t kMapEventsWarps = 0x08;
 constexpr std::uint32_t kMapEventsBgEvents = 0x10;
 constexpr std::uint32_t kWarpEventSize = 8;
 
+// MapHeader: mapLayout @0x00, events @0x04, mapScripts @0x08,
+//            connections @0x0C (global.fieldmap.h). +0x08 is a *script*
+//            pointer, and reading it as the table silently produced no roads.
+//   struct MapConnections { s32 count; const MapConnection *connections; }
+//   struct MapConnection  { u8 direction; s32 offset; u8 mapGroup; u8 mapNum; }
+//   - direction at +0, mapGroup at +8, mapNum at +9, 12 bytes with padding.
+// Direction codes are the engine's: 1 north, 2 south, 3 west, 4 east.
+constexpr std::uint32_t kMapLayoutPtr = 0x00;
+constexpr std::uint32_t kMapConnectionsPtr = 0x0C;
+constexpr std::uint32_t kMapConnectionSize = 12;
+constexpr int kConnNorth = 1, kConnSouth = 2, kConnWest = 3, kConnEast = 4;
+constexpr int kConnNoticeTiles = 3;
+
 // Background events: signs, the wall clock, the TV, shelves. They have no
 // sprite, so nothing in the object list can say where they are.
 constexpr std::uint32_t kBgEventSize = 12;
@@ -106,6 +119,8 @@ struct Announcer {
     int npc_frame = -100000;
     int npc_dx = 999, npc_dy = 999, npc_kind = -1;   // who was last announced
     int look_x = -999, look_y = -999, look_kind = -1;  // what was looked at
+    int conn_dir = -1;                                 // road edge already named
+    int conn_frame = -100000;
     int frame = 0;
 };
 Announcer g_ann;
@@ -181,6 +196,8 @@ bool read_nav(const Mem& m, NavState* out) {
     n.elevation = m.u8(o + kEventElevation) & 0x0F;
     n.ok = true;
 
+    const std::uint32_t layout = m.u32(addr::gMapHeader + kMapLayoutPtr);
+
     // Warp events for this map (ROM tables pointed at by the RAM map header).
     // Routes have no warp entries at all, so a missing table must not skip the
     // facing probe below: what you are looking at matters on every map.
@@ -207,6 +224,52 @@ bool read_nav(const Mem& m, NavState* out) {
         info.stair = info.elevation != 0 && info.elevation != n.elevation;
         info.goesUp = info.elevation > n.elevation;
         n.warps[n.warpCount++] = info;
+    }
+
+    // Connecting maps: the road out of town is a map connection, not a warp.
+    {
+        const int width = layout ? static_cast<int>(m.u32(layout + 0x00)) : 0;
+        const int height = layout ? static_cast<int>(m.u32(layout + 0x04)) : 0;
+        const std::uint32_t table = m.u32(addr::gMapHeader + kMapConnectionsPtr);
+        int count = 0;
+        std::uint32_t entries = 0;
+        if (table >= 0x08000000u) {
+            count = static_cast<int>(m.u32(table));
+            entries = m.u32(table + 4);
+            if (count < 0 || count > 8 || entries < 0x08000000u) count = 0;
+        }
+        for (int i = 0; i < count; ++i) {
+            const std::uint32_t c = entries + static_cast<std::uint32_t>(i) * kMapConnectionSize;
+            NavState::ConnEdge e;
+            e.direction = m.u8(c);
+            e.mapGroup = m.u8(c + 8);
+            e.mapNum = m.u8(c + 9);
+            const int px = n.x - kMapOffset, py = n.y - kMapOffset;
+            switch (e.direction) {
+                case kConnNorth: e.dist = (height > 0) ? py : -1; break;
+                case kConnSouth: e.dist = (height > 0) ? height - 1 - py : -1; break;
+                case kConnWest:  e.dist = (width > 0) ? px : -1; break;
+                case kConnEast:  e.dist = (width > 0) ? width - 1 - px : -1; break;
+                default: e.dist = -1; break;   // dive/emerge: not a walkable edge
+            }
+            if (e.mapGroup == 127 || e.mapNum == 127) continue;
+            n.conns[n.connCount++] = e;
+        }
+        // Say out loud what the header actually contained, once per map, when
+        // asked: a silent zero here looks exactly like a map with no roads.
+        static int dbg_group = -1, dbg_num = -1;
+        if (std::getenv("EMERALD_NAV_DEBUG") && (dbg_group != n.mapGroup || dbg_num != n.mapNum)) {
+            dbg_group = n.mapGroup;
+            dbg_num = n.mapNum;
+            std::fprintf(stderr,
+                         "[emerald:a11y] conns: map (%d,%d) table=0x%08X count=%d "
+                         "width=%d height=%d kept=%d\n",
+                         n.mapGroup, n.mapNum, table, count, width, height, n.connCount);
+            for (int i = 0; i < n.connCount; ++i)
+                std::fprintf(stderr, "[emerald:a11y]   conn dir=%d -> map (%d,%d) dist=%d\n",
+                             n.conns[i].direction, n.conns[i].mapGroup, n.conns[i].mapNum,
+                             n.conns[i].dist);
+        }
     }
 
     // Object-event coordinates are stored with the field's MAP_OFFSET (7) added
@@ -427,11 +490,48 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
         }
     }
 
+    // ── Which way leads onward ───────────────────────────────────────────
+    // A town's exits are map connections, not warps, so "which road goes
+    // where" was the one travel question the mod could not answer. Name the
+    // road and its compass side while the player is standing at that edge.
+    {
+        int pick = -1, best = kConnNoticeTiles + 1;
+        for (int i = 0; i < n.connCount; ++i) {
+            const int d = n.conns[i].dist;
+            if (d >= 0 && d <= kConnNoticeTiles && d < best) {
+                best = d;
+                pick = i;
+            }
+        }
+        if (pick >= 0) {
+            const int dir = n.conns[pick].direction;
+            if (g_ann.conn_dir != dir || g_ann.frame - g_ann.conn_frame > 900) {
+                const char* word = dir == kConnNorth ? "north"
+                                 : dir == kConnSouth ? "south"
+                                 : dir == kConnWest ? "west" : "east";
+                const char* name = map_name_spoken(n.conns[pick].mapGroup,
+                                                   n.conns[pick].mapNum);
+                char line[96];
+                if (name)
+                    std::snprintf(line, sizeof(line), "%s %s.", name, word);
+                else
+                    std::snprintf(line, sizeof(line), "An opening %s.", word);
+                if (play_cue(Cue::MapTransition, line)) {
+                    g_ann.conn_dir = dir;      // only when it was really said
+                    g_ann.conn_frame = g_ann.frame;
+                }
+            }
+        } else {
+            g_ann.conn_dir = -1;    // walked away from the edge: name it again
+        }
+    }
+
     // ── Navigation target ───────────────────────────────────────────────
     if (g_target.set && n.mapGroup == g_target.mapGroup &&
         n.mapNum == g_target.mapNum && n.x == g_target.x && n.y == g_target.y) {
-        g_target.set = false;
-        play_cue(Cue::Target, "You have arrived.");
+        // Only clear the target once the arrival was actually spoken: a cue
+        // dropped by a cooldown would otherwise be lost for good.
+        if (play_cue(Cue::Target, "You have arrived.")) g_target.set = false;
     }
 
     // ── What the player is looking at ───────────────────────────────────
@@ -445,9 +545,24 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
         g_ann.look_x = n.lookX;
         g_ann.look_y = n.lookY;
         switch (n.lookKind) {
-            case LookDoor:
-                play_cue(Cue::Door, "Door here. Press A to exit.");
+            case LookDoor: {
+                // Name the destination, so a door is a decision and not a
+                // guess: standing in a town's doorway, "where does this go?"
+                // is the question a sighted player answers from the sign.
+                const char* dest = nullptr;
+                for (int i = 0; i < n.warpCount; ++i) {
+                    if (n.warps[i].x == n.lookX - kMapOffset &&
+                        n.warps[i].y == n.lookY - kMapOffset) {
+                        dest = map_name_spoken(n.warps[i].mapGroup, n.warps[i].mapNum);
+                        break;
+                    }
+                }
+                std::string say = "Door here.";
+                if (dest) say += std::string(" Leads to ") + dest + ".";
+                say += " Press A to exit.";
+                play_cue(Cue::Door, say.c_str());
                 break;
+            }
             case LookStairsUp:
                 play_cue(Cue::StairsUp, "Stairs up here. Walk onto them.");
                 break;
@@ -512,7 +627,10 @@ void nav_frame(const emerald::touch::SceneState& scene, const Mem& m) {
                 const std::string say = join("Stairs ", steps + where + ". Walk onto them.", "");
                 play_cue(w.goesUp ? Cue::StairsUp : Cue::StairsDown, say.c_str());
             } else {
-                const std::string say = join("Door ", steps + where + ". Press A to exit.", "");
+                std::string say = join("Door ", steps + where + ".", "");
+                const char* dest = map_name_spoken(w.mapGroup, w.mapNum);
+                if (dest) say += std::string(" Leads to ") + dest + ".";
+                say += " Press A to exit.";
                 play_cue(Cue::Door, say.c_str());
             }
         }

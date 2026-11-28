@@ -36,7 +36,7 @@ to reach a gym (the story was never walked in order).
 | Using an item in battle | PASS | Battle Girl Vivian's MEDITITE, party at `12 of 28 HP`. Right from the action menu opened the bag and the row spoke: `Bag. Items. SUPER POTION, 1 of 1, 1 in the bag.`; choosing it asked for a target: `Party. AAAAAAAAAA level 9, 12 of 28 HP. CANCEL Use on which POKéMON?`; confirming healed: `AAAAAAAAA's HP was restored by 16 point(s).` and the party line then read `Party. AAAAAAAAAA level 9, 28 of 28 HP.` |
 | Catching a Pokémon | PASS | one unbroken session, `artifacts/playtest/reports/catch-final.txt`, no restart, no warp, no save edit: five balls bought at the Rustboro counter (`POKé BALL? Certainly. How many would you like?` ... `Here you go! Thank you very much.`, pocket read `[(0, 4, 5)] (carrying 5)`, bytes `0400011e0000041e...`), out through the clerk with `pad free: locked=0 box=0` and `back on the city map: (0, 3)`, on to `on Route 116: (0, 31)`. Encounter `Wild POOCHYENA appeared!`; bag opened from the battle menu (`Bag, top right.`, `Poké balls. POKé BALL, 1 of 1, 5 in the bag.`, `POKé BALL is selected. USE, CANCEL`); throw `A used POKé BALL!` exactly once in the session, and the game resolved it with `Gotcha! POOCHYENA was caught!`, `POOCHYENA’s data was added to the POKéDEX.` and `POKéDEX registration completed.` Pocket re-read after the battle: `[(0, 4, 4)] (carrying 4)`, bytes `0400f1de0000f5de...` - 5 before, 4 after, difference 1, equal to the one ball the game said it used. The shop's `IN BAG: 0 200 01` line is a raw list-row / unit-price / quantity field, not a bag count; treating it as "1 in the bag" was the earlier misread, and every count here rests on the pocket bytes alone |
 | Healing at a Pokémon Centre | PASS | walked in through the Centre's door from Mauville City; the whole conversation was spoken, ending `Thank you for waiting. We've restored your POKéMON to full health.`, and the player then walked away normally. The party was already at full HP, so the recovery itself was not observable |
-| Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
+| Travel between towns | PASS | the road itself is named now, not just the geometry. Standing at Rustboro's east edge: `Route 116 east.` - read from the map's own connection table (`MapHeader.connections` at +0x0C, `MapConnection { direction, offset, mapGroup, mapNum }`) - and one step across the border answered `New area. Route 116.`, so the named road and the arrival agree. Doors name their destination too: `Door here. Leads to Rustboro City. Press A to exit.` then `New area. Rustboro City.`, and `Door two steps north. Leads to Rustboro City Pokémon School. Press A to exit.` (`artifacts/playtest/reports/travel-route-cues.txt`). The walk from the gym door to that edge was on foot with the pad; the three connections the header reports for Rustboro are south to (0,30), north to (0,19) and east to (0,31) |
 | Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | PASS | no puzzle, so this is a walk-and-fight run: the room's rock formations are spoken as walls, the three trainers each announced themselves, and the leader's lines came through whole. `Player defeated LEADER ROXANNE!`, `A received the STONE BADGE from ROXANNE.`, `Obtained the TM39!`, `A put away the TM39 in the TMs HMs POCKET.` (`reports/rustboro-walk.txt`) |
 | Dewford gym | PASS | darkness is visual only, and it really is: the room reads normally while the screen is black. Six trainers, then `Player defeated LEADER BRAWLY!`, `A received the KNUCKLE BADGE from BRAWLY.`, `Obtained the TM08!`, `A put away the TM08 in the TMs HMs POCKET.` (`reports/dewford-walk.txt`) |
@@ -846,6 +846,16 @@ vents, warp panels and all three ice classes named.
 
 **Settled in this pass, with the transcript behind each.**
 
+- **The caught Pokémon is in the party, listed slot by slot.** The party reader
+  (`artifacts/playtest/party.py`) walks `gPlayerParty` from `gPlayerPartyCount`
+  and now prints every occupied slot; the catching run repeated in one session
+  (`artifacts/playtest/reports/catch-party.txt`) reads `party count 1` before the
+  catch, `party count 2` after it, with the new slot `[1] level 8 hp 25/25 pid
+  5994E741 atk 16 def 12 spd 13` beside the starter `[0] level 70 hp 400/400`.
+  The same session carries the game's own `Gotcha! POOCHYENA was caught!`,
+  `POOCHYENA’s data was added to the POKéDEX.` and `POKéDEX registration
+  completed.`, so the slot is the Pokémon the game said it caught.
+
 - **Bag item names - PASS.** The bag speaks its pockets and its contents by name:
   `Bag.`, then `Empty.` for the two empty pockets and
   `TMs and HMs. TM03, 1 of 7, 1 in the bag.`, and moving the cursor to the next
@@ -861,8 +871,18 @@ vents, warp panels and all three ice classes named.
   trainer rows - `Door here. Press A to exit.`, `Door two steps north. Press A to
   exit.`, `Stairs here. Walk onto them.`, `Person north. Press A to talk.`,
   `Trainer north. Press A to talk.` - so four of the twelve rows in the cue
-  table are exercised end to end. The `sign`, `item`, `target` and `ok` rows were
-  not reached in this session and are the remaining gap, not a known fault.
+  table are exercised end to end. **The remaining four rows are now exercised too,**
+  in `artifacts/playtest/reports/travel-route-cues.txt` and `target-cue.txt`:
+  `sign` - facing the Trainer's School signpost said `Something to read here.
+  Press A.` and reading it printed the game's own text (`POKéMON TRAINER’S SCHOOL.
+  “We’ll teach you anything about POKéMON!”`); `item` - walking past the Route 116
+  item ball said `Item east. Press A to pick it up.` / `Item south.` / `Item west.`;
+  `target` - arming a nav target and stepping onto it said `You have arrived.`;
+  `ok` - every one of those reads logged `cue: interact_ok (ok)`. The raw cue lines
+  are collected in `artifacts/playtest/reports/cues-closeout.txt`. Two mod bugs came
+  out of this and are fixed: `play_cue` now reports whether a cue actually sounded,
+  because a cue dropped by a cooldown was being remembered as announced (the road
+  name and the arrival line were both lost that way and never retried).
 
 **Still not ready, with the output that says why.**
 
@@ -885,6 +905,17 @@ vents, warp panels and all three ice classes named.
    the statue moves over several frames and the read catches it mid-turn
    (`mossdeep_solve.py --measure`). So the leaders' tile is still reached with
    the developer warp, and the route that reaches it without one is open work.
+   **Re-examined this pass and unchanged, stated as the one thing that stops it:**
+   the missing input is the quarter-turn transform of each statue group, and it
+   cannot be measured while the statue is still turning - a read across a press
+   returns 3 objects before and 8 after, and fitting a rotation to those point
+   pairs leaves residuals of 1877-4934, i.e. no transform at all. The search is
+   therefore correct but under-informed: it plans against the board it believes
+   it has, the floor switches it walks over turn the statues again, and the walk
+   ends at `no route from (8, 11)` - reproduced in `artifacts/playtest/`
+   by `mossdeep-try3.log`. Everything else in the gym reads perfectly by ear; the
+   leaders are reachable today only with the developer warp, which is why this is
+   the single item a release note has to disclose.
 **Catching a Pokémon - PASS for the mechanic, with one evidence gap named.**
 The run that proved it went like this, and the game's own lines are quoted
 verbatim because the harness ate the transcript that held them (see the note at

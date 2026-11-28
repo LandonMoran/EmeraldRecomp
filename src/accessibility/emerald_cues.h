@@ -63,7 +63,9 @@ void install_cue_sink(CueFn fn);
 
 // Play a cue. `say` is spoken alongside the sound when the spoken-announcement
 // option is on (default on); pass null to keep it silent.
-void play_cue(Cue cue, const char* say = nullptr);
+// Returns true when the cue actually sounded: a cue dropped by a cooldown
+// must not be remembered as announced, or the caller never retries it.
+bool play_cue(Cue cue, const char* say = nullptr);
 
 // Interaction outcomes. `note_action` records that the player asked for an
 // interaction; the next printed game text confirms it (InteractOk) or the

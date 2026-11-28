@@ -14,6 +14,7 @@ claim checkable instead of rhetorical.
 
 import json
 import struct
+import os
 import sys
 
 sys.path.insert(0, "artifacts/playtest")
@@ -23,7 +24,7 @@ from bot import rd                                     # noqa: E402
 from maps import Grid, obj_to_map, npc_tiles           # noqa: E402
 import navwalk                                         # noqa: E402
 
-TRANSCRIPT = "artifacts/playtest/reports/catch-final.txt"
+TRANSCRIPT = os.environ.get("CATCH_REPORT", "artifacts/playtest/reports/catch-final.txt")
 BALL_OFFSET = 0x650        # SaveBlock1 bagPocket_PokeBalls
 BALL_SLOTS = 16
 
@@ -506,15 +507,50 @@ def wander_to_battle(p, tag="grass", limit=90):
 
 
 def dump_party(p):
-    """Append the live party, read from gPlayerParty, to this transcript."""
+    """Append every occupied party slot, read from gPlayerParty."""
     import party as party_mod
     try:
-        out = party_mod.dump(p)
+        n = party_mod.count(p)
+        p.say("party", f"party count {n}")
+        for m in party_mod.dump(p):
+            p.say("party", f"[{m['index']}] level {m['level']} hp {m['hp']}/{m['max_hp']} "
+                           f"pid {m['personality']:08X} atk {m['attack']} def {m['defense']} "
+                           f"spd {m['speed']}")
     except Exception as exc:
         p.say("party", f"party read failed: {exc}")
-        return
-    for line in out:
-        p.say("party", str(line))
+
+
+def finish_capture(p, tag="name"):
+    """Decline the nickname prompt so the caught Pokemon joins the party."""
+    for _ in range(8):
+        scene = p.status().get("scene")
+        if scene not in ("naming", "battle", "dialog"):
+            break
+        p.action("b", 20)            # "Give a nickname?" -> no
+        p.frames(70)
+        p.flush_speech(tag)
+        p.frames(50)
+        p.flush_speech(tag)
+    p.say(tag, f"scene now {p.status().get('scene')}")
+
+
+def show_party_menu(p, tag="partymenu"):
+    """Open the real party screen so the game itself names the caught mon."""
+    p.action("start", 25)
+    p.frames(95)
+    p.flush_speech(tag)
+    p.confirm(90)                    # POKeMON is the first start-menu row
+    p.frames(95)
+    p.flush_speech(tag)
+    for _ in range(3):
+        p.action("down", 22)
+        p.frames(85)
+        p.flush_speech(tag)
+    p.action("b", 20)
+    p.frames(70)
+    p.action("b", 20)
+    p.frames(70)
+    p.flush_speech(tag)
 
 
 def capture_lines(p, since_tag="battle"):
@@ -639,6 +675,11 @@ def main():
     p.say("encounter", last(p, "enc"))
     caught_ok = run_encounters(p)
     p.say("caught", f"a Pokemon was caught this session: {caught_ok}")
+    if caught_ok:
+        finish_capture(p)
+        dump_party(p)
+        show_party_menu(p)
+        dump_party(p)
 
     end_slots, end_total = say_count(p, "count_after_throw")
     dump_party(p)

@@ -105,20 +105,20 @@ void install_cue_sink(CueFn fn) { g_sink = fn; }
 bool spoken_alongside() { return g_spoken; }
 void set_spoken_alongside(bool on) { g_spoken = on; }
 
-void play_cue(Cue cue, const char* say) {
+bool play_cue(Cue cue, const char* say) {
     const int i = static_cast<int>(cue);
-    if (i < 0 || i >= static_cast<int>(Cue::Count)) return;
+    if (i < 0 || i >= static_cast<int>(Cue::Count)) return false;
     const CueSpec& spec = kCueTable[i];
 
     // Per-cue cooldown: the same event must not retrigger while the player is
     // still standing on it.
-    if (g_frame - g_last_frame_of.v[i] < spec.cooldown) return;
+    if (g_frame - g_last_frame_of.v[i] < spec.cooldown) return false;
 
     // Global gap: unless this cue outranks whatever just sounded, drop it
     // rather than queue (a queued cue would be stale by the time it plays).
     if (g_has_cued && g_frame - g_last_cue_frame < kGlobalGapFrames &&
         spec.priority <= g_priority_of_last) {
-        return;
+        return false;
     }
 
     g_last_frame_of.v[i] = g_frame;
@@ -136,6 +136,7 @@ void play_cue(Cue cue, const char* say) {
                      spoken ? " + speak: " : "", spoken ? spoken : "");
     }
     if (spoken) speak_now(spoken, false);
+    return true;
 }
 
 void note_action(int action) {

@@ -1,0 +1,266 @@
+# artifacts/playtest/reports/travel-route-cues.txt - appended by each pad session
+# --- new pad session ---
+[session] one session, no restart: Rustboro gym -> sign -> east road named -> Route 116 -> signpost -> item ball
+[start] map (11, 3) tile (5, 3)
+[gym_out] warp (0, 3): approach (5, 18) (23 steps), step south
+[gym_out] from (5,3) to (5, 18)
+[gym_out f139701] Object here. Press A.
+[gym_out f139725] Overworld.
+[gym_out] (12,10) -south-> (12,11)
+[gym_out] (12,11) -south-> (12,12)
+[gym_out] (12,12) -west-> (11,12)
+[gym_out] (11,12) -west-> (10,12)
+[gym_out] (10,12) -west-> (9,12)
+[gym_out] (9,12) -south-> (9,13)
+[gym_out] (9,13) -south-> (9,14)
+[gym_out f140693] Trainer here. Press A to talk.
+[gym_out] (9,14) -south-> (9,15)
+[gym_out] (9,15) south blocked
+[gym_out] (2,8) refuses south to (2, 9); routing around it
+[gym_out] (9,15) -east-> (10,15)
+[gym_out] (10,15) -east-> (11,15)
+[gym_out] (11,15) -east-> (12,15)
+[gym_out] (12,15) -south-> (12,16)
+[gym_out] (12,16) -south-> (12,17)
+[gym_out] (12,17) -south-> (12,18)
+[gym_out] (12,18) -south-> (12,19)
+[gym_out] (12,19) -west-> (11,19)
+[gym_out] (11,19) -south-> (11,20)
+[gym_out f141925] Trainer east. Press A to talk.
+[gym_out] (11,20) -south-> (11,21)
+[gym_out] (11,21) east blocked
+[gym_out] (4,14) refuses east to (5, 14); routing around it
+[gym_out] (11,21) -north-> (11,20)
+[gym_out] (11,20) -north-> (11,19)
+[gym_out] (11,19) -west-> (10,19)
+[gym_out] (10,19) -west-> (9,19)
+[gym_out] (9,19) -west-> (8,19)
+[gym_out] (8,19) -south-> (8,20)
+[gym_out] (8,20) -south-> (8,21)
+[gym_out] (8,21) -south-> (8,22)
+[gym_out] (8,22) -south-> (8,23)
+[gym_out] (8,23) -south-> (8,24)
+[gym_out] (8,24) -east-> (9,24)
+[gym_out f143381] Person south. Press A to talk.
+[gym_out] (9,24) -east-> (10,24)
+[gym_out] (10,24) -east-> (11,24)
+[gym_out f143613] Door two steps south-east. Leads to Rustboro City. Press A to exit.
+[gym_out] (11,24) -south-> (11,25)
+[gym_out] (11,25) -east-> (12,25)
+[gym_out0 f143829] A warp arrow. Step on it.
+[gym_out0 f143829] Door here. Leads to Rustboro City. Press A to exit.
+[gym_out0 f143837] A warp arrow. Step on it.
+[gym_out0] (12,25) -south-> (12,26)
+[gym_out1] (12,26) south blocked
+[gym_outok1 f144285] New area. Rustboro City.
+[gym_out] warped (11, 3) -> (0, 3) at (27, 20)
+[map] out of the gym: (0, 3) at (27, 20)
+[sign_step] from (27,20) to (25, 36)
+[sign_step] (34,27) -south-> (34,28)
+[sign_step] (34,28) -south-> (34,29)
+[sign_step] (34,29) -south-> (34,30)
+[sign_step] (34,30) -south-> (34,31)
+[sign_step f144831] Person north. Press A to talk.
+[sign_step] (34,31) -west-> (33,31)
+[sign_step] (33,31) -west-> (32,31)
+[sign_step] (32,31) -west-> (31,31)
+[sign_step f145178] Get out! Out of the way!
+[sign_step] (31,31) -west-> (30,31)
+[sign_steppad1 f145633] Wait! Pleeeaaase! Don’t take my GOODS!
+[sign_step] waited out a scene that owned the pad
+[sign_step] (30,31) -south-> (30,32)
+[sign_step] (30,32) -south-> (30,33)
+[sign_step] (30,33) -south-> (30,34)
+[sign_step] (30,34) -south-> (30,35)
+[sign_step] (30,35) -south-> (30,36)
+[sign_step] (30,36) -south-> (30,37)
+[sign_step] (30,37) -south-> (30,38)
+[sign_step] (30,38) -south-> (30,39)
+[sign_step] (30,39) -south-> (30,40)
+[sign_step] (30,40) -south-> (30,41)
+[sign_step f147401] Person west. Press A to talk.
+[sign_step] (30,41) -south-> (30,42)
+[sign_step] (30,42) -south-> (30,43)
+[sign_step] (30,43) -east-> (31,43)
+[sign_step f147787] Person south. Press A to talk.
+[sign_step] (31,43) -east-> (32,43)
+[sign_look f147885] Something to read here. Press A.
+[sign_look f147908] Blocked north.
+[sign_read f148018] POKéMON TRAINER’S SCHOOL. “We’ll teach you anything about POKéMON!”
+[sign] standing (25, 36) under sign (25, 35)
+[east_walk] from (25,36) to (29, 46)
+[east_walk] waited out a scene that owned the pad
+[east_walk] (32,43) -east-> (33,43)
+[east_walk f149023] Person west. Press A to talk.
+[east_walk] (33,43) -south-> (33,44)
+[east_walk] (33,44) -south-> (33,45)
+[east_walk] (33,45) -south-> (33,46)
+[east_walk] (33,46) -south-> (33,47)
+[east_walk] (33,47) -south-> (33,48)
+[east_walk] (33,48) -south-> (33,49)
+[east_walk] (33,49) -east-> (34,49)
+[east_walk] (34,49) -east-> (35,49)
+[east_walk] (35,49) -east-> (36,49)
+[east_walk] (36,49) -east-> (37,49)
+[east_walk] (37,49) -south-> (37,50)
+[east_walk] (37,50) -south-> (37,51)
+[east_walk] (37,51) -south-> (37,52)
+[east_walk] (37,52) -south-> (37,53)
+[east_walk f150606] Blocked west.
+[east_walk] (37,53) west blocked
+[east_walk] (30,46) refuses west to (29, 46); routing around it
+[east_walk] no path from (30, 46) to (29, 46) (avoiding 1 tiles)
+[east_look f150704] Blocked east.
+[to_route116] edge ('x', 1): (39, 12) (59 steps)
+[to_route116] (37,53) -north-> (37,52)
+[to_route116] (37,52) -north-> (37,51)
+[to_route116] (37,51) -north-> (37,50)
+[to_route116] (37,50) -north-> (37,49)
+[to_route116] (37,49) -north-> (37,48)
+[to_route116] (37,48) -north-> (37,47)
+[to_route116] (37,47) -north-> (37,46)
+[to_route116] (37,46) -north-> (37,45)
+[to_route116] (37,45) -north-> (37,44)
+[to_route116 f151841] Person east. Press A to talk.
+[to_route116] (37,44) -north-> (37,43)
+[to_route116] (37,43) -west-> (36,43)
+[to_route116] (36,43) -west-> (35,43)
+[to_route116 f152135] Door two steps north. Leads to Rustboro City Pokémon School. Press A to exit.
+[to_route116] (35,43) -west-> (34,43)
+[to_route116] (34,43) -west-> (33,43)
+[to_route116 f152331] Person south. Press A to talk.
+[to_route116] (33,43) -west-> (32,43)
+[to_route116] (32,43) -west-> (31,43)
+[to_route116] (31,43) -north-> (31,42)
+[to_route116] (31,42) -west-> (30,42)
+[to_route116] (30,42) -north-> (30,41)
+[to_route116 f152787] Person west. Press A to talk.
+[to_route116] (30,41) -north-> (30,40)
+[to_route116] (30,40) -north-> (30,39)
+[to_route116] (30,39) -north-> (30,38)
+[to_route116] (30,38) -north-> (30,37)
+[to_route116] (30,37) -north-> (30,36)
+[to_route116] (30,36) -north-> (30,35)
+[to_route116] (30,35) -north-> (30,34)
+[to_route116] (30,34) -north-> (30,33)
+[to_route116] (30,33) -north-> (30,32)
+[to_route116] (30,32) -north-> (30,31)
+[to_route116] (30,31) -north-> (30,30)
+[to_route116] (30,30) -north-> (30,29)
+[to_route116] (30,29) -north-> (30,28)
+[to_route116 f154095] Something to read here. Press A.
+[to_route116] (30,28) -north-> (30,27)
+[to_route116] (30,27) -west-> (29,27)
+[to_route116] (29,27) -north-> (29,26)
+[to_route116] (29,26) -north-> (29,25)
+[to_route116] (29,25) -north-> (29,24)
+[to_route116] (29,24) -east-> (30,24)
+[to_route116] (30,24) -north-> (30,23)
+[to_route116] (30,23) -north-> (30,22)
+[to_route116] (30,22) -north-> (30,21)
+[to_route116] (30,21) -north-> (30,20)
+[to_route116] (30,20) -north-> (30,19)
+[to_route116] (30,19) -east-> (31,19)
+[to_route116] (31,19) -east-> (32,19)
+[to_route116] (32,19) -east-> (33,19)
+[to_route116] (33,19) -east-> (34,19)
+[to_route116] (34,19) -east-> (35,19)
+[to_route116] (35,19) -east-> (36,19)
+[to_route116] (36,19) -east-> (37,19)
+[to_route116pad0 f155838] Person north. Press A to talk.
+[to_route116pad0 f155856] Object here. Press A.
+[to_route116pad0 f155863] Oh, it’s you! You’re that fantastic TRAINER who helped me in PETALBURG WOODS! Help me! I was robbed by TEAM AQUA! I have to get the DEVON GOODS back! If I don’t… I’m going to be in serious trouble.
+[to_route116] waited out a scene that owned the pad
+[to_route116] (37,19) -east-> (38,19)
+[to_route116] (38,19) -east-> (39,19)
+[to_route116] (39,19) -east-> (40,19)
+[to_route116] (40,19) -east-> (41,19)
+[to_route116] (41,19) -east-> (42,19)
+[to_route116 f157621] Route 116 east.
+[to_route116] (42,19) -east-> (43,19)
+[to_route116] (43,19) -east-> (44,19)
+[to_route116] (44,19) -east-> (45,19)
+[to_route116] (45,19) -east-> (46,19)
+[to_route1160 f158013] New area. Route 116.
+[to_route1160] (46,19) -east-> (7,19)
+[to_route116ok0 f158103] Rustboro City west.
+[to_route116] warped (0, 3) -> (0, 31) at (0, 12)
+[map] on Route 116: (0, 31) tile (0, 12)
+[item_step] from (0,12) to (11, 17)
+[item_step] (7,19) -south-> (7,20)
+[item_step] (7,20) -east-> (8,20)
+[item_step] (8,20) -east-> (9,20)
+[item_step] (9,20) -south-> (9,21)
+[item_step] (9,21) -south-> (9,22)
+[item_step] (9,22) -east-> (10,22)
+[item_step] (10,22) -east-> (11,22)
+[item_step] (11,22) -south-> (11,23)
+[item_step] (11,23) -south-> (11,24)
+[item_step] (11,24) -east-> (12,24)
+[item_step] (12,24) -east-> (13,24)
+[item_step] (13,24) -east-> (14,24)
+[item_step] (14,24) -east-> (15,24)
+[item_step f159741] Item east. Press A to pick it up.
+[item_stepbattle0 f159872] Battle.
+[item_stepbattle4 f160155] Wild NINCADA appeared!
+[item_stepbattle6 f160289] Go! TORCHIC!
+[item_stepbattle8 f160488] Fight, top left.
+[item_stepbattle9 f160535] SCRATCH, NORMAL, PP 16 of 35. 1 of 4
+[item_stepbattle10 f160623] TORCHIC is paralyzed! It can’t move!
+[item_stepbattle13 f160883] Wild NINCADA used SCRATCH!
+[item_stepbattle15 f161090] Fight, top left.
+[item_stepbattle16 f161109] SCRATCH, NORMAL, PP 16 of 35. 1 of 4
+[item_stepbattle17 f161198] TORCHIC used SCRATCH!
+[item_stepbattle20 f161498] Wild NINCADA fainted!
+[item_stepbattle22 f161611] TORCHIC gained 65 EXP. Points!
+[item_stepbattle25 f161880] Overworld.
+[item_step] a battle interrupted the walk and was cleared
+[item_step] (15,24) -east-> (16,24)
+[item_step] (16,24) east blocked
+[item_step] (9,17) refuses east to (10, 17); routing around it
+[item_step] (16,24) -north-> (16,23)
+[item_step f162217] Item south. Press A to pick it up.
+[item_step] (16,23) -east-> (17,23)
+[item_step] (17,23) -east-> (18,23)
+[item_step f162441] Item west. Press A to pick it up.
+[item_step] (18,23) -south-> (18,24)
+[item_look f162538] Trainer here. Press A to talk.
+[item_look f162542] My BUG POKéMON are tough! Let’s battle!
+[item] tried the item ball at (10, 17) from (11, 17)
+[target] armed target (13, 17) from (11, 17)
+[target_walk] from (11,17) to (13, 17)
+[target_walkpad1 f163450] Battle.
+[target_walkpad2 f163628] BUG CATCHER JOSE would like to battle!
+[target_walkpad3 f163915] BUG CATCHER JOSE sent out WURMPLE!
+[target_walkpad4 f164162] Go! TORCHIC!
+[target_walkpad5 f164361] Fight, top left.
+[target_walkpad6 f164551] SCRATCH, NORMAL, PP 15 of 35. 1 of 4
+[target_walkpad7 f164769] TORCHIC is paralyzed! It can’t move!
+[target_walkpad9 f165031] Foe WURMPLE used TACKLE!
+[target_walkpad9 f165240] Fight, top left.
+[target_walkpad10 f165399] SCRATCH, NORMAL, PP 15 of 35. 1 of 4
+[target_walkpad11 f165618] TORCHIC used SCRATCH!
+[target_walkpad13 f165923] Foe WURMPLE fainted!
+[target_walkpad13 f166048] TORCHIC gained 91 EXP. Points!
+[target_walkpad15 f166397] BUG CATCHER JOSE sent out NINCADA!
+[target_walkpad16 f166703] Fight, top left.
+[target_walkpad17 f166883] SCRATCH, NORMAL, PP 14 of 35. 1 of 4
+[target_walk f166955] EMBER, FIRE, PP 25 of 25. 2 of 4
+[target_walkbattle0 f167020] TORCHIC used EMBER!
+[target_walkbattle3 f167266] It’s super effective!
+[target_walkbattle6 f167499] Foe NINCADA fainted!
+[target_walkbattle7 f167595] TORCHIC gained 111 EXP. Points!
+[target_walkbattle9 f167791] Player defeated BUG CATCHER JOSE!
+[target_walkbattle12 f168046] I lost! I thought I had you!
+[target_walkbattle14 f168161] A got 128 for winning!
+[target_walkbattle17 f168462] Overworld.
+[target_walk] a battle interrupted the walk and was cleared
+[target_walk] (18,24) east blocked
+[target_walk] (11,17) refuses east to (12, 17); routing around it
+[target_walk] (18,24) -north-> (18,23)
+[target_walk f168663] Trainer south. Press A to talk.
+[target_walk] (18,23) -east-> (19,23)
+[target_walk] (19,23) -east-> (20,23)
+[target_walk] (20,23) -south-> (20,24)
+[target] arrived at (13, 17)
+[done] final map (0, 31)
