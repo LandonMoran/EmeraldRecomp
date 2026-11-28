@@ -946,8 +946,18 @@ std::string status_text(const SceneState& s, const Mem& m) {
         item_speech(s, m, &what);
 
     switch (s.kind) {
-        case SceneKind::Overworld:
-            return what.empty() ? "Overworld." : "Overworld. " + what;
+        case SceneKind::Overworld: {
+            // On a puzzle map, plain "Overworld." leaves out the only thing
+            // that matters: where the switch is, whether it is down, and which
+            // way out of this tile. Saying it here costs nothing on ordinary
+            // ground because a map with no puzzle adds nothing.
+            PuzzleState pz;
+            const std::string context =
+                read_puzzle(m, &pz) ? puzzle_context_speech(pz) : std::string();
+            std::string text = what.empty() ? "Overworld." : "Overworld. " + what;
+            if (!context.empty()) text += " " + context;
+            return text;
+        }
         case SceneKind::Battle: {
             const std::string field = battle_field_speech(m);
             if (field.empty()) return what.empty() ? "Battle." : "Battle. " + what;

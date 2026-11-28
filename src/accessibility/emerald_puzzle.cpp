@@ -334,6 +334,10 @@ struct Tracker {
 
     bool puzzle_map = false;        // geometry has changed on this map
     int trigger_notice_x = -999, trigger_notice_y = -999;
+    // Latest nearest-trigger reading, so the read key can describe it.
+    int trigger_dist = -1, trigger_dx = 0, trigger_dy = 0;
+    bool trigger_on = false, trigger_raised = false;
+    int underfoot_notice_x = -999, underfoot_notice_y = -999;
 
     int last_opened = 0, last_closed = 0, last_changed = 0;
     int total_changes = 0;   // room changes seen on this map (diagnostics)
@@ -377,6 +381,7 @@ void reset_map_state() {
     g_t.forced_idle = 0;
     g_t.puzzle_map = false;
     g_t.trigger_notice_x = g_t.trigger_notice_y = -999;
+    g_t.underfoot_notice_x = g_t.underfoot_notice_y = -999;
     g_t.last_opened = g_t.last_closed = g_t.last_changed = 0;
     g_t.last_move_tiles = 0;
     g_t.press_active = false;
@@ -485,10 +490,18 @@ bool read_puzzle(const Mem& m, PuzzleState* out) {
             p.triggerDy = dy;
         }
     }
+    p.onTrigger = best == 0;
+
     const Grid grid = grid_of(m);
     p.gridWidth = grid.width;
     p.gridHeight = grid.height;
     p.gridBlocks = grid.ok ? grid.blocks : 0;
+    if (grid.ok && p.triggerDist > 0) {
+        // A raised switch is solid and a pressed one is flat, so passability is
+        // exactly the state a sighted player sees on the pillar.
+        p.triggerRaised = !passable_block(static_cast<std::uint16_t>(
+            block_at(m, grid, pl.x + p.triggerDx, pl.y + p.triggerDy)));
+    }
     if (grid.ok) {
         p.blockN = block_at(m, grid, pl.x, pl.y - 1);
         p.blockE = block_at(m, grid, pl.x + 1, pl.y);
@@ -782,11 +795,101 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
                       false);
         }
         if (best == 0) {
-            // Standing on one: it fires by itself, so nothing to say until the
-            // room answers. Forgetting the notice lets the next approach speak.
+            // Standing on one: it fires by itself, so the room's answer is the
+            // news. But a plate already pressed does nothing at all, and
+            // silence on a plate tile is indistinguishable from silence on
+            // plain floor - the player then presses it again believing the
+            // first press was missed. Say once per tile that a plate is here.
+            if (g_t.underfoot_notice_x != p.x || g_t.underfoot_notice_y != p.y) {
+                g_t.underfoot_notice_x = p.x;
+                g_t.underfoot_notice_y = p.y;
+                speak_now("Plate underfoot.", false);
+            }
+            // Forgetting the notice lets the next approach speak.
             g_t.trigger_notice_x = g_t.trigger_notice_y = -999;
         }
+        // Keep the reading for the read key, whether or not it was announced.
+        g_t.trigger_dist = best == (1 << 30) ? -1 : best;
+        g_t.trigger_dx = best > 0 ? bx : 0;
+        g_t.trigger_dy = best > 0 ? by : 0;
+        g_t.trigger_on = best == 0;
+        if (best >= 0 && best < (1 << 30)) {
+            const Grid g = grid_of(m);
+            g_t.trigger_raised = !passable_block(block_at(m, g, p.x + bx, p.y + by));
+        }
     }
+}
+
+// ── Read-key sentence ────────────────────────────────────────────────────
+namespace {
+
+const char* count_word(int n) {
+    switch (n) {
+        case 1: return "one step";
+        case 2: return "two steps";
+        case 3: return "three steps";
+        case 4: return "four steps";
+        case 5: return "five steps";
+        case 6: return "six steps";
+        case 7: return "seven steps";
+        case 8: return "eight steps";
+        case 9: return "nine steps";
+        default: return nullptr;
+    }
+}
+
+// "north", "north and east", "north, east and south"
+void append_directions(std::string* out, const bool open[4]) {
+    static const char* const names[4] = {"north", "east", "south", "west"};
+    int listed = 0, total = 0;
+    for (int i = 0; i < 4; ++i) total += open[i] ? 1 : 0;
+    if (total == 0) return;
+    for (int i = 0; i < 4; ++i) {
+        if (!open[i]) continue;
+        if (listed > 0) *out += (listed == total - 1) ? " and " : ", ";
+        *out += names[i];
+        ++listed;
+    }
+}
+
+}  // namespace
+
+std::string puzzle_context_speech(const PuzzleState& p) {
+    if (!p.ok || !p.puzzleMap) return std::string();
+    std::string out = "Puzzle.";
+    if (p.onTrigger) {
+        out += " Plate underfoot.";
+    } else if (p.triggerDist > 0 && p.triggerDist <= 9) {
+        const char* words = count_word(p.triggerDist);
+        if (words) {
+            out += " Plate ";
+            out += words;
+            out += ' ';
+            out += compass(p.triggerDx, p.triggerDy);
+            out += p.triggerRaised ? ", raised." : ".";
+        }
+    }
+    // Ways out of the tile underfoot. Blocked is the fact a wall and a beam
+    // share, so this reads the same in every gym.
+    bool open[4] = {p.openN, p.openE, p.openS, p.openW};
+    bool blocked[4] = {!p.openN, !p.openE, !p.openS, !p.openW};
+    int open_count = 0;
+    for (int i = 0; i < 4; ++i) open_count += open[i] ? 1 : 0;
+    if (open_count == 0) {
+        out += " Boxed in.";
+    } else if (open_count < 4) {
+        out += " Open ";
+        append_directions(&out, open);
+        out += '.';
+        // Only name the blocked ways when there are few enough to be useful.
+        int blocked_count = 4 - open_count;
+        if (blocked_count <= 2) {
+            out += " Blocked ";
+            append_directions(&out, blocked);
+            out += '.';
+        }
+    }
+    return out;
 }
 
 }  // namespace emerald::accessibility

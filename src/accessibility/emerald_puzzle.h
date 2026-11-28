@@ -78,6 +78,9 @@ struct PuzzleState {
     int coordEventCount = 0;        // trigger tiles on this map
     int triggerDist = -1;           // nearest one, Manhattan (-1 = none)
     int triggerDx = 0, triggerDy = 0;
+    bool onTrigger = false;         // standing on a trigger tile
+    bool triggerRaised = false;     // the nearest trigger is impassable (a raised
+                                    // switch; a flat one can be stepped on)
     int changedBlocks = 0;          // geometry diff on the latest settled frame
     int openedBlocks = 0, closedBlocks = 0;
     int totalChanges = 0;           // how many times this map's room has changed
@@ -102,6 +105,17 @@ bool read_puzzle(const emerald::guest::Mem& m, PuzzleState* out);
 
 // Full state as one JSON object (dev diagnostics; not spoken).
 std::string puzzle_json(const PuzzleState& p);
+
+// One sentence for the read key, for the puzzles that cannot be understood a
+// step at a time: where the nearest trigger tile is, whether it is raised or
+// flat, and which of the four ways out of this tile are open. Empty when this
+// map has no puzzle, so an ordinary field reads exactly as it always did.
+//
+// Mauville Gym is the case that asked for it: four floor switches, only one of
+// them flat at a time, and a beam maze that redraws when the map reloads. Being
+// told "Plate two steps west, raised. Open north and south." is the difference
+// between exploring and guessing.
+std::string puzzle_context_speech(const PuzzleState& p);
 
 // Per-frame announcements. `host_keys` is the pad's own active-low key mask for
 // this frame, used only to tell a player-driven walk from a forced move.

@@ -27,6 +27,7 @@ means a player cannot get it at all.
 | Catching a Pokémon | NOT TESTED | needs a ball in the bag, which needs the bag, which needs the Start menu |
 | Healing at a Pokémon Centre | PASS | walked in through the Centre's door from Mauville City; the whole conversation was spoken, ending `Thank you for waiting. We've restored your POKéMON to full health.`, and the player then walked away normally. The party was already at full HP, so the recovery itself was not observable |
 | Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
+| Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
 | Mauville gym | PARTIAL | plates are named (`Step plate two steps east.`) and a press now announces its effect (`The room changed north-east.`); switch 2 at (4,12) pressed and heard, switch 4 at (8,9) not reached yet |
@@ -94,6 +95,24 @@ size and indexing tiles through the same offset, the same press says:
 > `Step plate two steps east.` … `The room changed north-east.`
 
 which is the first time a Mauville plate has been usable by ear.
+
+### Cues for the hard rooms
+
+A hard puzzle cannot be understood one step at a time, so the read key now
+answers the whole question instead of saying `Overworld.`:
+
+| Where | What is said |
+|---|---|
+| In the gym, away from the switches | `Overworld. Puzzle. Plate seven steps north.` |
+| Standing on a switch | `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.` |
+| Stepping on a switch that fires | `The room changed north-east.` and `Plate underfoot.` |
+
+The nearest trigger is described by distance and compass point, and a trigger
+that is solid is called **raised** - a raised switch is the pillar a sighted
+player cannot step on, and the pressed one is the flat tile. The four ways out
+of the tile underfoot are named from the same passability the `Blocked` cue
+uses, so a beam and a wall sound alike on purpose. Off puzzle maps nothing is
+added, so an ordinary field still reads as `Overworld.`
 
 ### What the gym sounds like now
 
