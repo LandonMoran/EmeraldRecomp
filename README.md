@@ -247,6 +247,15 @@ cmake --build build --target EmeraldRecomp
 (`gba_recompile` is built from the `gbarecomp` checkout; see that repo's README.)
 The recompiled translation unit is large — expect a multi-minute compile.
 
+The BIOS recompilation output is build-local too, so the `gbarecomp` checkout is
+never left with modified files:
+
+```
+./build/gbarecomp_build/gba_recompile --bios gbarecomp/bios/gba_bios.bin \
+    --config gbarecomp/bios/gba_bios.toml --out build/generated_bios
+cmake -S . -B build -DGBARECOMP_GENERATED_BIOS_DIR=$PWD/build/generated_bios
+```
+
 ## License
 
 For this project's code covered by the [PolyForm Noncommercial License](LICENSE),
