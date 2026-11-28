@@ -30,7 +30,7 @@ means a player cannot get it at all.
 | Puzzle readout (L key) | PASS | at the Mauville door: `Overworld. Puzzle. Plate seven steps north.`; standing on the pressed switch: `Overworld. Puzzle. Plate underfoot. Open east and south. Blocked north and west.`; standing on a plate also says `Plate underfoot.` once, so a press that changes nothing is no longer silent |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
-| Mauville gym | PARTIAL | plates are named (`Step plate two steps east.`) and a press now announces its effect (`The room changed north-east.`); switch 2 at (4,12) pressed and heard, switch 4 at (8,9) not reached yet |
+| Mauville gym | PARTIAL | plates are named (`Step plate two steps east.`) and a press announces its effect (`The room changed north-east.`); switches 2 at (4,12) and 3 at (3,9) pressed and heard (gym state now 3), switch 4 at (8,9) still unreached because the checkpoint's party has no moves to beat the trainer guarding it |
 | Lavaridge gym | NOT TESTED | 24 pit warps |
 
 ## The blocker, in order
@@ -114,6 +114,11 @@ of the tile underfoot are named from the same passability the `Blocked` cue
 uses, so a beam and a wall sound alike on purpose. Off puzzle maps nothing is
 added, so an ordinary field still reads as `Overworld.`
 
+The edge of the map counts as blocked. The grid returns `MAPGRID_UNDEFINED`
+past the border, whose collision bits are zero, so a plain passability test
+called the right-hand wall `Open east.` while the step out of it was refused -
+the read has to agree with the refusal next to it.
+
 ### What the gym sounds like now
 
 - `Step plate one step north.` / `Step plate two steps west.` - the nearest
@@ -129,12 +134,38 @@ North of the pressed switch is refused (`Blocked north.` at (4,12)), and the
 layout only flips when the map reloads, which is what a player does by leaving
 through the door and walking back in.
 
-### Still open
+### Second attempt: switches 2 and 3, plate 4 still out of reach
 
-Switch 4 at (8,9) is reached by pressing the switches in an order that keeps
-the beam maze open; that ordering has not been walked yet, so **plate 4 is not
-PASS**. Nothing here relies on the harness's coordinates: the harness holds the
-pad and records, and every decision above came from a spoken line.
+Walked from `mauville-plate4-before` with the read key deciding every move:
+
+| Heard | Then |
+|---|---|
+| `Plate seven steps north.` at the door | walked north to the corridor |
+| `Plate three steps north. Open east, south and west. Blocked north.` at (4,15) | took the west column, not the blocked middle |
+| `Plate two steps west.` at (2,15) | north up the column, past the trainer at (2,13) who only spoke `Trainer west.` |
+| `Step plate two steps east.` at (2,12) | east onto switch 2 at (4,12): **`The room changed north-east.`** and `Plate underfoot.` |
+| `Open north, south and west. Blocked east.` at (2,12) after the map reloaded | north to (2,9); `Step plate two steps north-east.` at (2,10) pointed at switch 3 |
+| east along y=9 | onto switch 3 at (3,9): **`The room changed south-east.`** and `Plate underfoot.`, gym state 2 → 3 |
+| `Blocked east.` at (5,9) and `Blocked north.` at (5,8) | the way on runs past a trainer instead |
+
+Every step above was chosen from a spoken sentence: the plate distance and
+compass point, and the `Open` / `Blocked` list for the tile underfoot. The read
+key agreed with the game's own refusals - when it said `Blocked east.` the step
+was refused, and where it said open the step went through.
+
+### Why plate 4 is still not reachable: the party cannot battle
+
+The remaining route to (8,9) crosses a trainer's line of sight. Stepping into it
+was answered, in order:
+
+> `BATTLE GIRL VIVIAN would like to battle!` · `Go! !` · `has no moves left!` ·
+> `A is out of usable POKéMON!` · `A whited out!`
+
+This checkpoint's party carries no moves, so no gym trainer can be beaten, and
+the trainers guard the half of the gym that holds switch 4. That is a party
+problem, not a cue problem: the mod said exactly what was wrong at each step.
+With a party that has moves, the same spoken cues lead to (8,9) along the route
+above; until then **plate 4 is PARTIAL, not PASS**.
 
 ## Using a potion in battle, end to end
 

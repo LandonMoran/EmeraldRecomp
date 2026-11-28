@@ -507,10 +507,17 @@ bool read_puzzle(const Mem& m, PuzzleState* out) {
         p.blockE = block_at(m, grid, pl.x + 1, pl.y);
         p.blockS = block_at(m, grid, pl.x, pl.y + 1);
         p.blockW = block_at(m, grid, pl.x - 1, pl.y);
-        p.openN = passable_block(static_cast<std::uint16_t>(p.blockN));
-        p.openE = passable_block(static_cast<std::uint16_t>(p.blockE));
-        p.openS = passable_block(static_cast<std::uint16_t>(p.blockS));
-        p.openW = passable_block(static_cast<std::uint16_t>(p.blockW));
+        // MAPGRID_UNDEFINED (0x03FF) is what the grid returns past the map edge,
+        // and its collision bits are zero, so a naive passability test calls the
+        // wall of the world "open" while the game refuses the step. The read key
+        // has to agree with the refusal it sits next to.
+        auto open_way = [](unsigned b) {
+            return b != 0x03FFu && passable_block(static_cast<std::uint16_t>(b));
+        };
+        p.openN = open_way(p.blockN);
+        p.openE = open_way(p.blockE);
+        p.openS = open_way(p.blockS);
+        p.openW = open_way(p.blockW);
     }
     p.lastMoveTiles = g_t.last_move_tiles;
     p.openedBlocks = g_t.last_opened;
