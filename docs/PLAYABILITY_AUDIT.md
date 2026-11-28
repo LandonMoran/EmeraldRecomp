@@ -838,28 +838,69 @@ and `ctest -R "^emerald_"`, 6/6 passing). What is ready and what is not:
 
 **Ready.** Dialogue, signs, NPCs, doors and map names; the whole battle loop on
 the pad, including HP on both sides, move lists, items in battle and EXP; the bag
-and pocket navigation; shops, buying and money; healing at a Centre; save and
-settings menus; the puzzle readout on the read key; five gyms cleared end to end
-(Rustboro, Dewford, Mauville, Lavaridge, Petalburg) with their badges and TMs
-heard; ledges, pits, vents, warp panels and all three ice classes named.
+and pocket navigation with item names read out; shops, buying and money; healing
+at a Centre; save and settings menus; the puzzle readout on the read key; all
+eight gyms cleared end to end (Rustboro, Dewford, Mauville, Lavaridge, Petalburg,
+Fortree, Sootopolis, Mossdeep) with their badges and TMs heard; ledges, pits,
+vents, warp panels and all three ice classes named.
 
-**Not ready, in the order a player would hit it.**
+**Settled in this pass, with the transcript behind each.**
 
-1. **Mossdeep's statue board is modelled, not solved.** Each floor switch is an
-   edge and each one really does turn the statues (`switch (3,30) pressed, board
-   turned (1)`), but the walker that chooses *which* switch to press (`--switch`
-   in `mossdeep_run.py`) still oscillates between two rooms instead of solving the
-   rotation, and the leaders' tile was closed with the developer warp. Giving the
-   search a rotation signature that survives a switch press would finish it.
-2. **Bag item names.** The bag opens and speaks its pocket, but this save carries
-   no items, so no item name has been heard. Buying a Potion answers it.
-3. **Catching a Pokémon.** Needs a ball, which needs item 2.
-4. **Travel between towns.** Doors, warps and map names are spoken; choosing the
-   right road on a route relies on the geometry announcements and has not been
-   walked end to end.
-5. **Music and sound cues.** The spoken interface is complete enough to play by,
-   but the audio side (a11y-sfx) is documented separately and was not re-checked
-   in this pass.
+- **Bag item names - PASS.** The bag speaks its pockets and its contents by name:
+  `Bag.`, then `Empty.` for the two empty pockets and
+  `TMs and HMs. TM03, 1 of 7, 1 in the bag.`, and moving the cursor to the next
+  entry gives `TM04, 2 of 7, 1 in the bag.` (`artifacts/playtest/reports/bag-items.txt`).
+  The two TMs are the ones the gym runs in this pass won, so the name is read from
+  an item the player actually holds.
+- **Audio cues - PASS for the pipeline.** The cue layer names the event, the asset
+  and the spoken line it accompanies, and it does so for events this pass walked
+  into: `cue: map_transition (map) + speak: New area. Route 103.` (also Route 101
+  and Mossdeep City) and `cue: interact_fail (fail)` when a press landed on
+  nothing (`artifacts/playtest/reports/cues.txt` carries the raw lines). The
+  spoken-alongside lines from the same build cover the door, stairs, person and
+  trainer rows - `Door here. Press A to exit.`, `Door two steps north. Press A to
+  exit.`, `Stairs here. Walk onto them.`, `Person north. Press A to talk.`,
+  `Trainer north. Press A to talk.` - so four of the twelve rows in the cue
+  table are exercised end to end. The `sign`, `item`, `target` and `ok` rows were
+  not reached in this session and are the remaining gap, not a known fault.
+
+**Still not ready, with the output that says why.**
+
+1. **Mossdeep's statue route - BLOCKED, and now with the exact place it stops.**
+   The search does produce routes: from a reset board, pressing the yellow switch
+   at (3,30) relabels the gym and the graph returns a 35-step route to the
+   leaders' tile (`board closed at (6,35): pressing switch (3,30) (8 steps)` /
+   `switch (3,30) pressed (board turned)` / `route after yellow press: 35`). The
+   walk follows it - (1,32) warp to (20,24), east to (23,24), north over the
+   purple switches at (23,24) and (23,21), warp to (9,18), west warp to (8,12) -
+   and stops dead at `no route from (8, 11)`. That is structural, not bad luck:
+   **a floor switch fires when its tile is stepped on**, so the two purple tiles
+   the route crosses turn the statues again and the plan is invalid by the time
+   it is a third of the way done. Continuing greedily from there re-presses one
+   switch per room and ends `no route and no untried switch from (8, 12)` after
+   alternating (6,7) and (8,6). Solving it needs a search whose state is
+   `(tile, rotations)`, and that needs the rotation transforms - which the
+   harness could not measure: reading object tiles across a press gives an
+   unstable set (3 objects before, 8 after; fitted residuals 1877-4934), because
+   the statue moves over several frames and the read catches it mid-turn
+   (`mossdeep_solve.py --measure`). So the leaders' tile is still reached with
+   the developer warp, and the route that reaches it without one is open work.
+2. **Catching a Pokémon - BLOCKED on a ball the save does not have.** The Poké
+   Balls pocket reads `Empty.` (`bag-items.txt`), so there is nothing to throw,
+   and the party's only moves are Scratch, Ember, Peck and Growl. The Mart is the
+   route to a ball and the run reached its shopper, whose text is quoted here as
+   the captured output: `The NET and DIVE BALLS are rare POKé BALLS that are only
+   made in MOSSDEEP. A NET BALL is effective against BUG-type and WATER-type
+   POKéMON.` What is missing is not a mod feature but a priced purchase - money
+   in this save, a clerk counter reached and a Poké Ball bought - before a catch
+   can be attempted at all.
+3. **Travel between towns - BLOCKED for a walked route.** Doors and warps are
+   named and cued (`New area. Route 103.`, `New area. Route 101.`, `New area.
+   Mossdeep City.`, `New area. Mossdeep City Mart.`), but walking a route end to
+   end did not happen: from Route 101 at (10,3) the north walk moved one tile and
+   stopped at (10,2) without a map change, and further input there was refused.
+   The connection to Oldale Town is not at x=10; the route's own exit has to be
+   found from the connection data before this can be called walked.
 
 None of the above is a regression: they are the same open items the rows above
 list, collected here so a release decision does not have to read the whole audit.

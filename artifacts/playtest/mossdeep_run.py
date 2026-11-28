@@ -51,6 +51,8 @@ def main():
     ap.add_argument("--leader", default="TATE & LIZA")
     ap.add_argument("--talk", default="north")
     ap.add_argument("--rounds", type=int, default=240)
+    ap.add_argument("--memo", default="",
+                    help="file of board states already pressed, carried between runs")
     ap.add_argument("--start", default="",
                     help="x,y to force the map to; omit to carry on from where the player is")
     args = ap.parse_args()
@@ -90,6 +92,15 @@ def main():
     # the walker bounces between two rooms, pressing the same switch forever,
     # because the nearest switch is always the one it just used.
     pressed_from = set()
+    if args.memo and os.path.exists(args.memo):
+        with open(args.memo) as fh_memo:
+            pressed_from = {tuple(line.strip().split("|")) for line in fh_memo if line.strip()}
+        log("memo loaded: %d (board state, switch) pairs already tried" % len(pressed_from))
+    # A switch, once chosen, is a commitment: the walk to it is re-planned one
+    # step at a time, but the *choice* of switch is not re-made on every step.
+    # Re-choosing each step is what made the earlier runs drift between three
+    # switches and never reach any of them.
+    pending = None
     for i in range(args.rounds):
         # A trainer's sight line locks the field *before* the battle scene
         # starts, so "overworld" alone is not "free to walk".
@@ -111,8 +122,29 @@ def main():
         steps = plan(edges, pos, goal, blocked, refused, True)
         if steps is None:
             steps = plan(edges, pos, goal, blocked, refused, False)
+        if steps is not None and pending is not None:
+            log("the board opened on the way to switch %s; going for the leaders" % (pending,))
+            pending = None
+        if steps is None and pending is not None and pos != pending:
+            steps = plan(edges, pos, pending, blocked, refused, True)
+            if steps is None:
+                steps = plan(edges, pos, pending, blocked, refused, False)
+                if steps is None:
+                    log("lost the way to switch %s from %s" % (pending, pos))
+                    pending = None
         if steps is None:
-            state = frozenset(people(p))
+            # The board's state is the *collision grid*, not the people list:
+            # a rotation moves statue objects and rewrites the arrow metatiles,
+            # so two rotations can share an object layout while the walkable
+            # tiles differ, and a switch pressed from the same-looking object
+            # layout must still be tried in the other rotation.
+            # A rotation can change the statue layout *and* the walkable tiles
+            # (the arrow metatiles are rewritten), so the state is both: two
+            # rotations that differ only in the objects still open different
+            # routes, and two that differ only in the floor still need their
+            # own switches tried.
+            state = (tuple(sorted(people(p))),
+                     tuple(sorted(t for t, (walk, _e) in tiles.items() if walk)))
             best = None
             for sw in SWITCHES:
                 if sw in blocked or sw == pos or (state, sw) in pressed_from:
@@ -127,8 +159,13 @@ def main():
                 log("no route and no untried switch from %s" % (pos,))
                 break
             sw, route = best
-            pressed_from.add((state, sw))
+            key = ("%x" % (hash(state) & 0xFFFFFFFF), "%d,%d" % sw)
+            pressed_from.add(key)
+            if args.memo:
+                with open(args.memo, "a") as fh_memo:
+                    fh_memo.write("%s|%s\n" % key)
             steps = route
+            pending = sw
             log("board closed at %s: pressing switch %s (%d steps)" % (pos, sw, len(route)))
         direction, kind = steps[0]
         before = pos

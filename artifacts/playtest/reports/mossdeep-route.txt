@@ -1,0 +1,103 @@
+[walk1 f373131] Step plate two steps south.
+[walk1 f373131] Door here. Press A to exit.
+[walk1 f373214] Trainer west. Press A to talk.
+[walk1 f373300] Person west. Press A to talk.
+[walk1 f373320] Plate underfoot.
+[walk1 f373632] Step plate one step east.
+[walk1 f373784] Person north. Press A to talk.
+[walk1 f373870] A warp panel. Step on it.
+[walk1 f373997] A warp panel. Step on it.
+[walk1 f374108] Step plate two steps east.
+[walk1 f374450] Trainer south. Press A to talk.
+[walk1 f374528] Person south. Press A to talk.
+[walk1 f374548] Plate underfoot.
+[walk1 f374642] Step plate one step south.
+[walk1 f374700] Door two steps north. Press A to exit.
+[walk1 f374720] Step plate one step north.
+[walk1 f374832] Trainer here. Press A to talk.
+[walk1 f375162] A warp panel. Step on it.
+[walk1 f375162] Door here. Press A to exit.
+[walk1 f375182] Plate underfoot.
+[walk1 f375240] A warp panel. Step on it.
+[walk1 f375260] Step plate one step south.
+[walk1 f375288] A warp panel. Step on it.
+[walk1 f375446] A warp panel. Step on it.
+[walk1 f375446] Door here. Press A to exit.
+[walk1 f375524] A warp panel. Step on it.
+[walk1 f375573] Step plate two steps north.
+[walk1 f375762] Plate underfoot.
+[walk1 f376342] A warp panel. Step on it.
+[walk1 f376342] Door here. Press A to exit.
+[walk1 f376362] Step plate one step north.
+[walk1 f376469] A warp panel. Step on it.
+[walk1 f376560] A warp panel. Step on it.
+[walk1 f376560] Door here. Press A to exit.
+[walk1 f376638] A warp panel. Step on it.
+[walk1 f376687] Step plate one step south.
+[walk1 f376790] Plate underfoot.
+[walk1 f376856] Person west. Press A to talk.
+[walk1 f376876] Step plate one step north.
+[walk1 f376962] Step plate one step south.
+[walk1 f377028] Trainer here. Press A to talk.
+[walk1 f377048] Plate underfoot.
+[walk1 f377340] Trainer west. Press A to talk.
+[walk1 f377360] Step plate one step south.
+[walk1 f377418] Door two steps north. Press A to exit.
+[walk1 f377438] Step plate one step north.
+[walk1 f377504] A warp panel. Step on it.
+[walk1 f377524] Plate underfoot.
+[walk1 f377816] Trainer west. Press A to talk.
+[walk1 f377836] Step plate one step north.
+[walk1 f377894] Person west. Press A to talk.
+[walk1 f377914] Step plate one step south.
+[walk1 f378000] Plate underfoot.
+[walk1 f378074] Trainer north. Press A to talk.
+[walk1 f378094] Step plate one step west.
+[walk1 f379548] Step plate two steps west.
+[walk1 f379720] Plate underfoot.
+[walk1 f379939] A warp arrow. Step on it.
+[walk1 f379939] Stairs here. Walk onto them.
+[walk1 f380848] Step plate two steps north.
+[walk1 f381012] Door two steps north. Press A to exit.
+[walk1 f381032] Plate underfoot.
+[walk1 f381041] Trainer west. Press A to talk.
+[walk1 f381320] Step plate one step north.
+[walk] (10,38) facing 1
+[walk1 f381500] Trainer north. Press A to talk.
+[walk] (9,38) facing 3
+[walk1 f381692] Person north. Press A to talk.
+[walk] (8,38) facing 3
+[walk1 f381900] A warp panel. Step on it.
+[walk] (8,39) facing 1
+[walk1 f382092] A warp panel. Step on it.
+[walk] (27,31) facing 1
+[walk1 f382370] Step plate two steps east.
+[walk] (28,31) facing 4
+[walk1 f382542] Trainer south. Press A to talk.
+[walk] (29,31) facing 4
+[walk1 f382742] Person south. Press A to talk.
+[walk1 f382762] Plate underfoot.
+[walk] (30,31) facing 4
+[walk1 f382970] Step plate one step south.
+[walk] (30,30) facing 2
+[walk1 f383142] Door two steps north. Press A to exit.
+[walk1 f383162] Step plate one step north.
+[walk] (30,29) facing 2
+[walk1 f383342] A warp panel. Step on it.
+[walk1 f383342] Door here. Press A to exit.
+[walk1 f383362] Plate underfoot.
+[walk] (30,28) facing 2
+[walk1 f383542] A warp panel. Step on it.
+[walk1 f383562] Step plate one step south.
+[walk1 f383591] A warp panel. Step on it.
+[walk1 f383591] Door here. Press A to exit.
+[walk] (16,25) facing 1
+[walk1 f383800] A warp panel. Step on it.
+[walk1 f383800] Door here. Press A to exit.
+[walk] (15,25) facing 3
+[walk1 f383992] A warp panel. Step on it.
+[walk1 f383992] Door here. Press A to exit.
+[walk1 f384041] A warp panel. Step on it.
+[walk1 f384041] Step plate two steps north.
+[walk] (15,19) facing 1
+[walk] (15,18) facing 2

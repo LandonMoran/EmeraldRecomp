@@ -1,0 +1,13 @@
+[scaffold] force_map -> [0, 6] at (37,27)
+[walk1 f0] Spoken interface on. Press L to read the screen, Select to repeat, and Select then L to stop speech. The spoken settings are in the Mods menu.
+[walk1 f344702] TATE: Looks like the bond between you and your POKéMON is far stronger than the bond that we share as twins. LIZA: You will become even stronger! We’ve battled you, so we know.
+[walk1 f344726] Overworld.
+[walk1 f345956] New area. Route 103.
+[walk1 f346066] … … … … … … … … … … … Beep! SCOTT: Hiya, A, it’s me! Just as I thought, you won at the FORTREE GYM. Your strength… Perhaps you really are the TRAINER that I’ve been searching for. Remember, you have a fan in me. I’ll be cheering from the sidelines. Keep up the great work! … … … … … … … … … … … Click!
+[walk1 f356299] New area. Route 101.
+[walk1 f357922] New area. Mossdeep City.
+[walk] (37,26) facing 2
+[walk] blocked at (37,26) facing 2
+[walk] blocked at (37,26) facing 2
+[walk] blocked at (37,26) facing 2
+[walk] blocked at (37,26) facing 2
