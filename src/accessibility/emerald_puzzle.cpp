@@ -60,6 +60,8 @@ constexpr std::uint32_t kCoordEventSize = 16;
 constexpr int kCoordEventMax = 64;
 
 constexpr int kMapOffset = 7;          // object events are stored +7
+constexpr int kMapOffsetW = kMapOffset * 2 + 1;   // gBackupMapLayout padding
+constexpr int kMapOffsetH = kMapOffset * 2;
 constexpr int kScanRadius = 8;         // geometry window: 17 x 17 tiles
 constexpr int kSettleFrames = 20;      // frames of standing still before a diff
 
@@ -117,6 +119,10 @@ struct Grid {
     bool ok = false;
     int width = 0, height = 0;
     std::uint32_t blocks = 0;   // EWRAM pointer to the u16 grid
+    // The engine's own working copy (gBackupMapLayout) pads the map by
+    // MAP_OFFSET on the west/north, so a tile's index is (x + off_x, y + off_y)
+    // in a grid MAP_OFFSET_W/MAP_OFFSET_H wider and taller than the map.
+    int off_x = 0, off_y = 0;
 };
 
 Grid grid_of(const Mem& m) {
@@ -135,12 +141,25 @@ Grid grid_of(const Mem& m) {
     // so take its block pointer once it describes the same map. The header's
     // layout usually still points at the ROM original, which never sees those
     // writes.
+    //
+    // The backup is not the same shape as the map. The engine copies the map
+    // into a padded buffer (MAP_OFFSET tiles on the west and north, and one
+    // extra column east) so a screenful near the edge still reads sensible
+    // neighbours, and it stores width + MAP_OFFSET_W by height + MAP_OFFSET_H.
+    // Comparing it against the unpadded size rejected every map, fell back to
+    // the ROM copy, and made the beams in Mauville Gym look like they never
+    // moved — the plates fired and nothing was spoken.
     const int backup_w = static_cast<int>(m.u32(kBackupMapLayout));
     const int backup_h = static_cast<int>(m.u32(kBackupMapLayout + 4));
     const std::uint32_t backup_blocks = m.u32(kBackupMapLayout + 8);
-    if (backup_w == g.width && backup_h == g.height && backup_blocks >= 0x02000000u &&
-        backup_blocks < 0x02040000u)
+    if (backup_w == g.width + kMapOffsetW && backup_h == g.height + kMapOffsetH &&
+        backup_blocks >= 0x02000000u && backup_blocks < 0x02040000u) {
         g.blocks = backup_blocks;
+        g.width = backup_w;
+        g.height = backup_h;
+        g.off_x = kMapOffset;
+        g.off_y = kMapOffset;
+    }
     // Map data can live in EWRAM (a map a script has rewritten) or in ROM (the
     // original; the gym reads straight out of ROM because nothing has written
     // to it yet). Requiring EWRAM here made every tile on a ROM-backed map look
@@ -153,8 +172,10 @@ Grid grid_of(const Mem& m) {
 }
 
 std::uint16_t block_at(const Mem& m, const Grid& g, int x, int y) {
-    if (!g.ok || x < 0 || y < 0 || x >= g.width || y >= g.height) return 0x03FF;
-    return m.u16(g.blocks + static_cast<std::uint32_t>((y * g.width + x) * 2));
+    if (!g.ok || x < 0 || y < 0) return 0x03FF;
+    const int gx = x + g.off_x, gy = y + g.off_y;
+    if (gx < 0 || gy < 0 || gx >= g.width || gy >= g.height) return 0x03FF;
+    return m.u16(g.blocks + static_cast<std::uint32_t>((gy * g.width + gx) * 2));
 }
 
 bool passable_block(std::uint16_t block) {
@@ -665,65 +686,76 @@ void puzzle_frame(const emerald::touch::SceneState& scene, const Mem& m,
     g_t.still = moved ? 0 : g_t.still + 1;
 
     // ── Room geometry ────────────────────────────────────────────────────
-    // Snapshot the window once the player stands still, then re-read it every
-    // settled frame. A map script rewriting the room (a switch, a turnstile, a
-    // statue, a door opening) shows up as a diff, and the direction of the
-    // change is what a sighted player sees happening.
-    if (!g_t.have_snapshot || p.x != g_t.snap_x || p.y != g_t.snap_y) {
-        // Snapshot the instant the tile changes. A trigger's map script runs on
-        // the landing frame, so a snapshot taken after a settle delay already
-        // contains the new room — the diff then always reported zero and a
-        // switch could never be heard.
-        snapshot_window(m, p);
-        g_t.last_opened = g_t.last_closed = g_t.last_changed = 0;
-    } else if (g_t.still >= 1) {
+    // Keep a baseline of the window and diff against it. A map script
+    // rewriting the room (a switch, a turnstile, a statue, a door opening)
+    // shows up as a diff, and the direction of the change is what a sighted
+    // player sees happening.
+    //
+    // The baseline is indexed by world tile, not by offset from the player.
+    // That matters twice over. A one-tile step shifts every offset, so an
+    // offset diff would report the whole window as changed on every step. And
+    // a pressure plate's script rewrites the beams on the very frame the
+    // player lands on it, so a baseline taken after arrival already contains
+    // the new room: the plates in Mauville Gym fired all through the run and
+    // yet nothing was ever spoken. Comparing world tiles on arrival catches
+    // that frame, and the baseline is then retaken for the tile we now stand on.
+    auto diff_room = [&]() {
         const Grid g = grid_of(m);
-        if (g.ok && g_t.snapshot.size() ==
-                       static_cast<std::size_t>((2 * kScanRadius + 1) *
-                                                (2 * kScanRadius + 1))) {
-            int changed = 0, opened = 0, closed = 0;
-            long sum_dx = 0, sum_dy = 0;
-            std::size_t i = 0;
-            for (int sy = -kScanRadius; sy <= kScanRadius; ++sy) {
-                for (int sx = -kScanRadius; sx <= kScanRadius; ++sx, ++i) {
-                    const std::uint16_t now = block_at(m, g, p.x + sx, p.y + sy);
-                    if (now == g_t.snapshot[i]) continue;
-                    const bool was_open = passable_block(g_t.snapshot[i]);
-                    const bool is_open = passable_block(now);
-                    if (was_open == is_open && (now & 0x03FF) == (g_t.snapshot[i] & 0x03FF))
-                        continue;   // elevation-only change: not a path
-                    ++changed;
-                    if (!was_open && is_open) ++opened;
-                    if (was_open && !is_open) ++closed;
-                    sum_dx += sx;
-                    sum_dy += sy;
-                    g_t.snapshot[i] = now;
-                }
-            }
-            g_t.last_changed = changed;
-            g_t.last_opened = opened;
-            g_t.last_closed = closed;
-            if (changed > 0) {
-                const std::string where = compass(
-                    std::abs(sum_dx) < 2 ? 0 : (sum_dx > 0 ? 1 : -1),
-                    std::abs(sum_dy) < 2 ? 0 : (sum_dy > 0 ? 1 : -1));
-                ++g_t.total_changes;
-                // Say which way, not just that something happened: a switch
-                // that raises beams without changing passability is still a
-                // change the player has to connect to the plate they stepped on.
-                if (opened > 0 && closed == 0) {
-                    speak_now(("A path opened " + where + ".").c_str(), false);
-                } else if (closed > 0 && opened == 0) {
-                    speak_now(("A path closed " + where + ".").c_str(), false);
-                } else {
-                    speak_now(("The room changed " + where + ".").c_str(), false);
-                }
-                // From now on this map has proven to have switchable geometry,
-                // so naming the trigger tiles you can step on is guidance the
-                // player asked for by being here — not chatter.
-                g_t.puzzle_map = true;
+        if (!g.ok || !g_t.have_snapshot) return;
+        if (g_t.snapshot.size() != static_cast<std::size_t>((2 * kScanRadius + 1) *
+                                                          (2 * kScanRadius + 1)))
+            return;
+        int changed = 0, opened = 0, closed = 0;
+        long sum_dx = 0, sum_dy = 0;
+        std::size_t i = 0;
+        for (int sy = -kScanRadius; sy <= kScanRadius; ++sy) {
+            for (int sx = -kScanRadius; sx <= kScanRadius; ++sx, ++i) {
+                const int wx = g_t.snap_x + sx, wy = g_t.snap_y + sy;
+                const std::uint16_t now = block_at(m, g, wx, wy);
+                if (now == g_t.snapshot[i]) continue;
+                const bool was_open = passable_block(g_t.snapshot[i]);
+                const bool is_open = passable_block(now);
+                if (was_open == is_open && (now & 0x03FF) == (g_t.snapshot[i] & 0x03FF))
+                    continue;   // elevation-only change: not a path
+                ++changed;
+                if (!was_open && is_open) ++opened;
+                if (was_open && !is_open) ++closed;
+                sum_dx += wx - p.x;
+                sum_dy += wy - p.y;
+                g_t.snapshot[i] = now;
             }
         }
+        g_t.last_changed = changed;
+        g_t.last_opened = opened;
+        g_t.last_closed = closed;
+        if (changed == 0) return;
+        const std::string where = compass(
+            std::abs(sum_dx) < 2 ? 0 : (sum_dx > 0 ? 1 : -1),
+            std::abs(sum_dy) < 2 ? 0 : (sum_dy > 0 ? 1 : -1));
+        ++g_t.total_changes;
+        // Say which way, not just that something happened: a switch that
+        // raises beams without changing passability is still a change the
+        // player has to connect to the plate they stepped on.
+        if (opened > 0 && closed == 0) {
+            speak_now(("A path opened " + where + ".").c_str(), false);
+        } else if (closed > 0 && opened == 0) {
+            speak_now(("A path closed " + where + ".").c_str(), false);
+        } else {
+            speak_now(("The room changed " + where + ".").c_str(), false);
+        }
+        // From now on this map has proven to have switchable geometry, so
+        // naming the trigger tiles you can step on is guidance the player
+        // asked for by being here — not chatter.
+        g_t.puzzle_map = true;
+    };
+
+    const bool tile_changed =
+        !g_t.have_snapshot || p.x != g_t.snap_x || p.y != g_t.snap_y;
+    if (tile_changed) {
+        diff_room();            // did the step itself rewrite the room?
+        snapshot_window(m, p);  // new baseline, taken after the script ran
+    } else if (g_t.still >= 1) {
+        diff_room();            // a script that wrote a frame or two later
     }
 
     // ── Trigger tiles, once the map has shown it has a puzzle ────────────

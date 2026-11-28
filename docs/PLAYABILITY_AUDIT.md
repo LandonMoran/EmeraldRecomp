@@ -29,7 +29,7 @@ means a player cannot get it at all.
 | Travel between towns | PARTIAL | doors, warps and map names are announced; deciding *which* way leads onward relies on the geometry announcements, nothing names a route |
 | Rustboro gym | NOT TESTED | no puzzle, trainers only |
 | Dewford gym | NOT TESTED | darkness is visual only |
-| Mauville gym | PARTIAL | trainer battle and plates 1-3 done; plate 4 unreached, and a press can seal the pocket at (4,10) |
+| Mauville gym | PARTIAL | plates are named (`Step plate two steps east.`) and a press now announces its effect (`The room changed north-east.`); switch 2 at (4,12) pressed and heard, switch 4 at (8,9) not reached yet |
 | Lavaridge gym | NOT TESTED | 24 pit warps |
 
 ## The blocker, in order
@@ -39,8 +39,9 @@ means a player cannot get it at all.
    yet. Buying one potion answers it.
 2. **Catching and healing.** Both are behind the bag and ordinary dialogue, so
    both become testable now that the Start menu speaks. Neither has been done.
-3. **Telling a beam from a wall.** `Blocked west.` is spoken now, but a maze
-   still has to be walked blind; Mauville's fourth plate is the proof.
+3. **Telling a beam from a wall.** `Blocked west.` is spoken now, and so is a
+   plate's effect (see the Mauville section); walking the beam maze blind is
+   slow rather than impossible, and Mauville's fourth plate is the proof.
 4. **Route knowledge between towns.** Nothing says which exit leads to the next
    town, so travel is exploration rather than navigation.
 
@@ -62,6 +63,59 @@ means a player cannot get it at all.
   strings and checked against the shop's prices. Quantities are stored XORed with
   `SaveBlock2.encryptionKey` (item.c's `GetBagItemQuantity`); without that the
   single Poké Ball read back as 4762.
+
+## Mauville gym, plate 4 (in progress)
+
+**Status: PARTIAL.** The plates are now spoken and their effect is announced;
+plate 4 at (8,9) has not been pressed yet, so the gym is not passed.
+
+Checkpoint before the attempt: `mauville-plate4-before`, taken at (4,19) one
+tile above the door with a fresh puzzle state (`VAR_MAUVILLE_GYM_STATE` 0). It is
+the engine's own savestate; the cartridge `.sav` was never written.
+
+### A plate could fire without a word
+
+The gym's switches are coord events on four tiles - 1 at (0,15), 2 at (4,12),
+3 at (3,9), 4 at (8,9) - and each press rewrites the map: the pressed switch
+flattens, the other three rise, every beam is cleared, and the barrier layout
+flips the next time the map loads. Measured from a checkpoint: stepping on
+switch 2 took `VAR_MAUVILLE_GYM_STATE` from 0 to 2 and set
+`FLAG_MAUVILLE_GYM_BARRIERS_STATE`, and the mod said **nothing at all**.
+
+The reads were pointing at the wrong copy of the map. `setmetatile` writes into
+the engine's working copy (`gBackupMapLayout`), while the map header still
+points at the ROM original that never changes. The mod knew about the copy but
+only accepted it when its size matched the map - and the copy is padded by
+`MAP_OFFSET` (7) tiles west and north, plus one extra column east, so its size
+is `width + 15` by `height + 14`. It never matched, the padded copy was
+discarded, and every change was diffed against ROM. After reading the padded
+size and indexing tiles through the same offset, the same press says:
+
+> `Step plate two steps east.` … `The room changed north-east.`
+
+which is the first time a Mauville plate has been usable by ear.
+
+### What the gym sounds like now
+
+- `Step plate one step north.` / `Step plate two steps west.` - the nearest
+  switch, once the map is known to have geometry (indoor coord events).
+- `Blocked north.` - a refused step into a beam or wall, once per tile,
+  direction and block value, so a beam that flips is heard again.
+- `The room changed north-east.` - the press, with the direction of the change.
+- `New area. Mauville City Gym.` on entry.
+
+The route to switch 2 is repeatable from the checkpoint and was walked on these
+cues alone: `up` four times, `left` twice, `up` three times, `right` twice.
+North of the pressed switch is refused (`Blocked north.` at (4,12)), and the
+layout only flips when the map reloads, which is what a player does by leaving
+through the door and walking back in.
+
+### Still open
+
+Switch 4 at (8,9) is reached by pressing the switches in an order that keeps
+the beam maze open; that ordering has not been walked yet, so **plate 4 is not
+PASS**. Nothing here relies on the harness's coordinates: the harness holds the
+pad and records, and every decision above came from a spoken line.
 
 ## Using a potion in battle, end to end
 
